@@ -462,15 +462,23 @@ const AggregationSection = ({
 		[onUpdateMeter],
 	);
 
+	const [multiplierInput, setMultiplierInput] = useState(meter.aggregation?.multiplier?.toString() || '');
+
 	const handleMultiplierChange = useCallback(
-		(multiplierStr: string) => {
-			onUpdateMeter((prev) => ({
-				...prev,
-				aggregation: {
-					...prev.aggregation!,
-					multiplier: multiplierStr ? Number(multiplierStr) : undefined,
-				},
-			}));
+		(value: string) => {
+			// Allow empty string or valid decimal numbers
+			if (/^\d*\.?\d*$/.test(value)) {
+				setMultiplierInput(value);
+
+				const num = parseFloat(value);
+				onUpdateMeter((prev) => ({
+					...prev,
+					aggregation: {
+						...prev.aggregation!,
+						multiplier: !isNaN(num) ? num : undefined,
+					},
+				}));
+			}
 		},
 		[onUpdateMeter],
 	);
@@ -527,7 +535,7 @@ const AggregationSection = ({
 
 				{showMultiplierInput && (
 					<Input
-						value={meter.aggregation?.multiplier?.toString() || ''}
+						value={multiplierInput}
 						onChange={handleMultiplierChange}
 						label='Aggregation Multiplier'
 						placeholder='1'

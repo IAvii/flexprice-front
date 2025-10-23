@@ -1,4 +1,4 @@
-import { Pagination, Feature, FEATURE_TYPE, Metadata, Meter } from '@/models';
+import { Pagination, Feature, FEATURE_TYPE, Metadata, Meter, AlertSettings } from '@/models';
 import { TypedBackendFilter, TypedBackendSort } from '../formatters/QueryBuilder';
 import { MeterFilter, CreateMeterRequest } from './Meter';
 
@@ -16,6 +16,7 @@ export interface CreateFeatureRequest {
 	metadata?: Metadata;
 	unit_singular?: string;
 	unit_plural?: string;
+	alert_settings?: AlertSettings;
 }
 
 export interface UpdateFeatureRequest {
@@ -25,6 +26,7 @@ export interface UpdateFeatureRequest {
 	unit_singular?: string;
 	unit_plural?: string;
 	filters?: MeterFilter[];
+	alert_settings?: AlertSettings;
 }
 
 // ============================================

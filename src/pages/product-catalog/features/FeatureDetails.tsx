@@ -1,9 +1,9 @@
 // React and third-party libraries
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { EyeOff } from 'lucide-react';
+import { EyeOff, Bell, EllipsisVertical } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 // Core utilities and APIs
 import { RouteNames } from '@/core/routes/Routes';
@@ -16,7 +16,8 @@ import { useBreadcrumbsStore } from '@/store/useBreadcrumbsStore';
 
 // Components
 import { Button, Card, CardHeader, Chip, Divider, Loader, NoDataCard, Page, Spacer } from '@/components/atoms';
-import { ApiDocsContent, ColumnData, FlexpriceTable, RedirectCell } from '@/components/molecules';
+import { ApiDocsContent, ColumnData, FlexpriceTable, RedirectCell, DropdownMenu, DropdownMenuOption } from '@/components/molecules';
+import { FeatureAlertDialog } from '@/components/molecules/FeatureAlertDialog';
 
 // Models and types
 import { FEATURE_TYPE } from '@/models/Feature';
@@ -35,6 +36,7 @@ import ChargeValueCell from '@/pages/product-catalog/plans/ChargeValueCell';
 import { PriceApi } from '@/api/PriceApi';
 import { formatBillingPeriodForDisplay, getPriceTypeLabel } from '@/utils/common/helper_functions';
 import { formatInvoiceCadence } from '@/pages/product-catalog/plans/PlanDetailsPage';
+import { AlertSettings } from '@/models/Feature';
 
 export const formatAggregationType = (data: string): string => {
 	const aggregationTypeMap: Record<string, string> = {
@@ -80,6 +82,7 @@ const priceColumns: ColumnData<Price>[] = [
 const FeatureDetails = () => {
 	const { id: featureId } = useParams() as { id: string };
 	const { updateBreadcrumb } = useBreadcrumbsStore();
+	const [showAlertDialog, setShowAlertDialog] = useState(false);
 
 	const { data, isLoading, isError } = useQuery({
 		queryKey: ['fetchFeatureDetails', featureId],
@@ -124,6 +127,17 @@ const FeatureDetails = () => {
 			updateBreadcrumb(2, data?.name, RouteNames.featureDetails + featureId);
 		}
 	}, [data, featureId, updateBreadcrumb]);
+
+	const dropdownOptions: DropdownMenuOption[] = useMemo(
+		() => [
+			{
+				icon: <Bell />,
+				label: 'Alert Settings',
+				onSelect: () => setShowAlertDialog(true),
+			},
+		],
+		[],
+	);
 
 	const columns: ColumnData<EntitlementResponse>[] = [
 		{
@@ -223,14 +237,43 @@ const FeatureDetails = () => {
 						<EyeOff className='w-4 h-4' />
 						{isArchiving ? 'Archiving...' : 'Archive'}
 					</Button>
-					{/* <Button disabled className='flex gap-2'>
-				<Pencil />
-				Edit
-			</Button> */}
+					<DropdownMenu
+						options={dropdownOptions}
+						trigger={<Button variant={'outline'} prefixIcon={<EllipsisVertical />} size={'icon'}></Button>}
+					/>
 				</div>
 			}
 			heading={data?.name}>
 			<ApiDocsContent tags={['Features']} snippets={data?.type === FEATURE_TYPE.METERED ? snippets : undefined} />
+
+			{/* Feature Alert Dialog */}
+			<FeatureAlertDialog
+				open={showAlertDialog}
+				alertSettings={data?.alert_settings}
+				onSave={async (alertSettings: AlertSettings) => {
+					if (!featureId) return;
+					try {
+						console.log('[FeatureAlertSettings] Updating alert settings for feature:', featureId, alertSettings);
+						await FeatureApi.updateFeature(featureId, {
+							alert_settings: alertSettings,
+						});
+						setShowAlertDialog(false);
+						refetchQueries(['fetchFeatureDetails', featureId]);
+						toast.success('Alert settings updated successfully');
+						console.log('[FeatureAlertSettings] Successfully updated alert settings');
+					} catch (e: any) {
+						console.error('[FeatureAlertSettings] Failed to update alert settings:', {
+							featureId,
+							alertSettings,
+							error: e,
+							message: e?.message,
+							response: e?.response?.data,
+						});
+						toast.error(e?.response?.data?.error?.message || e?.message || 'Failed to update alert settings');
+					}
+				}}
+				onClose={() => setShowAlertDialog(false)}
+			/>
 
 			<Spacer className='!h-4' />
 			<div className='space-y-6'>

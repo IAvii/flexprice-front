@@ -117,6 +117,8 @@ export { default as PriceOverrideDialog } from './PriceOverrideDialog';
 
 export { default as WalletAlertDialog } from './WalletAlertDialog';
 
+export { FeatureAlertDialog } from './FeatureAlertDialog';
+
 export { AddonTable, AddonModal } from './AddonTable';
 
 export { default as SubscriptionCoupon } from './SubscriptionCoupon/SubscriptionCoupon';

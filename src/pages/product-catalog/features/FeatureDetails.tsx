@@ -30,11 +30,14 @@ import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { ENTITY_STATUS } from '@/models/base';
 import { EntitlementResponse } from '@/types/dto';
 import { METER_AGGREGATION_TYPE } from '@/models/Meter';
-import { Price } from '@/models/Price';
+import { PRICE_ENTITY_TYPE } from '@/models/Price';
 import { PriceApi } from '@/api/PriceApi';
-import { formatBillingPeriodForDisplay, getPriceTypeLabel } from '@/utils/common/helper_functions';
+import { formatBillingPeriodForDisplay } from '@/utils/common/helper_functions';
 import { ChargeValueCell } from '@/components/molecules';
-import { formatInvoiceCadence } from '@/pages';
+import { formatInvoiceCadence } from '@/pages/product-catalog/plans/PlanDetailsPage';
+import { generateExpandQueryParams } from '@/utils/common/api_helper';
+import { EXPAND } from '@/models/expand';
+import { GetPriceResponse } from '@/types/dto/Price';
 
 export const formatAggregationType = (data: string): string => {
 	const aggregationTypeMap: Record<string, string> = {
@@ -50,11 +53,18 @@ export const formatAggregationType = (data: string): string => {
 	return aggregationTypeMap[data] || data;
 };
 
-const priceColumns: ColumnData<Price>[] = [
+const priceColumns: ColumnData<GetPriceResponse>[] = [
 	{
-		title: 'Charge Type',
-		render: (row) => {
-			return <span>{getPriceTypeLabel(row.type)}</span>;
+		title: 'Plan/Addon',
+		render: (row: GetPriceResponse) => {
+			return (
+				<RedirectCell
+					redirectUrl={
+						row.entity_type === PRICE_ENTITY_TYPE.PLAN ? `${RouteNames.plan}/${row.entity_id}` : `${RouteNames.addons}/${row.entity_id}`
+					}>
+					{row.entity_type === PRICE_ENTITY_TYPE.PLAN ? row.plan?.name : row.addon?.name}
+				</RedirectCell>
+			);
 		},
 	},
 	{
@@ -102,6 +112,7 @@ const FeatureDetails = () => {
 		queryKey: ['fetchLinkedPrices', featureId],
 		queryFn: async () =>
 			await PriceApi.ListPrices({
+				expand: generateExpandQueryParams([EXPAND.PLAN, EXPAND.ADDONS]),
 				meter_ids: [data?.meter?.id || ''],
 			}),
 		enabled: !!data?.meter?.id,
@@ -186,9 +197,9 @@ const FeatureDetails = () => {
 	"event_name": "${data?.meter?.event_name || '__MUST_BE_DEFINED__'}",
 	"external_customer_id": "__CUSTOMER_ID__",
 	"properties": {${[...(data?.meter?.filters || [])]
-		.filter((filter) => filter.key && filter.key.trim() !== '')
-		.map((filter) => `\n\t\t\t "${filter.key}" : "${filter.values[0] || 'FILTER_VALUE'}"`)
-		.join(',')}${data?.meter?.aggregation?.field ? `,\n\t\t\t "${data?.meter?.aggregation.field}":"__VALUE__"` : ''}
+			.filter((filter) => filter.key && filter.key.trim() !== '')
+			.map((filter) => `\n\t\t\t "${filter.key}" : "${filter.values[0] || 'FILTER_VALUE'}"`)
+			.join(',')}${data?.meter?.aggregation?.field ? `,\n\t\t\t "${data?.meter?.aggregation.field}":"__VALUE__"` : ''}
 	},
 	"source": "api",
 	"timestamp": "${staticDate}"
@@ -238,22 +249,22 @@ const FeatureDetails = () => {
 					<div>
 						{linkedPrices?.items?.length && linkedPrices?.items?.length > 0 ? (
 							<Card variant='notched'>
-								<CardHeader title='Linked Prices' />
+								<CardHeader title='Charges' />
 								<FlexpriceTable showEmptyRow columns={priceColumns} data={linkedPrices?.items ?? []} variant='no-bordered' />
 							</Card>
 						) : (
-							<NoDataCard title='Linked Prices' subtitle='No prices linked to the feature yet' />
+							<NoDataCard title='Charges' subtitle='No charges linked to the feature yet' />
 						)}
 					</div>
 				)}
 
 				{(linkedEntitlements?.items?.length || 0) > 0 ? (
 					<Card variant='notched'>
-						<CardHeader title='Linked Plans' />
+						<CardHeader title='Entitlements' />
 						<FlexpriceTable showEmptyRow columns={columns} data={linkedEntitlements?.items ?? []} variant='no-bordered' />
 					</Card>
 				) : (
-					<NoDataCard title='Linked Plans' subtitle='No plans linked to the feature yet' />
+					<NoDataCard title='Entitlements' subtitle='No entitlements linked to the feature yet' />
 				)}
 
 				{data?.type === FEATURE_TYPE.METERED && (

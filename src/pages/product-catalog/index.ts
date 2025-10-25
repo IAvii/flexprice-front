@@ -1,5 +1,4 @@
 // Addons
-export { default as AddOn } from './addons/AddOn';
 export { default as AddonCharges } from './addons/AddonCharges';
 export { default as AddonDetails } from './addons/AddonDetails';
 export { default as Addons } from './addons/Addons';

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import TaskRunsTable from '@/components/molecules/TaskRunsTable/TaskRunsTable';
 import { ApiDocsContent } from '@/components/molecules';
+import { RouteNames } from '@/core/routes/Routes';
 
 const TaskRunsPage = () => {
 	const { connectionId, exportId } = useParams<{ connectionId: string; exportId: string }>();
@@ -16,7 +17,7 @@ const TaskRunsPage = () => {
 			<div className='mb-6'>
 				<Button
 					variant='outline'
-					onClick={() => navigate(`/tools/exports/s3/${connectionId}/export/${exportId}`)}
+					onClick={() => navigate(RouteNames.s3ExportDetails.replace(':connectionId', connectionId!).replace(':exportId', exportId!))}
 					className='flex items-center gap-2'>
 					<ArrowLeft className='w-4 h-4' />
 					Back to Export Details

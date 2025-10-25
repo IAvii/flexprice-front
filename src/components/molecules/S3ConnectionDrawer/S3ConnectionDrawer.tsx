@@ -65,17 +65,21 @@ const S3ConnectionDrawer: FC<S3ConnectionDrawerProps> = ({ isOpen, onOpenChange,
 
 	const validateForm = (): boolean => {
 		const newErrors: ValidationErrors = {};
+		const isEditMode = !!connection;
 
 		if (!formData.name.trim()) {
 			newErrors.name = 'Connection name is required';
 		}
 
-		if (!formData.aws_access_key_id.trim()) {
-			newErrors.aws_access_key_id = 'AWS Access Key ID is required';
-		}
+		// Only require AWS credentials when creating a new connection
+		if (!isEditMode) {
+			if (!formData.aws_access_key_id.trim()) {
+				newErrors.aws_access_key_id = 'AWS Access Key ID is required';
+			}
 
-		if (!formData.aws_secret_access_key.trim()) {
-			newErrors.aws_secret_access_key = 'AWS Secret Access Key is required';
+			if (!formData.aws_secret_access_key.trim()) {
+				newErrors.aws_secret_access_key = 'AWS Secret Access Key is required';
+			}
 		}
 
 		setErrors(newErrors);
@@ -153,33 +157,37 @@ const S3ConnectionDrawer: FC<S3ConnectionDrawerProps> = ({ isOpen, onOpenChange,
 					description='A descriptive name for this S3 connection'
 				/>
 
-				<Input
-					label='AWS Access Key ID'
-					placeholder='Enter AWS Access Key ID'
-					value={formData.aws_access_key_id}
-					onChange={(value) => handleChange('aws_access_key_id', value)}
-					error={errors.aws_access_key_id}
-					description='Your AWS Access Key ID'
-				/>
+				{!connection && (
+					<>
+						<Input
+							label='AWS Access Key ID'
+							placeholder='Enter AWS Access Key ID'
+							value={formData.aws_access_key_id}
+							onChange={(value) => handleChange('aws_access_key_id', value)}
+							error={errors.aws_access_key_id}
+							description='Your AWS Access Key ID'
+						/>
 
-				<Input
-					label='AWS Secret Access Key'
-					placeholder='Enter AWS Secret Access Key'
-					type='password'
-					value={formData.aws_secret_access_key}
-					onChange={(value) => handleChange('aws_secret_access_key', value)}
-					error={errors.aws_secret_access_key}
-					description='Your AWS Secret Access Key'
-				/>
+						<Input
+							label='AWS Secret Access Key'
+							placeholder='Enter AWS Secret Access Key'
+							type='password'
+							value={formData.aws_secret_access_key}
+							onChange={(value) => handleChange('aws_secret_access_key', value)}
+							error={errors.aws_secret_access_key}
+							description='Your AWS Secret Access Key'
+						/>
 
-				<Input
-					label='AWS Session Token (Optional)'
-					placeholder='Enter AWS Session Token'
-					type='password'
-					value={formData.aws_session_token}
-					onChange={(value) => handleChange('aws_session_token', value)}
-					description='Required only for temporary credentials'
-				/>
+						<Input
+							label='AWS Session Token (Optional)'
+							placeholder='Enter AWS Session Token'
+							type='password'
+							value={formData.aws_session_token}
+							onChange={(value) => handleChange('aws_session_token', value)}
+							description='Required only for temporary credentials'
+						/>
+					</>
+				)}
 
 				<div className='bg-blue-50 border border-blue-200 rounded-lg p-4'>
 					<h4 className='font-medium text-blue-900 mb-2'>Security Note</h4>

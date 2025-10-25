@@ -19,12 +19,12 @@ const TaskRunsTable: FC<TaskRunsTableProps> = ({ scheduledTaskId, taskType = 'EX
 	// Reset pagination when filters change
 	useEffect(() => {
 		reset();
-	}, [statusFilter, dateRangeFilter]);
+	}, [statusFilter, dateRangeFilter, reset]);
 
 	const { data: runsResponse, isLoading } = useQuery({
-		queryKey: ['task-runs', scheduledTaskId, taskType, statusFilter, dateRangeFilter, page],
+		queryKey: ['task-runs', scheduledTaskId, taskType, statusFilter, page],
 		queryFn: () => {
-			const params: any = {
+			const params: Record<string, string | number> = {
 				scheduled_task_id: scheduledTaskId,
 				task_type: taskType,
 				limit,
@@ -40,7 +40,6 @@ const TaskRunsTable: FC<TaskRunsTableProps> = ({ scheduledTaskId, taskType = 'EX
 	});
 
 	const runs = runsResponse?.items || [];
-	const totalItems = runsResponse?.pagination?.total || 0;
 
 	// Filter by date range on client side
 	const filteredRuns = runs.filter((run) => {
@@ -71,6 +70,9 @@ const TaskRunsTable: FC<TaskRunsTableProps> = ({ scheduledTaskId, taskType = 'EX
 				return true;
 		}
 	});
+
+	// Use filtered data total when date filtering is active, otherwise use server total
+	const totalItems = dateRangeFilter === 'all' ? runsResponse?.pagination?.total || 0 : filteredRuns.length;
 
 	const getStatusChip = (status: string) => {
 		const statusLower = status.toLowerCase();
@@ -194,8 +196,8 @@ const TaskRunsTable: FC<TaskRunsTableProps> = ({ scheduledTaskId, taskType = 'EX
 				<div className='text-center py-8 text-gray-500'>No task runs found for the selected filters.</div>
 			)}
 
-			{/* Pagination */}
-			{totalItems > 0 && (
+			{/* Pagination - only show when not using date filtering */}
+			{totalItems > 0 && dateRangeFilter === 'all' && (
 				<>
 					<Spacer className='!h-4' />
 					<ShortPagination unit='Task Runs' totalItems={totalItems} />

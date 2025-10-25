@@ -1,12 +1,14 @@
 import { AxiosClient } from '@/core/axios/verbs';
 import { generateQueryParams } from '@/utils/common/api_helper';
 
+export type ScheduledEntityType = 'events' | 'invoices';
+
 export interface ScheduledTask {
 	id: string;
 	tenant_id: string;
 	environment_id: string;
 	connection_id: string;
-	entity_type: string;
+	entity_type: ScheduledEntityType;
 	interval: 'hourly' | 'daily';
 	enabled: boolean;
 	job_config: {
@@ -42,7 +44,7 @@ export interface GetScheduledTasksResponse {
 
 export interface CreateScheduledTaskPayload {
 	connection_id: string;
-	entity_type: 'events' | 'invoices';
+	entity_type: ScheduledEntityType;
 	interval: 'hourly' | 'daily';
 	enabled: boolean;
 	job_config: {

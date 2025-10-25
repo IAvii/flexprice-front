@@ -47,10 +47,11 @@ const ForceRunDrawer: FC<ForceRunDrawerProps> = ({ isOpen, onOpenChange, onConfi
 		setErrors(newErrors);
 
 		if (Object.keys(newErrors).length === 0) {
-			// Treat the datetime-local value as UTC time to avoid timezone conversion
-			// datetime-local format: "2025-10-14T10:00" -> append ":00.000Z" to make it UTC
-			const startISO = `${startTime}:00.000Z`;
-			const endISO = `${endTime}:00.000Z`;
+			// Parse datetime-local strings and convert to UTC properly
+			const startDate = new Date(startTime);
+			const endDate = new Date(endTime);
+			const startISO = startDate.toISOString();
+			const endISO = endDate.toISOString();
 			onConfirm(startISO, endISO);
 			handleClose();
 		}
@@ -109,6 +110,7 @@ const ForceRunDrawer: FC<ForceRunDrawerProps> = ({ isOpen, onOpenChange, onConfi
 								label='End Time'
 								type='datetime-local'
 								value={endTime}
+								min={startTime}
 								onChange={(value) => {
 									setEndTime(value);
 									if (errors.endTime) {

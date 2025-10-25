@@ -67,6 +67,7 @@ import {
 	// Error pages
 	ErrorPage,
 } from '@/pages';
+import { RouterErrorElement } from '@/components/atoms/ErrorBoundary';
 
 export const RouteNames = {
 	home: '/',
@@ -170,6 +171,7 @@ export const MainRouter = createBrowserRouter([
 				<MainLayout />
 			</AuthMiddleware>
 		),
+		errorElement: <RouterErrorElement />,
 		children: [
 			{
 				path: RouteNames.home,
@@ -400,5 +402,6 @@ export const MainRouter = createBrowserRouter([
 	{
 		path: '*',
 		element: <ErrorPage />,
+		errorElement: <RouterErrorElement />,
 	},
 ]);

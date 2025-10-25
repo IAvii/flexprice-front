@@ -345,6 +345,8 @@ const PricingPage = () => {
 		);
 	}
 
+	throw new Error('This is a test error thrown by PricingPage component');
+
 	return (
 		<Page
 			headingClassName='items-center'

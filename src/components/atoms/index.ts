@@ -73,3 +73,6 @@ export { default as PaymentUrlSuccessDialog } from './PaymentUrlSuccessDialog';
 
 // New billing tier components
 export { default as DecimalUsageInput } from './DecimalUsageInput';
+
+// Error Boundary
+export { default as ErrorBoundary } from './ErrorBoundary';

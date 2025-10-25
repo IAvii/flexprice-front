@@ -96,6 +96,10 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 					title: 'Bulk Imports',
 					url: RouteNames.bulkImports,
 				},
+				{
+					title: 'Exports',
+					url: RouteNames.exports,
+				},
 			],
 		},
 	];

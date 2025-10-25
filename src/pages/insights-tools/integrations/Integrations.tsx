@@ -23,15 +23,18 @@ const Integrations = () => {
 		(integration) =>
 			!linkedinIntegration?.providers?.some((provider) => provider.toLowerCase() === integration.name.toLowerCase()) &&
 			integration.type === 'available' &&
-			!integration.premium,
+			!integration.premium &&
+			!integration.tags.includes('Data Pipelines'),
 	);
 
 	const availablePremium = integrations.filter(
 		(integration) =>
 			!linkedinIntegration?.providers?.some((provider) => provider.toLowerCase() === integration.name.toLowerCase()) &&
 			integration.type === 'available' &&
-			integration.premium,
+			integration.premium &&
+			!integration.tags.includes('Data Pipelines'),
 	);
+
 	if (isLoading) {
 		return <Loader />;
 	}

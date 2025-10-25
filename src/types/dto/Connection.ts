@@ -20,10 +20,14 @@ export interface CreateConnectionPayload {
 	encrypted_secret_data: {
 		account_id?: string;
 		publishable_key?: string;
-		secret_key: string;
-		webhook_secret: string;
+		secret_key?: string;
+		webhook_secret?: string;
+		// S3 specific fields
+		aws_access_key_id?: string;
+		aws_secret_access_key?: string;
+		aws_session_token?: string;
 	};
-	sync_config: {
+	sync_config?: {
 		plan: {
 			inbound: boolean;
 			outbound: boolean;

@@ -73,6 +73,7 @@ const ImportExport = () => {
 		queryKey: ['importTasks', page],
 		queryFn: async () => {
 			return await TaskApi.getAllTasks({
+				task_type: 'IMPORT',
 				limit,
 				offset,
 			});

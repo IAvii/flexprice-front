@@ -10,6 +10,7 @@ export interface Connection extends BaseModel {
 
 export enum CONNECTION_PROVIDER_TYPE {
 	STRIPE = 'stripe',
+	S3 = 's3',
 	// Add more providers as needed
 }
 

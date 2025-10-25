@@ -26,6 +26,11 @@ import FeaturesPage from '@/pages/product-catalog/features/Features';
 import ImportExport from '@/pages/customer/import-export/ImportExport';
 import Integrations from '@/pages/insights-tools/integrations/Integrations';
 import IntegrationDetails from '@/pages/insights-tools/integrations/IntegrationDetails';
+import Exports from '@/pages/insights-tools/exports/Exports';
+import S3Exports from '@/pages/insights-tools/exports/S3Exports';
+import ExportManagement from '@/pages/insights-tools/exports/ExportManagement';
+import ExportDetails from '@/pages/insights-tools/exports/ExportDetails';
+import TaskRunsPage from '@/pages/insights-tools/exports/TaskRunsPage';
 import FeatureDetails from '@/pages/product-catalog/features/FeatureDetails';
 import AddOn from '@/pages/product-catalog/addons/AddOn';
 import AddonsPage from '@/pages/product-catalog/addons/Addons';
@@ -105,6 +110,11 @@ export const RouteNames = {
 	bulkImports: '/tools/bulk-imports',
 	integrations: '/tools/integrations',
 	integrationDetails: '/tools/integrations',
+	exports: '/tools/exports',
+	s3Exports: '/tools/exports/s3',
+	s3ExportManagement: '/tools/exports/s3/:connectionId/export',
+	s3ExportDetails: '/tools/exports/s3/:connectionId/export/:exportId',
+	s3TaskRuns: '/tools/exports/s3/:connectionId/export/:exportId/runs',
 
 	// footer
 	developers: '/developers',
@@ -228,6 +238,26 @@ export const MainRouter = createBrowserRouter([
 					{
 						path: `${RouteNames.integrationDetails}/:id`,
 						element: <IntegrationDetails />,
+					},
+					{
+						path: RouteNames.exports,
+						element: <Exports />,
+					},
+					{
+						path: RouteNames.s3Exports,
+						element: <S3Exports />,
+					},
+					{
+						path: RouteNames.s3ExportManagement,
+						element: <ExportManagement />,
+					},
+					{
+						path: RouteNames.s3ExportDetails,
+						element: <ExportDetails />,
+					},
+					{
+						path: RouteNames.s3TaskRuns,
+						element: <TaskRunsPage />,
 					},
 				],
 			},

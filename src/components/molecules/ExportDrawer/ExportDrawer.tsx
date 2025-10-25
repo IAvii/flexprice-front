@@ -185,7 +185,7 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 						error={errors.entity_type}
 						options={[
 							{ value: 'events', label: 'Events' },
-							{ value: 'invoice', label: 'Invoice' },
+							{ value: 'invoices', label: 'Invoices' },
 						]}
 					/>
 					<p className='text-xs text-gray-500 mt-1'>Select the type of data to export</p>

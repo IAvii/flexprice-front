@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useBreadcrumbsStore } from '@/store/useBreadcrumbsStore';
-import { Card, CardHeader, Loader, FeatureMultiSelect, Input, Button, DateTimePicker, Select } from '@/components/atoms';
+import { Card, Loader, FeatureMultiSelect, Input, Button, DateTimePicker, Select } from '@/components/atoms';
 import CustomerApi from '@/api/CustomerApi';
 import toast from 'react-hot-toast';
 import EventsApi from '@/api/EventsApi';
@@ -10,6 +10,7 @@ import Feature from '@/models/Feature';
 import { RefreshCw } from 'lucide-react';
 import { GetUsageAnalyticsRequest } from '@/types/dto';
 import { WindowSize } from '@/models';
+import CustomerUsageChart from '@/components/molecules/CustomerUsageChart';
 
 const windowSizeOptions = [
 	{ label: 'Minute', value: WindowSize.MINUTE },
@@ -147,45 +148,93 @@ const CustomerUsageTab = () => {
 
 	return (
 		<div className='space-y-6'>
-			{/* Filter Section */}
-			<div>
-				<div className=''>
-					<div className='flex items-end justify-between gap-2'>
-						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4'>
-							<FeatureMultiSelect
-								label='Features'
-								placeholder='Select features to filter'
-								values={selectedFeatures.map((f) => f.id)}
-								onChange={setSelectedFeatures}
-							/>
-							<Input label='Sources' placeholder='Enter sources (comma-separated)' value={sources} onChange={setSources} />
-							<DateTimePicker
-								title='Start Date'
-								date={startDate}
-								setDate={handleStartDateChange}
-								placeholder='Select start date and time'
-							/>
-							<DateTimePicker title='End Date' date={endDate} setDate={handleEndDateChange} placeholder='Select end date and time' />
-							<Select
-								label='Window Size'
-								className='w-full'
-								onChange={(value) => setWindowSize(value as WindowSize)}
-								value={windowSize}
-								options={windowSizeOptions.map((option) => ({ label: option.label, value: option.value }))}
-							/>
+			{/* Usage Data Display with Filters */}
+			<Card className='overflow-visible'>
+				<div className='p-6 pb-0'>
+					<div className='flex flex-col space-y-4'>
+						<div className='flex items-center justify-between'>
+							<h3 className='text-lg font-medium text-gray-900'>Usage Analytics</h3>
+							<div className='flex items-center space-x-2'>
+								<Button variant='ghost' size='sm' onClick={resetFilters} className='h-8 px-2 text-xs text-gray-500 hover:text-gray-700'>
+									<RefreshCw className='h-3.5 w-3.5 mr-1' />
+									Reset
+								</Button>
+							</div>
 						</div>
-						<Button variant='outline' onClick={resetFilters} size='icon'>
-							<RefreshCw className='size-9' />
-						</Button>
+
+						{/* Compact Filter Section */}
+						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 pb-4 border-b border-gray-100'>
+							<div className='col-span-1 lg:col-span-2'>
+								<FeatureMultiSelect
+									label='Features'
+									placeholder='Select features'
+									values={selectedFeatures.map((f) => f.id)}
+									onChange={setSelectedFeatures}
+									className='text-sm'
+								/>
+							</div>
+							<div className='col-span-1'>
+								<Input label='Sources' placeholder='Enter sources' value={sources} onChange={setSources} className='text-sm' />
+							</div>
+							<div className='col-span-1'>
+								<Select
+									label='Window Size'
+									className='w-full text-sm'
+									onChange={(value) => setWindowSize(value as WindowSize)}
+									value={windowSize}
+									options={windowSizeOptions.map((option) => ({ label: option.label, value: option.value }))}
+								/>
+							</div>
+						</div>
+
+						{/* Date Range Selection */}
+						<div className='flex flex-wrap items-center gap-3 pb-4'>
+							<div className='flex items-center gap-2'>
+								<DateTimePicker title='From' date={startDate} setDate={handleStartDateChange} placeholder='Start date' />
+								<span className='text-gray-400 flex items-center px-2'>→</span>
+								<DateTimePicker title='To' date={endDate} setDate={handleEndDateChange} placeholder='End date' />
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			{/* Usage Data Display */}
-			<Card>
-				<CardHeader title='Usage Analytics' />
-				<div className='p-6'>
-					<pre className='bg-gray-50 p-4 rounded-md overflow-auto text-sm'>{JSON.stringify(usageData, null, 2)}</pre>
+				{/* Chart Display */}
+				<div className='px-2'>
+					{usageData ? (
+						<CustomerUsageChart
+							data={usageData}
+							title={`${customer?.name || 'Customer'} Usage`}
+							description={`Data from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`}
+							className='border-0 shadow-none'
+						/>
+					) : (
+						<div className='flex items-center justify-center h-[400px] text-center text-muted-foreground'>
+							{usageLoading ? (
+								<div className='flex flex-col items-center gap-2'>
+									<Loader />
+									<span>Loading usage data...</span>
+								</div>
+							) : (
+								<div className='flex flex-col items-center gap-2'>
+									<svg
+										xmlns='http://www.w3.org/2000/svg'
+										width='24'
+										height='24'
+										viewBox='0 0 24 24'
+										fill='none'
+										stroke='currentColor'
+										strokeWidth='2'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										className='text-gray-300'>
+										<path d='M3 3v18h18'></path>
+										<path d='m19 9-5 5-4-4-3 3'></path>
+									</svg>
+									<span>No usage data available</span>
+								</div>
+							)}
+						</div>
+					)}
 				</div>
 			</Card>
 		</div>

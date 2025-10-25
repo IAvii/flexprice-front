@@ -38,7 +38,6 @@ import {
 	AddFeature as AddFeaturePage,
 	Features as FeaturesPage,
 	FeatureDetails,
-	AddOn,
 	Addons as AddonsPage,
 	AddonDetails as AddonDetailsPage,
 	AddonCharges as AddonChargesPage,
@@ -112,7 +111,6 @@ export const RouteNames = {
 	couponDetails: '/product-catalog/coupons',
 
 	// add on routes
-	addOn: '/product-catalog/add-on',
 	addons: '/product-catalog/addons',
 	addonDetails: '/product-catalog/addons',
 	addonCharges: '/product-catalog/addons/:addonId/add-charges',
@@ -204,10 +202,6 @@ export const MainRouter = createBrowserRouter([
 					{
 						path: `${RouteNames.featureDetails}/:id`,
 						element: <FeatureDetails />,
-					},
-					{
-						path: RouteNames.addOn,
-						element: <AddOn />,
 					},
 					{
 						path: RouteNames.addons,

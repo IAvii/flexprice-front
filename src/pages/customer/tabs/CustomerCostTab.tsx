@@ -256,7 +256,7 @@ const CostDataTable: React.FC<{ items: CostAnalyticItem[] }> = ({ items }) => {
 	// Define table columns
 	const columns: ColumnData<CostAnalyticItem>[] = [
 		{
-			title: 'Meter Name',
+			title: 'Cost Attribute',
 			render: (row: CostAnalyticItem) => {
 				return <span>{row.meter_name || row.meter?.name || row.meter_id}</span>;
 			},

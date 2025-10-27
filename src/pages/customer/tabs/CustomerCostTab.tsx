@@ -2,16 +2,13 @@ import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useBreadcrumbsStore } from '@/store/useBreadcrumbsStore';
-import { Card, Loader, Button, DateRangePicker, FeatureMultiSelect } from '@/components/atoms';
+import { Card, Loader, DateRangePicker, FeatureMultiSelect } from '@/components/atoms';
 import CustomerApi from '@/api/CustomerApi';
 import toast from 'react-hot-toast';
-import CostAnalyticsApi from '@/api/CostAnalyticsApi';
-import { RefreshCw } from 'lucide-react';
-import { GetCombinedAnalyticsRequest } from '@/types/dto/CostAnalytics';
+import CostSheetApi from '@/api/CostSheetApi';
+import { GetCostAnalyticsRequest } from '@/types/dto/Cost';
 import Feature from '@/models/Feature';
-import { WindowSize } from '@/models';
 import { formatNumber } from '@/utils/common';
-import { isCombinedAnalytics } from '@/utils/cost-analytics';
 import { CostDataTable } from '@/components/molecules/CostDataTable';
 
 const CustomerCostTab = () => {
@@ -37,16 +34,13 @@ const CustomerCostTab = () => {
 	});
 
 	// Prepare API parameters
-	const apiParams: GetCombinedAnalyticsRequest | null = useMemo(() => {
+	const apiParams: GetCostAnalyticsRequest | null = useMemo(() => {
 		if (!customer?.external_id) {
 			return null;
 		}
 
-		const params: GetCombinedAnalyticsRequest = {
+		const params: GetCostAnalyticsRequest = {
 			external_customer_id: customer.external_id,
-			include_time_series: true,
-			include_revenue: true,
-			window_size: WindowSize.HOUR,
 		};
 
 		if (selectedFeatures.length > 0) {
@@ -65,7 +59,7 @@ const CustomerCostTab = () => {
 	}, [customer?.external_id, selectedFeatures, startDate, endDate]);
 
 	// Debounced API parameters with 300ms delay
-	const [debouncedApiParams, setDebouncedApiParams] = useState<GetCombinedAnalyticsRequest | null>(null);
+	const [debouncedApiParams, setDebouncedApiParams] = useState<GetCostAnalyticsRequest | null>(null);
 
 	useEffect(() => {
 		if (apiParams) {
@@ -86,7 +80,7 @@ const CustomerCostTab = () => {
 	} = useQuery({
 		queryKey: ['cost-analytics', customerId, debouncedApiParams],
 		queryFn: async () => {
-			return await CostAnalyticsApi.getCombinedAnalytics(debouncedApiParams ?? { include_revenue: true });
+			return await CostSheetApi.GetCostAnalytics(debouncedApiParams ?? {});
 		},
 		enabled: !!debouncedApiParams,
 	});
@@ -95,12 +89,6 @@ const CustomerCostTab = () => {
 		updateBreadcrumb(4, 'Cost Analytics');
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	const resetFilters = () => {
-		setSelectedFeatures([]);
-		setStartDate(new Date(new Date().setDate(new Date().getDate() - 7)));
-		setEndDate(new Date());
-	};
 
 	if (customerLoading) {
 		return <Loader />;
@@ -143,9 +131,6 @@ const CustomerCostTab = () => {
 					placeholder='Select date range'
 					title='Date Range'
 				/>
-				<Button variant='ghost' onClick={resetFilters} className='h-10 w-10 p-0' title='Reset filters'>
-					<RefreshCw className='h-4 w-4' />
-				</Button>
 			</div>
 
 			{/* Summary Metrics */}
@@ -156,58 +141,55 @@ const CustomerCostTab = () => {
 			) : (
 				costData &&
 				(() => {
-					const revenue = isCombinedAnalytics(costData) ? costData.total_revenue : '0';
-					const margin = isCombinedAnalytics(costData) ? costData.margin : '0';
-					const marginPercent = isCombinedAnalytics(costData) ? costData.margin_percent : '0';
-					const roi = isCombinedAnalytics(costData) ? costData.roi : '0';
-					const roiPercent = isCombinedAnalytics(costData) ? costData.roi_percent : '0';
+					const totalRevenue = parseFloat(costData.total_revenue || '0');
+					const totalCost = parseFloat(costData.total_cost || '0');
+					const margin = parseFloat(costData.margin || '0');
+					const marginPercent = parseFloat(costData.margin_percent || '0');
+					const roi = parseFloat(costData.roi || '0');
+					const roiPercent = parseFloat(costData.roi_percent || '0');
 
-					const marginValue = parseFloat(margin || '0');
-					const roiValue = parseFloat(roi || '0');
-					const marginTextClass = marginValue >= 0 ? 'text-green-600' : 'text-red-600';
-					const roiTextClass = roiValue >= 0 ? 'text-green-600' : 'text-red-600';
+					const marginColorClass = margin >= 0 ? 'text-green-600' : 'text-red-600';
+					const roiColorClass = roi >= 0 ? 'text-green-600' : 'text-red-600';
 
 					return (
 						<div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-							{/* Revenue Card */}
+							{/* Total Revenue Card */}
 							<div className='bg-white border border-gray-200 p-6'>
-								<p className='text-sm text-gray-600 font-normal mb-2'>Revenue</p>
+								<p className='text-sm text-gray-600 font-normal mb-2'>Total Revenue</p>
 								<p className='text-xl font-semibold text-gray-900'>
-									{formatNumber(parseFloat(revenue || '0'), 2)} {costData.currency}
+									{formatNumber(totalRevenue, 2)} {costData.currency}
 								</p>
 							</div>
 
-							{/* Cost Card */}
+							{/* Total Cost Card */}
 							<div className='bg-white border border-gray-200 p-6'>
-								<p className='text-sm text-gray-600 font-normal mb-2'>Cost</p>
+								<p className='text-sm text-gray-600 font-normal mb-2'>Total Cost</p>
 								<p className='text-xl font-semibold text-gray-900'>
-									{formatNumber(parseFloat(costData.total_cost || '0'), 2)} {costData.currency}
+									{formatNumber(totalCost, 2)} {costData.currency}
 								</p>
 							</div>
 
 							{/* Margin Card */}
 							<div className='bg-white border border-gray-200 p-6 relative'>
-								<div
-									className={`absolute top-3 right-3 ${marginValue >= 0 ? 'text-green-600' : 'text-red-600'} text-xs font-medium px-2 py-1 flex items-center gap-1`}>
-									<span>{marginValue >= 0 ? '↑' : '↓'}</span>
-									<span>{formatNumber(parseFloat(marginPercent || '0'), 2)}%</span>
+								<div className={`absolute top-3 right-3 ${marginColorClass} text-xs font-medium px-2 py-1 flex items-center gap-1`}>
+									<span>{margin >= 0 ? '↑' : '↓'}</span>
+									<span>{formatNumber(Math.abs(marginPercent), 2)}%</span>
 								</div>
 								<p className='text-sm text-gray-600 font-normal mb-2'>Margin</p>
-								<p className={`text-xl font-semibold ${marginTextClass}`}>
-									{formatNumber(marginValue, 2)} {costData.currency}
+								<p className={`text-xl font-semibold ${marginColorClass}`}>
+									{formatNumber(margin, 2)} {costData.currency}
 								</p>
 							</div>
 
 							{/* ROI Card */}
 							<div className='bg-white border border-gray-200 p-6 relative'>
-								<div
-									className={`absolute top-3 right-3 ${roiValue >= 0 ? 'text-green-600' : 'text-red-600'} text-xs font-medium px-2 py-1 flex items-center gap-1`}>
-									<span>{roiValue >= 0 ? '↑' : '↓'}</span>
-									<span>{formatNumber(parseFloat(roiPercent || '0'), 2)}%</span>
+								<div className={`absolute top-3 right-3 ${roiColorClass} text-xs font-medium px-2 py-1 flex items-center gap-1`}>
+									<span>{roi >= 0 ? '↑' : '↓'}</span>
+									<span>{formatNumber(Math.abs(roiPercent), 2)}%</span>
 								</div>
 								<p className='text-sm text-gray-600 font-normal mb-2'>ROI</p>
-								<p className={`text-xl font-semibold ${roiTextClass}`}>
-									{formatNumber(roiValue, 2)} {costData.currency}
+								<p className={`text-xl font-semibold ${roiColorClass}`}>
+									{formatNumber(roi, 2)} {costData.currency}
 								</p>
 							</div>
 						</div>

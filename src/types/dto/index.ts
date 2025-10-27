@@ -24,11 +24,10 @@ export type {
 export type {
 	GetCostAnalyticsRequest,
 	GetCostAnalyticsResponse,
-	GetCombinedAnalyticsRequest,
-	GetCombinedAnalyticsResponse,
+	GetDetailedCostAnalyticsResponse,
 	CostAnalyticItem,
 	CostPoint,
-} from './CostAnalytics';
+} from './Cost';
 
 export type { GetTasksPayload, GetTasksResponse, AddTaskPayload } from './Task';
 

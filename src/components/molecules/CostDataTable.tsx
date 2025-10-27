@@ -1,8 +1,7 @@
 import React from 'react';
 import FlexpriceTable, { ColumnData } from '@/components/molecules/Table';
-import { CostAnalyticItem } from '@/types/dto/CostAnalytics';
+import { CostAnalyticItem } from '@/types/dto/Cost';
 import { formatNumber } from '@/utils/common';
-import { createStableId } from '@/utils/cost-analytics';
 
 interface CostDataTableProps {
 	items: CostAnalyticItem[];
@@ -38,7 +37,11 @@ export const CostDataTable: React.FC<CostDataTableProps> = ({ items }) => {
 	// Prepare data for the table with stable IDs
 	const tableData = items.map((item) => ({
 		...item,
-		id: createStableId(item),
+		// Use meter_id as primary key, fallback to generated ID from stable fields
+		id:
+			item.meter_id ||
+			`item-${[item.meter_name, item.source, item.customer_id || item.external_customer_id, item.price_id].filter(Boolean).join('-')}` ||
+			'unknown-item',
 	}));
 
 	return (

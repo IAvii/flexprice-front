@@ -2,12 +2,11 @@ import { useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useBreadcrumbsStore } from '@/store/useBreadcrumbsStore';
-import { Card, Loader, FeatureMultiSelect, Button, DateRangePicker } from '@/components/atoms';
+import { Card, Loader, FeatureMultiSelect, DateRangePicker } from '@/components/atoms';
 import CustomerApi from '@/api/CustomerApi';
 import toast from 'react-hot-toast';
 import EventsApi from '@/api/EventsApi';
 import Feature from '@/models/Feature';
-import { RefreshCw } from 'lucide-react';
 import { GetUsageAnalyticsRequest } from '@/types/dto';
 import { WindowSize } from '@/models';
 import CustomerUsageChart from '@/components/molecules/CustomerUsageChart';
@@ -97,12 +96,6 @@ const CustomerUsageTab = () => {
 		updateBreadcrumb(4, 'Usage');
 	}, [updateBreadcrumb]);
 
-	const resetFilters = () => {
-		setSelectedFeatures([]);
-		setStartDate(new Date(new Date().setDate(new Date().getDate() - 7)));
-		setEndDate(new Date());
-	};
-
 	if (customerLoading) {
 		return <Loader />;
 	}
@@ -126,79 +119,59 @@ const CustomerUsageTab = () => {
 
 	return (
 		<div className='space-y-6'>
-			{/* Usage Data Display with Filters */}
-			<Card className='overflow-visible'>
-				<div className='p-6 pb-0'>
-					<div className='flex flex-col space-y-4'>
-						<div className='flex items-center justify-between'>
-							<h3 className='text-lg font-medium text-gray-900'>Usage Analytics</h3>
-						</div>
+			<h3 className='text-lg font-medium text-gray-900 mb-8'>Usage Analytics</h3>
 
-						{/* Filters in single line */}
-						<div className='flex flex-wrap items-end gap-3 pb-4 border-b border-gray-100'>
-							<div className='flex-1 min-w-[200px] max-w-md'>
-								<FeatureMultiSelect
-									label='Features'
-									placeholder='Select features'
-									values={selectedFeatures.map((f) => f.id)}
-									onChange={setSelectedFeatures}
-									className='text-sm'
-								/>
-							</div>
-							<DateRangePicker
-								startDate={startDate}
-								endDate={endDate}
-								onChange={handleDateRangeChange}
-								placeholder='Select date range'
-								title='Date Range'
-							/>
-							<Button variant='ghost' onClick={resetFilters} className='h-10 w-10 p-0' title='Reset filters'>
-								<RefreshCw className='h-4 w-4' />
-							</Button>
-						</div>
+			{/* Filters Section */}
+			<div className='flex flex-wrap items-end gap-3'>
+				<div className='flex-1 min-w-[200px] max-w-md'>
+					<FeatureMultiSelect
+						label='Features'
+						placeholder='Select features'
+						values={selectedFeatures.map((f) => f.id)}
+						onChange={setSelectedFeatures}
+						className='text-sm'
+					/>
+				</div>
+				<DateRangePicker
+					startDate={startDate}
+					endDate={endDate}
+					onChange={handleDateRangeChange}
+					placeholder='Select date range'
+					title='Date Range'
+				/>
+			</div>
+
+			{/* Chart Display */}
+			{usageLoading ? (
+				<div className='flex items-center justify-center py-12'>
+					<Loader />
+				</div>
+			) : (
+				usageData && (
+					<div>
+						<CustomerUsageChart data={usageData} />
 					</div>
-				</div>
-
-				{/* Chart Display */}
-				<div className='px-2'>
-					{usageData ? (
-						<CustomerUsageChart data={usageData} className='border-0 shadow-none' />
-					) : (
-						<div className='flex items-center justify-center h-[400px] text-center text-muted-foreground'>
-							{usageLoading ? (
-								<div className='flex flex-col items-center gap-2'>
-									<Loader />
-									<span>Loading usage data...</span>
-								</div>
-							) : (
-								<div className='flex flex-col items-center gap-2'>
-									<svg
-										xmlns='http://www.w3.org/2000/svg'
-										width='24'
-										height='24'
-										viewBox='0 0 24 24'
-										fill='none'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-										className='text-gray-300'>
-										<path d='M3 3v18h18'></path>
-										<path d='m19 9-5 5-4-4-3 3'></path>
-									</svg>
-									<span>No usage data available</span>
-								</div>
-							)}
-						</div>
-					)}
-				</div>
-			</Card>
+				)
+			)}
 
 			{/* Usage Data Table */}
-			{usageData && (
-				<div className='mt-6 '>
-					<UsageDataTable items={usageData.items} />
+			{usageLoading ? (
+				<div className='mt-6'>
+					<h1 className='text-lg font-medium text-gray-900 mb-4'>Usage Breakdown</h1>
+					<Card>
+						<div className='p-12'>
+							<div className='flex items-center justify-center'>
+								<Loader />
+							</div>
+						</div>
+					</Card>
 				</div>
+			) : (
+				usageData && (
+					<div className='mt-6'>
+						<UsageDataTable items={usageData.items} />
+					</div>
+				)
 			)}
 		</div>
 	);

@@ -1,25 +1,15 @@
 import { Meter, Price, Pagination } from '@/models';
-import { WindowSize } from '@/models/Analytics';
 
 export interface GetCostAnalyticsRequest {
 	// Time range fields (optional - defaults to last 7 days if not provided)
 	start_time?: string;
 	end_time?: string;
 
-	// Optional filters - at least one of these should be provided
-	costsheet_v2_id?: string; // Optional - for specific costsheet
+	// Optional filters
 	external_customer_id?: string; // Optional - for specific customer
 
 	// Additional filters
 	meter_ids?: string[];
-	sources?: string[];
-	window_size?: WindowSize; // For time-series
-	group_by?: string[]; // "meter_id", "source", "customer_id"
-	property_filters?: Record<string, string[]>;
-
-	// Additional options
-	include_time_series?: boolean;
-	include_breakdown?: boolean;
 
 	// Expand options - specify which entities to expand
 	expand?: string[]; // "meter", "price"
@@ -85,20 +75,16 @@ export interface GetCostAnalyticsResponse {
 	pagination?: Pagination;
 }
 
-export interface GetCombinedAnalyticsRequest extends GetCostAnalyticsRequest {
-	// Revenue analytics options
-	include_revenue: boolean;
-}
-
-export interface GetCombinedAnalyticsResponse {
+// GetDetailedCostAnalyticsResponse represents the response for combined cost and revenue analytics
+export interface GetDetailedCostAnalyticsResponse {
 	// Cost analytics array (flattened from nested structure)
 	cost_analytics: CostAnalyticItem[];
 
 	// Derived metrics
 	total_revenue: string; // decimal.Decimal represented as string
 	total_cost: string; // decimal.Decimal represented as string
-	total_quantity?: string; // decimal.Decimal represented as string
-	total_events?: number;
+	total_quantity?: string; // decimal.Decimal represented as string (optional - may not always be available)
+	total_events?: number; // optional - may not always be available
 	margin: string; // decimal.Decimal represented as string (Revenue - Cost)
 	margin_percent: string; // decimal.Decimal represented as string ((Margin / Revenue) * 100)
 	roi: string; // decimal.Decimal represented as string ((Revenue - Cost) / Cost)

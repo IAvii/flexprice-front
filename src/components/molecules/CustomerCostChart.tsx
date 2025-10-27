@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { GetCostAnalyticsResponse, GetCombinedAnalyticsResponse } from '@/types/dto/CostAnalytics';
+import { GetCostAnalyticsResponse } from '@/types/dto/Cost';
 
 interface CustomerCostChartProps {
-	data: GetCostAnalyticsResponse | GetCombinedAnalyticsResponse;
+	data: GetCostAnalyticsResponse;
 	title?: string;
 	description?: string;
 	className?: string;

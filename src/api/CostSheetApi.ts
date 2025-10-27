@@ -9,9 +9,10 @@ import {
 	GetCostSheetsByFilterPayload,
 	CostSheetResponse,
 } from '@/types/dto';
+import { GetCostAnalyticsRequest, GetDetailedCostAnalyticsResponse } from '@/types/dto/Cost';
 
 class CostSheetApi {
-	private static baseUrl = '/costsheets';
+	private static baseUrl = '/costs';
 
 	public static async ListCostSheets(payload: GetCostSheetsPayload = {}): Promise<GetCostSheetsResponse> {
 		const url = generateQueryParams(this.baseUrl, {
@@ -43,6 +44,21 @@ class CostSheetApi {
 
 	public static async GetCostSheetsByFilter(payload: GetCostSheetsByFilterPayload) {
 		return await AxiosClient.post<GetCostSheetsResponse, GetCostSheetsByFilterPayload>(`${this.baseUrl}/search`, payload);
+	}
+
+	public static async GetActiveCostSheetForTenant() {
+		return await AxiosClient.get<CostSheetResponse>(`${this.baseUrl}/active`);
+	}
+
+	/**
+	 * Get detailed cost analytics for customers and costsheets
+	 * @Summary Get combined revenue and cost analytics
+	 * @Description Retrieve combined analytics with ROI, margin, and detailed breakdowns. If start_time and end_time are not provided, defaults to last 7 days.
+	 * @param payload Cost analytics request (start_time/end_time optional - defaults to last 7 days)
+	 * @returns Detailed cost analytics response with revenue, margin, ROI
+	 */
+	public static async GetCostAnalytics(payload: GetCostAnalyticsRequest): Promise<GetDetailedCostAnalyticsResponse> {
+		return await AxiosClient.post<GetDetailedCostAnalyticsResponse>(`${this.baseUrl}/analytics`, payload);
 	}
 }
 

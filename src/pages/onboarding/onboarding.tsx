@@ -34,7 +34,7 @@ const tutorials: TutorialItem[] = [
 		onClick: () => window.open('https://docs.flexprice.io/guides/wallet/customers-wallet', '_blank'),
 	},
 	{
-		title: 'Customer Management',
+		title: 'Billing',
 		description: 'Create customers, assign plans, and manage subscriptions',
 		onClick: () => window.open('https://docs.flexprice.io/guides/subscription/customers-create-subscription', '_blank'),
 	},

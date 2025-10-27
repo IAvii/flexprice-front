@@ -4,7 +4,7 @@ import SidebarNav, { NavItem } from './SidebarMenu';
 import FlexpriceSidebarFooter from './SidebarFooter';
 import { RouteNames } from '@/core/routes/Routes';
 import { EnvironmentSelector } from '@/components/molecules';
-import { Users, TrendingUp, Settings, Boxes } from 'lucide-react';
+import { Settings, Landmark, Layers2, Gauge } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }) => {
@@ -13,7 +13,7 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 		{
 			title: 'Product Catalog',
 			url: '#',
-			icon: Boxes,
+			icon: Layers2,
 			items: [
 				{
 					title: 'Features',
@@ -42,9 +42,9 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 			],
 		},
 		{
-			title: 'Customer',
+			title: 'Billing',
 			url: '#',
-			icon: Users,
+			icon: Landmark,
 			items: [
 				{
 					title: 'Customers',
@@ -79,7 +79,7 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 		{
 			title: 'Usage Tracking',
 			url: '#',
-			icon: TrendingUp,
+			icon: Gauge,
 			items: [
 				{
 					title: 'Events Debugger',

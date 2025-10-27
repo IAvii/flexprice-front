@@ -90,19 +90,18 @@ export const RouteNames = {
 	events: '/usage-tracking/events',
 	queryPage: '/usage-tracking/query',
 
-	// customer management routes
-	customerManagement: '/customer-management',
-	customers: '/customer-management/customers',
-	subscriptions: '/customer-management/subscriptions',
-	createSubscription: '/customer-management/subscriptions/create',
-	subscriptionDetails: '/customer-management/subscriptions/:id',
-	taxes: '/customer-management/taxes',
-	invoices: '/customer-management/invoices',
-	createInvoice: '/customer-management/customers/:customerId/invoices/create',
-	creditNotes: '/customer-management/credit-notes',
-	payments: '/customer-management/payments',
-	usage: '/customer-management/usage',
-	analytics: '/customer-management/analytics',
+	// billing routes
+	customerManagement: '/billing',
+	customers: '/billing/customers',
+	subscriptions: '/billing/subscriptions',
+	createSubscription: '/billing/subscriptions/create',
+	subscriptionDetails: '/billing/subscriptions/:id',
+	taxes: '/billing/taxes',
+	invoices: '/billing/invoices',
+	createInvoice: '/billing/customers/:customerId/invoices/create',
+	creditNotes: '/billing/credit-notes',
+	payments: '/billing/payments',
+	analytics: '/billing/analytics',
 
 	// product catalog routes
 	productCatalog: '/product-catalog',

@@ -95,7 +95,7 @@ const InvoiceTable: FC<Props> = ({ data }) => {
 			<FlexpriceTable
 				showEmptyRow={true}
 				onRowClick={(row) => {
-					navigate(`/customer-management/invoices/${row.id}`);
+					navigate(`/billing/invoices/${row.id}`);
 				}}
 				columns={columns}
 				data={data}

@@ -46,7 +46,7 @@ const CustomerTable: FC<Props> = ({ data, onEdit }) => {
 					entityName='Customer'
 					refetchQueryKey='fetchCustomers'
 					deleteMutationFn={(id) => CustomerApi.deleteCustomerById(id)}
-					editPath={`/customer-management/customers/edit-customer?id=${row.id}`}
+					editPath={`/billing/customers/edit-customer?id=${row.id}`}
 					onEdit={() => {
 						onEdit(row);
 					}}

@@ -45,7 +45,11 @@
   </p>
 </div>
 
----
+<h5 align="center">
+
+[Documentation](https://docs.flexprice.io) • [Demo](https://www.loom.com/share/60d8308781254fe0bc5be341501f9fd5) • [Website](https://flexprice.io/) • [LinkedIn](https://www.linkedin.com/company/flexpriceio)
+
+[![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)](https://pkg.go.dev/github.com/flexprice/go-sdk) [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://pypi.org/project/flexprice) [![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)](https://www.npmjs.com/package/@flexprice/sdk) 
 
 ## 📋 Table of Contents
 
@@ -69,7 +73,6 @@
 ---
 
 ## 🏗️ Open Architecture
-
 The Flexprice core (metering, credits, pricing, billing) has an open and composable design.
 
 <p align="center">
@@ -376,6 +379,10 @@ Whether you're a newbie coder or a wizard 🧙‍♀️, your perspective is gol
 <a href="https://github.com/flexprice/flexprice-front/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=flexprice/flexprice-front" />
 </a>
+
+<!-- ## Repo Activity -->
+
+<!-- ![Alt](https://repobeats.axiom.co/api/embed/4d6e208eab20ff0615787615c4fa022591adfa6b.svg 'Repobeats analytics image') -->
 
 ## 🤝 Contributing
 

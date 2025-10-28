@@ -33,7 +33,7 @@ const exploreTutorials: TutorialItem[] = [
 		onClick: () => window.open('https://docs.flexprice.io/guides/billable-metric/billable-metrics-create', '_blank'),
 	},
 	{
-		title: 'Customer Management',
+		title: 'Billing',
 		description: 'Create customers, assign plans, and manage subscriptions',
 		icon: <Users className='w-5 h-5 text-[#3293D9]' />,
 		onClick: () => window.open('https://docs.flexprice.io/guides/subscription/customers-create-subscription', '_blank'),

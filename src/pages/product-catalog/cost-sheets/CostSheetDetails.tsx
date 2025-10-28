@@ -1,0 +1,218 @@
+import { Button, CardHeader, Chip, Loader, Page, Spacer, NoDataCard } from '@/components/atoms';
+import { ApiDocsContent, ColumnData, FlexpriceTable, CostSheetDrawer } from '@/components/molecules';
+import { DetailsCard } from '@/components/molecules';
+import { RouteNames } from '@/core/routes/Routes';
+import { Price } from '@/models/Price';
+import { useBreadcrumbsStore } from '@/store/useBreadcrumbsStore';
+import CostSheetApi from '@/api/CostSheetApi';
+import { getPriceTypeLabel } from '@/utils/common/helper_functions';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { EyeOff, Plus, Pencil } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Card } from '@/components/atoms';
+import formatChips from '@/utils/common/format_chips';
+import { ChargeValueCell } from '@/components/molecules';
+import { BILLING_PERIOD } from '@/constants/constants';
+
+const formatBillingPeriod = (billingPeriod: string) => {
+	switch (billingPeriod.toUpperCase()) {
+		case BILLING_PERIOD.DAILY:
+			return 'Daily';
+		case BILLING_PERIOD.WEEKLY:
+			return 'Weekly';
+		case BILLING_PERIOD.MONTHLY:
+			return 'Monthly';
+		case BILLING_PERIOD.ANNUAL:
+			return 'Yearly';
+		case BILLING_PERIOD.QUARTERLY:
+			return 'Quarterly';
+		case BILLING_PERIOD.HALF_YEARLY:
+			return 'Half Yearly';
+		default:
+			return '--';
+	}
+};
+
+const formatInvoiceCadence = (cadence: string): string => {
+	switch (cadence.toUpperCase()) {
+		case 'ADVANCE':
+			return 'Advance';
+		case 'ARREAR':
+			return 'Arrear';
+		default:
+			return '';
+	}
+};
+
+type Params = {
+	id: string;
+};
+
+const chargeColumns: ColumnData<Price>[] = [
+	{
+		title: 'Charge Type',
+		render: (row) => {
+			return <span>{getPriceTypeLabel(row.type)}</span>;
+		},
+	},
+	{
+		title: 'Feature',
+		render(rowData) {
+			return <span>{rowData.meter?.name ?? '--'}</span>;
+		},
+	},
+	{
+		title: 'Billing Timing',
+		render(rowData) {
+			return <span>{formatInvoiceCadence(rowData.invoice_cadence as string)}</span>;
+		},
+	},
+	{
+		title: 'Billing Period',
+		render(rowData) {
+			return <span>{formatBillingPeriod(rowData.billing_period as string)}</span>;
+		},
+	},
+	{
+		title: 'Value',
+		render(rowData) {
+			return <ChargeValueCell data={rowData} />;
+		},
+	},
+];
+
+const CostSheetDetails = () => {
+	const navigate = useNavigate();
+	const { id } = useParams<Params>();
+	const [costSheetDrawerOpen, setCostSheetDrawerOpen] = useState(false);
+
+	const {
+		data: costSheetData,
+		isLoading,
+		isError,
+	} = useQuery({
+		queryKey: ['fetchCostSheet', id],
+		queryFn: async () => {
+			return await CostSheetApi.GetCostSheetById(id!);
+		},
+		enabled: !!id,
+	});
+
+	const { mutate: archiveCostSheet } = useMutation({
+		mutationFn: async () => {
+			return await CostSheetApi.DeleteCostSheet(id!);
+		},
+		onSuccess: () => {
+			toast.success('Cost Sheet archived successfully');
+			navigate(RouteNames.costSheets);
+		},
+		onError: (error: ServerError) => {
+			toast.error(error.error.message || 'Failed to archive cost sheet');
+		},
+	});
+
+	const { updateBreadcrumb } = useBreadcrumbsStore();
+
+	useEffect(() => {
+		if (costSheetData?.name) {
+			updateBreadcrumb(2, costSheetData.name);
+		}
+	}, [costSheetData, updateBreadcrumb]);
+
+	if (isLoading) {
+		return <Loader />;
+	}
+
+	if (isError) {
+		toast.error('Error loading cost sheet data');
+		return null;
+	}
+
+	if (!costSheetData) {
+		toast.error('No cost sheet data available');
+		return null;
+	}
+
+	const costSheetDetails = [
+		{ label: 'Cost Sheet Name', value: costSheetData?.name },
+		{ label: 'Lookup Key', value: costSheetData?.lookup_key },
+		{
+			label: 'Status',
+			value: <Chip label={formatChips(costSheetData?.status)} variant={costSheetData?.status === 'published' ? 'success' : 'default'} />,
+		},
+		{ label: 'Description', value: costSheetData?.description || '--' },
+	];
+
+	return (
+		<Page
+			heading={costSheetData?.name}
+			headingCTA={
+				<>
+					<Button onClick={() => setCostSheetDrawerOpen(true)} variant={'outline'} className='flex gap-2'>
+						<Pencil />
+						Edit
+					</Button>
+
+					<Button
+						onClick={() => archiveCostSheet()}
+						disabled={costSheetData?.status !== 'published'}
+						variant={'outline'}
+						className='flex gap-2'>
+						<EyeOff />
+						Archive
+					</Button>
+				</>
+			}>
+			<CostSheetDrawer
+				data={costSheetData}
+				open={costSheetDrawerOpen}
+				onOpenChange={setCostSheetDrawerOpen}
+				refetchQueryKeys={['fetchCostSheet']}
+			/>
+			<ApiDocsContent tags={['Cost Sheets']} />
+			<div className='space-y-6'>
+				<DetailsCard variant='stacked' title='Cost Sheet Details' data={costSheetDetails} />
+
+				{/* cost sheet charges table */}
+				{(costSheetData?.prices?.length ?? 0) > 0 ? (
+					<Card variant='notched'>
+						<CardHeader
+							title='Charges'
+							cta={
+								<Button prefixIcon={<Plus />} onClick={() => navigate(`${RouteNames.costSheetCharges.replace(':costSheetId', id!)}`)}>
+									Add
+								</Button>
+							}
+						/>
+						<FlexpriceTable columns={chargeColumns} data={costSheetData?.prices ?? []} />
+					</Card>
+				) : (
+					<NoDataCard
+						title='Charges'
+						subtitle='No charges added to the cost sheet yet'
+						cta={
+							<Button prefixIcon={<Plus />} onClick={() => navigate(`${RouteNames.costSheetCharges.replace(':costSheetId', id!)}`)}>
+								Add
+							</Button>
+						}
+					/>
+				)}
+
+				{costSheetData.metadata && Object.keys(costSheetData.metadata).length > 0 && (
+					<Card variant='notched'>
+						<CardHeader title='Metadata' />
+						<div className='p-4'>
+							<pre className='text-sm bg-gray-50 p-3 rounded overflow-auto'>{JSON.stringify(costSheetData.metadata, null, 2)}</pre>
+						</div>
+					</Card>
+				)}
+
+				<Spacer className='!h-20' />
+			</div>
+		</Page>
+	);
+};
+
+export default CostSheetDetails;

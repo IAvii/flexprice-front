@@ -1,4 +1,4 @@
-import { Event } from '@/models';
+import { Event, WindowSize, UsageAnalyticItem } from '@/models';
 
 export interface GetEventsPayload {
 	external_customer_id?: string;
@@ -43,4 +43,23 @@ export interface FireEventsPayload {
 	feature_id?: string;
 	duration?: number;
 	amount?: number;
+}
+
+// Analytics DTOs
+export interface GetUsageAnalyticsRequest {
+	external_customer_id: string;
+	feature_ids?: string[];
+	sources?: string[];
+	start_time?: string;
+	end_time?: string;
+	group_by?: string[]; // allowed values: "source", "feature_id", "properties.<field_name>"
+	window_size?: WindowSize;
+	expand?: string[]; // allowed values: "price", "meter", "feature", "subscription_line_item","plan","addon"
+	property_filters?: Record<string, string[]>;
+}
+
+export interface GetUsageAnalyticsResponse {
+	total_cost: number;
+	currency: string;
+	items: UsageAnalyticItem[];
 }

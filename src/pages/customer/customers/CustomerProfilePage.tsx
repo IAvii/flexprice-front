@@ -16,6 +16,7 @@ const tabs = [
 	{ id: 'invoice', label: 'Invoice' },
 	{ id: 'information', label: 'Information' },
 	{ id: 'tax-association', label: 'Tax' },
+	{ id: 'analytics', label: 'Analytics' },
 ] as const;
 
 type TabId = (typeof tabs)[number]['id'];
@@ -68,7 +69,7 @@ const CustomerProfilePage = () => {
 	}, [activeTab, updateBreadcrumb, setSegmentLoading, customer, location.pathname]);
 
 	const onTabChange = (tabId: TabId) => {
-		navigate(`/customer-management/customers/${customerId}/${tabId}`);
+		navigate(`/billing/customers/${customerId}/${tabId}`);
 	};
 
 	if (isLoading) {

@@ -22,12 +22,14 @@ import { BILLING_CADENCE, INVOICE_CADENCE } from '@/models/Invoice';
 import { BILLING_MODEL, PRICE_TYPE, PRICE_ENTITY_TYPE, PRICE_UNIT_TYPE } from '@/models/Price';
 import { logger } from '@/utils/common/Logger';
 import SubscriptionApi from '@/api/SubscriptionApi';
+import CostSheetApi from '@/api/CostSheetApi';
 
 // ===== TYPES & CONSTANTS =====
 
 export enum ENTITY_TYPE {
 	PLAN = 'PLAN',
 	ADDON = 'ADDON',
+	COST_SHEET = 'COSTSHEET',
 }
 
 type PriceState = 'new' | 'edit' | 'saved';
@@ -169,8 +171,10 @@ const EntityChargesPage: React.FC<EntityChargesPageProps> = ({ entityType, entit
 		queryFn: async () => {
 			if (entityType === ENTITY_TYPE.PLAN) {
 				return await PlanApi.getPlanById(entityId);
-			} else {
+			} else if (entityType === ENTITY_TYPE.ADDON) {
 				return await AddonApi.GetAddonById(entityId);
+			} else {
+				return await CostSheetApi.GetCostSheetById(entityId);
 			}
 		},
 		enabled: !!entityId,
@@ -225,11 +229,15 @@ const EntityChargesPage: React.FC<EntityChargesPageProps> = ({ entityType, entit
 	}, [isPending, isAnyPriceInEditMode, hasAnyCharges]);
 
 	const priceEntityType = useMemo(() => {
-		return entityType === ENTITY_TYPE.PLAN ? PRICE_ENTITY_TYPE.PLAN : PRICE_ENTITY_TYPE.ADDON;
+		if (entityType === ENTITY_TYPE.PLAN) return PRICE_ENTITY_TYPE.PLAN;
+		if (entityType === ENTITY_TYPE.ADDON) return PRICE_ENTITY_TYPE.ADDON;
+		return PRICE_ENTITY_TYPE.COST_SHEET;
 	}, [entityType]);
 
 	const routeName = useMemo(() => {
-		return entityType === ENTITY_TYPE.PLAN ? RouteNames.plan : RouteNames.addonDetails;
+		if (entityType === ENTITY_TYPE.PLAN) return RouteNames.plan;
+		if (entityType === ENTITY_TYPE.ADDON) return RouteNames.addonDetails;
+		return RouteNames.costSheetDetails;
 	}, [entityType]);
 
 	// ===== MEMOIZED CALLBACKS =====

@@ -18,6 +18,7 @@ import {
 	InvoiceDetailsPage,
 	CustomerInvoiceTab as Invoice,
 	CustomerOverviewTab as Overview,
+	CustomerAnalyticsTab as AnalyticsTab,
 	CustomerWalletTab as WalletTab,
 	CustomerSubscriptionDetailsPage,
 	AddCreditNotePage as AddCreditPage,
@@ -41,6 +42,9 @@ import {
 	Addons as AddonsPage,
 	AddonDetails as AddonDetailsPage,
 	AddonCharges as AddonChargesPage,
+	CostSheets as CostSheetsPage,
+	CostSheetDetails as CostSheetDetailsPage,
+	CostSheetCharges as CostSheetChargesPage,
 	Pricing as PricingPage,
 	AddCharges as AddChargesPage,
 	Coupons as CouponsPage,
@@ -48,6 +52,7 @@ import {
 	// Usage pages
 	Events as EventsPage,
 	Query as QueryPage,
+	CostAnalytics as CostAnalyticsPage,
 	// Developer pages
 	DeveloperPage,
 	// Onboarding pages
@@ -67,6 +72,7 @@ import {
 	// Error pages
 	ErrorPage,
 } from '@/pages';
+import { RouterErrorElement } from '@/components/atoms/ErrorBoundary';
 
 export const RouteNames = {
 	home: '/',
@@ -84,17 +90,18 @@ export const RouteNames = {
 	events: '/usage-tracking/events',
 	queryPage: '/usage-tracking/query',
 
-	// customer management routes
-	customerManagement: '/customer-management',
-	customers: '/customer-management/customers',
-	subscriptions: '/customer-management/subscriptions',
-	createSubscription: '/customer-management/subscriptions/create',
-	subscriptionDetails: '/customer-management/subscriptions/:id',
-	taxes: '/customer-management/taxes',
-	invoices: '/customer-management/invoices',
-	createInvoice: '/customer-management/customers/:customerId/invoices/create',
-	creditNotes: '/customer-management/credit-notes',
-	payments: '/customer-management/payments',
+	// billing routes
+	customerManagement: '/billing',
+	customers: '/billing/customers',
+	subscriptions: '/billing/subscriptions',
+	createSubscription: '/billing/subscriptions/create',
+	subscriptionDetails: '/billing/subscriptions/:id',
+	taxes: '/billing/taxes',
+	invoices: '/billing/invoices',
+	createInvoice: '/billing/customers/:customerId/invoices/create',
+	creditNotes: '/billing/credit-notes',
+	payments: '/billing/payments',
+	analytics: '/billing/analytics',
 
 	// product catalog routes
 	productCatalog: '/product-catalog',
@@ -114,6 +121,11 @@ export const RouteNames = {
 	addons: '/product-catalog/addons',
 	addonDetails: '/product-catalog/addons',
 	addonCharges: '/product-catalog/addons/:addonId/add-charges',
+
+	// cost sheet routes
+	costSheets: '/product-catalog/cost-sheets',
+	costSheetDetails: '/product-catalog/cost-sheets',
+	costSheetCharges: '/product-catalog/cost-sheets/:costSheetId/add-charges',
 
 	// tools routes
 	tools: '/tools',
@@ -170,6 +182,7 @@ export const MainRouter = createBrowserRouter([
 				<MainLayout />
 			</AuthMiddleware>
 		),
+		errorElement: <RouterErrorElement />,
 		children: [
 			{
 				path: RouteNames.home,
@@ -214,6 +227,18 @@ export const MainRouter = createBrowserRouter([
 					{
 						path: RouteNames.addonCharges,
 						element: <AddonChargesPage />,
+					},
+					{
+						path: RouteNames.costSheets,
+						element: <CostSheetsPage />,
+					},
+					{
+						path: `${RouteNames.costSheetDetails}/:id`,
+						element: <CostSheetDetailsPage />,
+					},
+					{
+						path: RouteNames.costSheetCharges,
+						element: <CostSheetChargesPage />,
 					},
 					{
 						path: RouteNames.addCharges,
@@ -287,6 +312,10 @@ export const MainRouter = createBrowserRouter([
 						element: <PaymentPage />,
 					},
 					{
+						path: RouteNames.analytics,
+						element: <CostAnalyticsPage />,
+					},
+					{
 						path: `${RouteNames.customers}/:id`,
 						element: <CustomerProfilePage />,
 						children: [
@@ -319,6 +348,10 @@ export const MainRouter = createBrowserRouter([
 							{
 								path: 'tax-association',
 								element: <TaxAssociation />,
+							},
+							{
+								path: 'analytics',
+								element: <AnalyticsTab />,
 							},
 
 							{
@@ -400,5 +433,6 @@ export const MainRouter = createBrowserRouter([
 	{
 		path: '*',
 		element: <ErrorPage />,
+		errorElement: <RouterErrorElement />,
 	},
 ]);

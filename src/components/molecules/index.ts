@@ -122,6 +122,8 @@ export { default as WalletAlertDialog } from './WalletAlertDialog';
 export { FeatureAlertDialog } from './FeatureAlertDialog';
 
 export { AddonTable, AddonModal } from './AddonTable';
+export { default as CostSheetDrawer } from './CostSheetDrawer/CostSheetDrawer';
+export { default as CostSheetTable } from './CostSheetTable/CostSheetTable';
 
 export { default as SubscriptionCoupon } from './SubscriptionCoupon/SubscriptionCoupon';
 
@@ -139,3 +141,9 @@ export { default as AppliedTaxesTable } from './AppliedTaxesTable';
 // New billing tier components
 export { default as TierBreakdown } from './TierBreakdown';
 export { SubscriptionTable } from './SubscriptionTable';
+
+export { default as CustomerUsageChart } from './CustomerUsageChart';
+export { default as CustomerCostChart } from './CustomerCostChart';
+
+export { CostDataTable } from './CostDataTable';
+export { default as MetricCard } from './MetricCard';

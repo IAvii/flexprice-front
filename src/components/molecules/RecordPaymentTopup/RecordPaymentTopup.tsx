@@ -241,14 +241,14 @@ const RecordPaymentTopup: FC<Props> = ({
 				const currentUrl = window.location.href;
 
 				// Extract the current page URL (for invoices it would be something like:
-				// /customer-management/invoices/inv_123?page=1)
+				// /billing/invoices/inv_123?page=1)
 				let redirectUrl = currentUrl;
 
 				// If destination_type is INVOICE, construct the invoice page URL
 				if (destination_type === PAYMENT_DESTINATION_TYPE.INVOICE) {
 					const urlParams = new URLSearchParams(window.location.search);
 					const pageParam = urlParams.get('page') || '1';
-					redirectUrl = `${baseUrl}/customer-management/invoices/${destination_id}?page=${pageParam}`;
+					redirectUrl = `${baseUrl}/billing/invoices/${destination_id}?page=${pageParam}`;
 				}
 
 				return {

@@ -72,6 +72,7 @@ export enum PRICE_ENTITY_TYPE {
 	ADDON = 'ADDON',
 	FEATURE = 'FEATURE',
 	METER = 'METER',
+	COST_SHEET = 'COSTSHEET',
 }
 
 export enum TIER_MODE {

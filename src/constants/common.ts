@@ -89,9 +89,4 @@ export const formatPercentage = (value: number, decimals: number = 1): string =>
 	return `${value.toFixed(decimals)}%`;
 };
 
-export const formatNumber = (value: number, decimals: number = 0): string => {
-	return new Intl.NumberFormat('en-US', {
-		minimumFractionDigits: decimals,
-		maximumFractionDigits: decimals,
-	}).format(value);
-};
+export { default as formatNumber } from '@/utils/common/format_number';

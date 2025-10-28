@@ -49,6 +49,7 @@ export { default as Toggle } from './Toggle';
 export { default as MultiSelect } from './MultiSelect';
 
 export { default as SelectFeature } from './SelectFeature';
+export { default as FeatureMultiSelect } from './FeatureMultiSelect';
 
 export { default as Checkbox } from './Checkbox';
 
@@ -73,3 +74,6 @@ export { default as PaymentUrlSuccessDialog } from './PaymentUrlSuccessDialog';
 
 // New billing tier components
 export { default as DecimalUsageInput } from './DecimalUsageInput';
+
+// Error Boundary
+export { default as ErrorBoundary } from './ErrorBoundary';

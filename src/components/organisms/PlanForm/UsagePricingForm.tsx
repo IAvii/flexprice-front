@@ -1,6 +1,6 @@
 import { Price } from '@/models/Price';
 import { FC, useState, useEffect } from 'react';
-import { Button, CheckboxRadioGroup, Input, Select, SelectOption, Spacer } from '@/components/atoms';
+import { Button, Input, Select, SelectOption, Spacer } from '@/components/atoms';
 import SelectMeter from './SelectMeter';
 // import { Pencil, Trash2 } from 'lucide-react';
 import { Meter } from '@/models/Meter';
@@ -90,10 +90,8 @@ const UsagePricingForm: FC<Props> = ({
 		flatModelError: '',
 		packagedModelError: '',
 		tieredModelError: '',
-		invoiceCadenceError: '',
 	});
 
-	const [invoiceCadence, setInvoiceCadence] = useState('ARREAR');
 
 	// Load price data when editing
 	useEffect(() => {
@@ -141,7 +139,6 @@ const UsagePricingForm: FC<Props> = ({
 			flatModelError: '',
 			packagedModelError: '',
 			tieredModelError: '',
-			invoiceCadenceError: '',
 		});
 
 		if (!meterId) {
@@ -272,7 +269,7 @@ const UsagePricingForm: FC<Props> = ({
 			type: PRICE_TYPE.USAGE,
 			billing_period_count: 1,
 			billing_cadence: 'RECURRING' as BILLING_CADENCE,
-			invoice_cadence: invoiceCadence as INVOICE_CADENCE,
+			invoice_cadence: INVOICE_CADENCE.ARREAR,
 			entity_type: entityType,
 			entity_id: entityId || '',
 		};
@@ -455,9 +452,8 @@ const UsagePricingForm: FC<Props> = ({
 				</div>
 			)}
 
-			<Spacer height='12px' />
-			{/* !TODO: Remove disabled once the feature is released */}
-			<CheckboxRadioGroup
+			{/* <Spacer height='12px' /> */}
+			{/* <CheckboxRadioGroup
 				title='Billing timing'
 				value={invoiceCadence}
 				checkboxItems={[
@@ -477,7 +473,7 @@ const UsagePricingForm: FC<Props> = ({
 					setInvoiceCadence(value);
 				}}
 				error={inputErrors.invoiceCadenceError}
-			/>
+			/> */}
 			<Spacer height={'16px'} />
 			<Spacer height='16px' />
 			<div className='flex justify-end'>

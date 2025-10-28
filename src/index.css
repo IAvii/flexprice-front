@@ -124,4 +124,11 @@
 	.page {
 		@apply flex flex-col px-4 py-12 h-screen;
 	}
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
 }

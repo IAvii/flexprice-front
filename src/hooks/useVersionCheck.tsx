@@ -1,15 +1,16 @@
+import { NODE_ENV, NodeEnv } from '@/types/env';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
-const isNotProd = import.meta.env.VITE_APP_ENVIRONMENT !== 'prod';
+const isProd = NODE_ENV === NodeEnv.PROD;
 const LAST_DISMISSED_VERSION = 'lastDismissedVersion';
 
 export default function useVersionCheck(intervalMs = 5 * 60 * 1000) {
 	const currentVersion = __APP_VERSION__;
 
 	useEffect(() => {
-		if (isNotProd) {
-			console.log('[VersionCheck] Skipped in dev mode');
+		if (!isProd) {
+			console.log(`[VersionCheck] Skipped in dev mode mode mode is ${NODE_ENV}`);
 			return;
 		}
 

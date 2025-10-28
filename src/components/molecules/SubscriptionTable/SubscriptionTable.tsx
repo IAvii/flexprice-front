@@ -81,7 +81,7 @@ const SubscriptionTable: FC<Props> = ({ data, onEdit }) => {
 							cancellation_type: SUBSCRIPTION_CANCELLATION_TYPE.IMMEDIATE,
 						});
 					}}
-					editPath={`${RouteNames.subscriptions}/edit/${row.id}`}
+					editPath={`${RouteNames.subscriptions}/${row.id}/edit`}
 					onEdit={() => {
 						onEdit?.(row);
 					}}

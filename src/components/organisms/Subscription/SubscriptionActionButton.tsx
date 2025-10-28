@@ -6,7 +6,7 @@ import {
 	SUBSCRIPTION_CANCELLATION_TYPE,
 } from '@/models/Subscription';
 import { useMutation } from '@tanstack/react-query';
-import { CirclePause, CirclePlay, X, Plus } from 'lucide-react';
+import { CirclePause, CirclePlay, X, Plus, Pencil } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 import SubscriptionApi from '@/api/SubscriptionApi';
 import { DatePicker, Modal, Input, Button, FormHeader, Spacer } from '@/components/atoms';
@@ -14,6 +14,8 @@ import { toast } from 'react-hot-toast';
 import DropdownMenu, { DropdownMenuOption } from '@/components/molecules/DropdownMenu/DropdownMenu';
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { addDays, format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import { RouteNames } from '@/core/routes/Routes';
 import AddSubscriptionPhase from '@/components/molecules/CreditGrant/AddSubscriptionPhase';
 import { AddSubscriptionPhasePayload } from '@/types/dto/Subscription';
 
@@ -22,6 +24,7 @@ interface Props {
 }
 
 const SubscriptionActionButton: React.FC<Props> = ({ subscription }) => {
+	const navigate = useNavigate();
 	const [state, setState] = useState({
 		isPauseModalOpen: false,
 		isResumeModalOpen: false,
@@ -95,6 +98,12 @@ const SubscriptionActionButton: React.FC<Props> = ({ subscription }) => {
 	const isCancelled = subscription.subscription_status.toUpperCase() === 'CANCELLED';
 
 	const menuOptions: DropdownMenuOption[] = [
+		{
+			label: 'Edit Subscription',
+			icon: <Pencil className='h-4 w-4' />,
+			onSelect: () => navigate(`${RouteNames.subscriptions}/${subscription.id}/edit`),
+			disabled: isCancelled,
+		},
 		...(!isPaused && !isCancelled
 			? [
 					{

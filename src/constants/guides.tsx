@@ -1,5 +1,87 @@
 import { TutorialItem } from '@/pages/onboarding/onboarding';
 
+// all links enum
+export enum DOCS_LINKS {
+	//features
+	FEATURE_CREATE = 'https://docs.flexprice.io/docs/product-catalogue/features/create',
+	FEATURE_PLANS = 'https://docs.flexprice.io/docs/product-catalogue/features/linking-to-plans',
+	FEATURE_USECASE = 'https://docs.flexprice.io/docs/product-catalogue/features/use-cases',
+
+	//plans
+	PLANS_OVERVIEW = 'https://docs.flexprice.io/docs/product-catalogue/plans/overview',
+	PLANS_CREATE = 'https://docs.flexprice.io/docs/product-catalogue/plans/create',
+	PLANS_CHARGES = 'https://docs.flexprice.io/docs/product-catalogue/plans/charges/advance-vs-arrear',
+
+	//customers
+	CUSTOMER_OVERVIEW = 'https://docs.flexprice.io/docs/customers/overview',
+	CUSTOMER_ARCHIVE = 'https://docs.flexprice.io/docs/customers/archive',
+	SUBSCRIPTION_CREATE = 'https://docs.flexprice.io/docs/subscriptions/customers-create-subscription',
+
+	//invoices
+	INVOICE_CREATE = 'https://docs.flexprice.io/api-reference/invoices/create-a-new-one-off-invoice',
+	INVOICE_MANAGE = 'https://docs.flexprice.io/api-reference/invoices/update-an-invoice',
+	INVOICE_PARTIAL = 'https://docs.flexprice.io/api-reference/payments/create-a-new-payment#create-a-new-payment',
+
+	//payments
+	PAYMENT_CREATE = 'https://docs.flexprice.io/api-reference/payments/create-a-new-payment',
+	PAYMENT_UPDATE = 'https://docs.flexprice.io/api-reference/payments/update-a-new-payment',
+	PAYMENT_DELETE = 'https://docs.flexprice.io/api-reference/payments/delete-a-new-payment',
+
+	//secrets
+	SECRET_LIST = 'https://docs.flexprice.io/api-reference/secrets/list-api-keys',
+	SECRET_CREATE = 'https://docs.flexprice.io/api-reference/secrets/create-a-new-api-key',
+	SECRET_DELETE = 'https://docs.flexprice.io/api-reference/secrets/delete-an-api-key',
+
+	//credit notes
+	CREDIT_CREATE = 'https://docs.flexprice.io/api-reference/credit-notes/create-a-new-credit-note',
+	CREDIT_PROCESS = 'https://docs.flexprice.io/api-reference/credit-notes/process-a-draft-credit-note',
+	CREDIT_VOID = 'https://docs.flexprice.io/api-reference/credit-notes/void-a-credit-note',
+
+	//tasks
+	TASK_LIST = 'https://docs.flexprice.io/api-reference/tasks/list-tasks',
+	TASK_CREATE = 'https://docs.flexprice.io/api-reference/tasks/create-a-new-task',
+	TASK_PROCESS = 'https://docs.flexprice.io/api-reference/tasks/process-a-task',
+
+	//taxes
+	TAX_OVERVIEW = 'https://docs.flexprice.io/api-reference/tax-associations/create-tax-associations',
+	TAX_TYPES = 'https://docs.flexprice.io/api-reference/tasks/get-task-processing-result',
+	TAX_ASSOCIATIONS = 'https://docs.flexprice.io/api-reference/tax-associations/list-tax-associations',
+}
+
+export enum IMAGE_URLS {
+	FEATURE_1 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/FEATURES1_veomrd.svg',
+	FEATURE_2 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180989/Features2_fbd39s.svg',
+	FEATURE_3 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180994/FEATURES_3_drkhb7.svg',
+
+	PLAN_1 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/PLAN_1_j6tdqv.svg',
+	PLAN_2 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/PLAN_2_oxi9ld.svg',
+	PLAN_3 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180995/PLAN_3_lfh1mi.svg',
+
+	CUSTOMER_1 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180990/Customer_1_kf0ena.svg',
+	CUSTOMER_2 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180991/Customer_2_ifiaof.svg',
+	CUSTOMER_3 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180987/Customer_3_triyiv.svg',
+
+	INVOICE_1 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/Invoice_1_lh9ved.svg',
+	INVOICE_2 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180991/invoice_2_v8fa71.svg',
+	INVOICE_3 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180989/iNvoice_3_glq1xo.svg',
+
+	PAYMENT_1 = 'https://res.cloudinary.com/daospvham/image/upload/v1753182361/PAYMENTS_1_dgx00f.svg',
+	PAYMENT_2 = 'https://res.cloudinary.com/daospvham/image/upload/v1753182361/PAYMENTS_2_ugsdxt.svg',
+	PAYMENT_3 = 'https://res.cloudinary.com/daospvham/image/upload/v1753203616/PAYMENTS_3_erwdgn_gxkrxv.svg',
+
+	SECRET_1 = 'https://res.cloudinary.com/daospvham/image/upload/v1753189165/api1_egeb4f.svg',
+	SECRET_2 = 'https://res.cloudinary.com/daospvham/image/upload/v1753204234/api2_gxkyqw.svg',
+	SECRET_3 = 'https://res.cloudinary.com/daospvham/image/upload/v1753184051/api3_ahcbx8.svg',
+
+	CREDIT_1 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180987/CN1_vkg2kh.svg',
+	CREDIT_2 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180988/CN2_gpeaqi.svg',
+	CREDIT_3 = 'https://res.cloudinary.com/daospvham/image/upload/v1753180987/CN3_kpsfpv.svg',
+
+	TASK_1 = 'https://res.cloudinary.com/daospvham/image/upload/v1753189165/TASK1_cpgjla.svg',
+	TASK_2 = 'https://res.cloudinary.com/daospvham/image/upload/v1753182361/TASKS_2_emkpmn.svg',
+	TASK_3 = 'https://res.cloudinary.com/daospvham/image/upload/v1753189166/TASKS_3_k2nkyu.svg',
+}
+
 const openGuide = (url: string) => {
 	window.open(url, '_blank');
 };
@@ -13,47 +95,44 @@ const GUIDES: Record<
 	features: {
 		tutorials: [
 			{
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/FEATURES1_veomrd.svg',
+				imageUrl: IMAGE_URLS.FEATURE_1,
 				title: 'How to create a feature?',
 				description: 'Explore how features work in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Product%20catalogue/Features/Creating%20a%20feature'),
+				onClick: () => openGuide(DOCS_LINKS.FEATURE_CREATE),
 			},
 			{
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180989/Features2_fbd39s.svg',
+				imageUrl: IMAGE_URLS.FEATURE_2,
 				title: 'How to link features to plans?',
 				description: 'Link features to plans in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Product%20catalogue/Features/Link%20features%20to%20plans'),
+				onClick: () => openGuide(DOCS_LINKS.FEATURE_PLANS),
 			},
 			{
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180994/FEATURES_3_drkhb7.svg',
+				imageUrl: IMAGE_URLS.FEATURE_3,
 				title: 'How to clone open ai pricing?',
 				description: 'Clone open ai / cursor style pricing in Flexprice.',
-				onClick: () =>
-					openGuide(
-						'https://docs.flexprice.io/docs/Product%20catalogue/Plans/Use%20cases/Clone%20Open%20AI%20pricing#clone-open-ai-pricing',
-					),
+				onClick: () => openGuide(DOCS_LINKS.FEATURE_USECASE),
 			},
 		],
 	},
 	plans: {
 		tutorials: [
 			{
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/PLAN_1_j6tdqv.svg',
+				imageUrl: IMAGE_URLS.PLAN_1,
 				title: 'Explore how plans work in Flexprice.',
 				description: 'Explore how plans work in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Product%20catalogue/Plans/Overview'),
+				onClick: () => openGuide(DOCS_LINKS.PLANS_OVERVIEW),
 			},
 			{
 				title: 'How to create a plan',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/PLAN_2_oxi9ld.svg',
+				imageUrl: IMAGE_URLS.PLAN_2,
 				description: 'Create a new plan in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Product%20catalogue/Plans/Creating%20a%20plan'),
+				onClick: () => openGuide(DOCS_LINKS.PLANS_CREATE),
 			},
 			{
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180995/PLAN_3_lfh1mi.svg',
+				imageUrl: IMAGE_URLS.PLAN_3,
 				title: 'How to choose between advance and arrear billing?',
 				description: 'Understand billing models used in plans.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Product%20catalogue/Plans/Charges%20in%20plans/Advancevsarrear'),
+				onClick: () => openGuide(DOCS_LINKS.PLANS_CHARGES),
 			},
 		],
 	},
@@ -62,20 +141,20 @@ const GUIDES: Record<
 			{
 				title: 'How to create a customer',
 				description: 'Explore how customers work in Flexprice.',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180990/Customer_1_kf0ena.svg',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Customers/Overview'),
+				imageUrl: IMAGE_URLS.CUSTOMER_1,
+				onClick: () => openGuide(DOCS_LINKS.CUSTOMER_OVERVIEW),
 			},
 			{
 				title: 'How to archive a customer',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180991/Customer_2_ifiaof.svg',
+				imageUrl: IMAGE_URLS.CUSTOMER_2,
 				description: 'Create a new customer in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Customers/Creating%20a%20customer'),
+				onClick: () => openGuide(DOCS_LINKS.CUSTOMER_ARCHIVE),
 			},
 			{
 				title: 'How to create a subscription',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180987/Customer_3_triyiv.svg',
+				imageUrl: IMAGE_URLS.CUSTOMER_3,
 				description: 'Create a new subscription in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Customers/Creating%20a%20subscription'),
+				onClick: () => openGuide(DOCS_LINKS.SUBSCRIPTION_CREATE),
 			},
 		],
 	},
@@ -84,20 +163,20 @@ const GUIDES: Record<
 			{
 				title: 'How to create an invoice',
 				description: 'Explore how invoices work in Flexprice.',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/Invoice_1_lh9ved.svg',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/invoices/create-a-new-invoice#create-a-new-invoice'),
+				imageUrl: IMAGE_URLS.INVOICE_1,
+				onClick: () => openGuide(DOCS_LINKS.INVOICE_CREATE),
 			},
 			{
 				title: 'How to manage invoices',
 				description: 'Manage invoices in Flexprice.',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180991/invoice_2_v8fa71.svg',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Invoices/ManagingInvoice'),
+				imageUrl: IMAGE_URLS.INVOICE_2,
+				onClick: () => openGuide(DOCS_LINKS.INVOICE_MANAGE),
 			},
 			{
 				title: 'How to handle partial payments',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180989/iNvoice_3_glq1xo.svg',
 				description: 'Handle partial payments in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Invoices/partial_payments'),
+				imageUrl: IMAGE_URLS.INVOICE_3,
+				onClick: () => openGuide(DOCS_LINKS.INVOICE_PARTIAL),
 			},
 		],
 	},
@@ -105,21 +184,21 @@ const GUIDES: Record<
 		tutorials: [
 			{
 				title: 'How to create a payment',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753182361/PAYMENTS_1_dgx00f.svg',
+				imageUrl: IMAGE_URLS.PAYMENT_1,
 				description: 'Explore how payments work in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/payments/create-a-new-payment'),
+				onClick: () => openGuide(DOCS_LINKS.PAYMENT_CREATE),
 			},
 			{
 				title: 'How to update a payment',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753182361/PAYMENTS_2_ugsdxt.svg',
+				imageUrl: IMAGE_URLS.PAYMENT_2,
 				description: 'Create a payment in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/payments/update-a-payment'),
+				onClick: () => openGuide(DOCS_LINKS.PAYMENT_UPDATE),
 			},
 			{
-				title: 'Update a payment',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753203616/PAYMENTS_3_erwdgn_gxkrxv.svg',
-				description: 'Update an existing payment in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/payments/delete-a-payment'),
+				title: 'How to delete a payment',
+				imageUrl: IMAGE_URLS.PAYMENT_3,
+				description: 'Delete an existing payment in Flexprice.',
+				onClick: () => openGuide(DOCS_LINKS.PAYMENT_DELETE),
 			},
 		],
 	},
@@ -127,21 +206,21 @@ const GUIDES: Record<
 		tutorials: [
 			{
 				title: 'List API Keys',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753189165/api1_egeb4f.svg',
+				imageUrl: IMAGE_URLS.SECRET_1,
 				description: 'View all API keys in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/secrets/list-api-keys'),
+				onClick: () => openGuide(DOCS_LINKS.SECRET_LIST),
 			},
 			{
 				title: 'Create a new API Key',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753204234/api2_gxkyqw.svg',
+				imageUrl: IMAGE_URLS.SECRET_2,
 				description: 'Generate a new API key in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/secrets/create-a-new-api-key'),
+				onClick: () => openGuide(DOCS_LINKS.SECRET_CREATE),
 			},
 			{
 				title: 'Delete an API Key',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753184051/api3_ahcbx8.svg',
+				imageUrl: IMAGE_URLS.SECRET_3,
 				description: 'Delete an API key in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/secrets/delete-an-api-key'),
+				onClick: () => openGuide(DOCS_LINKS.SECRET_DELETE),
 			},
 		],
 	},
@@ -149,21 +228,21 @@ const GUIDES: Record<
 		tutorials: [
 			{
 				title: 'Create a new credit note',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180987/CN1_vkg2kh.svg',
+				imageUrl: IMAGE_URLS.CREDIT_1,
 				description: 'Explore how credit notes work in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/credit-notes/create-a-new-credit-note'),
+				onClick: () => openGuide(DOCS_LINKS.CREDIT_CREATE),
 			},
 			{
 				title: 'Process a draft credit note',
 				description: 'Create a new credit note in Flexprice.',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180988/CN2_gpeaqi.svg',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/credit-notes/process-a-draft-credit-note'),
+				imageUrl: IMAGE_URLS.CREDIT_2,
+				onClick: () => openGuide(DOCS_LINKS.CREDIT_PROCESS),
 			},
 			{
 				title: 'Void a credit note',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180987/CN3_kpsfpv.svg',
 				description: 'Manage credit notes in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/credit-notes/void-a-credit-note'),
+				imageUrl: IMAGE_URLS.CREDIT_3,
+				onClick: () => openGuide(DOCS_LINKS.CREDIT_VOID),
 			},
 		],
 	},
@@ -171,21 +250,21 @@ const GUIDES: Record<
 		tutorials: [
 			{
 				title: 'Overview',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753189165/TASK1_cpgjla.svg',
+				imageUrl: IMAGE_URLS.TASK_1,
 				description: 'Explore import and export options in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/tasks/list-tasks'),
+				onClick: () => openGuide(DOCS_LINKS.TASK_LIST),
 			},
 			{
 				title: 'Import a file',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753182361/TASKS_2_emkpmn.svg',
+				imageUrl: IMAGE_URLS.TASK_2,
 				description: 'Import a file into Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/tasks/create-a-new-task'),
+				onClick: () => openGuide(DOCS_LINKS.TASK_CREATE),
 			},
 			{
 				title: 'Process import task',
-				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753189166/TASKS_3_k2nkyu.svg',
+				imageUrl: IMAGE_URLS.TASK_3,
 				description: 'Process an import task in Flexprice.',
-				onClick: () => openGuide('https://docs.flexprice.io/api-reference/tasks/process-a-task'),
+				onClick: () => openGuide(DOCS_LINKS.TASK_PROCESS),
 			},
 		],
 	},
@@ -194,17 +273,17 @@ const GUIDES: Record<
 			{
 				title: 'How to create a tax rate?',
 				description: 'Learn how to set up tax rates for your billing system.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Taxes/Overview'),
+				onClick: () => openGuide(DOCS_LINKS.TAX_OVERVIEW),
 			},
 			{
 				title: 'Understanding tax types',
 				description: 'Explore percentage vs fixed amount tax calculations.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Taxes/TaxTypes'),
+				onClick: () => openGuide(DOCS_LINKS.TAX_TYPES),
 			},
 			{
 				title: 'Tax associations and overrides',
 				description: 'Learn how to apply taxes to specific entities.',
-				onClick: () => openGuide('https://docs.flexprice.io/docs/Taxes/Associations'),
+				onClick: () => openGuide(DOCS_LINKS.TAX_ASSOCIATIONS),
 			},
 		],
 	},

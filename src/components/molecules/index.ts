@@ -104,8 +104,8 @@ export { default as UpdateTenantDrawer } from './Tenant/UpdateTenantDrawer';
 export { default as TerminateWalletModal } from './TerminateWalletModal';
 
 export { QueryBuilder, FilterPopover, SortDropdown, FilterMultiSelect } from './QueryBuilder';
-export type { FilterCondition, FilterField, FilterFieldType, FilterOperator, DataType } from '@/types';
-export { sanitizeFilterConditions, sanitizeSortConditions } from '@/types';
+export type { FilterCondition, FilterField, FilterFieldType, FilterOperator, DataType, SortDirection } from './QueryBuilder';
+export { sanitizeFilterConditions, sanitizeSortConditions } from './QueryBuilder';
 
 export { CreditGrantTable, CreditGrantModal } from './CreditGrant';
 

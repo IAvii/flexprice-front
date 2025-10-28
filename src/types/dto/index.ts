@@ -209,3 +209,6 @@ export {
 	getSubscriptionWebhookEvents,
 	getInvoiceWebhookEvents,
 } from '../enums/StripeWebhookEvents';
+
+// Additional DTO types
+export type { Testimonial } from './Testimonial';

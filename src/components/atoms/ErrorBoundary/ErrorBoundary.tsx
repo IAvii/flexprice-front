@@ -6,7 +6,7 @@ import { Button } from '@/components/atoms';
 import { RouteNames } from '@/core/routes/Routes';
 import { Link } from 'react-router-dom';
 import * as Sentry from '@sentry/react';
-import { NODE_ENV, NodeEnv } from '@/types/env';
+import { NODE_ENV, NodeEnv } from '@/types';
 import toast from 'react-hot-toast';
 
 // Generate a unique error ID

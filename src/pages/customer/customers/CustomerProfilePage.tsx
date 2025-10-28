@@ -1,14 +1,14 @@
 import { Outlet, useNavigate, useParams, useLocation } from 'react-router-dom';
-import CustomerHeader from '@/components/molecules/Customer/CustomerHeader';
 import { useEffect, useState } from 'react';
-import { useBreadcrumbsStore } from '@/store/useBreadcrumbsStore';
+import { useBreadcrumbsStore } from '@/store';
 import { useQuery } from '@tanstack/react-query';
 import CustomerApi from '@/api/CustomerApi';
 import { Page } from '@/components/atoms';
 import { cn } from '@/lib/utils';
 import { ApiDocsContent } from '@/components/molecules';
 import { AlertCircle } from 'lucide-react';
-import { ENTITY_STATUS } from '@/models/base';
+import { ENTITY_STATUS } from '@/models';
+import CustomerHeader from '@/components/molecules/Customer/CustomerHeader';
 
 const tabs = [
 	{ id: '', label: 'Overview' },

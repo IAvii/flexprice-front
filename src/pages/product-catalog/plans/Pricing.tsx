@@ -5,16 +5,14 @@ import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { billlingPeriodOptions } from '@/constants/constants';
 import { useState, useMemo } from 'react';
-import { ExpandedPlan } from '@/types/plan';
+import { ExpandedPlan } from '@/types';
 import { GetAllPlansResponse } from '@/api/PlanApi';
-import PricingCard, { PricingCardProps } from '@/components/molecules/PricingCard';
+import { PricingCard, type PricingCardProps } from '@/components/molecules';
 import { ApiDocsContent } from '@/components/molecules';
 import { EmptyPage } from '@/components/organisms';
 import { PlanDrawer } from '@/components/molecules';
 import GUIDES from '@/constants/guides';
-import { Price } from '@/models/Price';
-import { INVOICE_CADENCE } from '@/models/Invoice';
-import { PRICE_TYPE } from '@/models/Price';
+import { Price, INVOICE_CADENCE, PRICE_TYPE } from '@/models';
 
 type PriceType = {
 	currency: string;

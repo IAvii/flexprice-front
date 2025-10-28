@@ -4,15 +4,14 @@ import RectangleRadiogroup, { RectangleRadiogroupOption } from '../RectangleRadi
 import { useMutation } from '@tanstack/react-query';
 import WalletApi from '@/api/WalletApi';
 import toast from 'react-hot-toast';
-import { getCurrencySymbol } from '@/utils/common/helper_functions';
+import { getCurrencySymbol } from '@/utils';
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
-import { WALLET_TRANSACTION_REASON } from '@/models/Wallet';
+import { WALLET_TRANSACTION_REASON } from '@/models';
 import { v4 as uuidv4 } from 'uuid';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { getCurrencyAmountFromCredits } from '@/utils/helpers/wallet';
-import { TopupWalletPayload } from '@/types/dto';
-import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Label, Switch } from '@/components/ui';
+import { getCurrencyAmountFromCredits } from '@/utils';
+import { TopupWalletPayload } from '@/types';
+import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui';
 
 // Enum for credits type with more descriptive names
 enum CreditsType {

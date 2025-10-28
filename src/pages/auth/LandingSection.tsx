@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import TestimonialCard from '../../components/molecules/TestimonialCard/TestimonialCard';
-import { Testimonial } from '../../types/testimonial';
+import { TestimonialCard } from '@/components/molecules';
+import { Testimonial } from '@/types';
 
 const testimonials: Testimonial[] = [
 	{

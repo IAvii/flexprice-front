@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 import { Button, Input, Sheet, Spacer } from '@/components/atoms';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@/components/ui';
 import { useUser } from '@/hooks/UserContext';
 import { useEnvironment } from '@/hooks/useEnvironment';
 import { useMutation } from '@tanstack/react-query';
@@ -13,7 +13,7 @@ import {
 	getPlanWebhookEvents,
 	getSubscriptionWebhookEvents,
 	getInvoiceWebhookEvents,
-} from '@/types/enums/StripeWebhookEvents';
+} from '@/types';
 
 interface StripeConnectionDrawerProps {
 	isOpen: boolean;

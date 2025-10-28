@@ -2,12 +2,12 @@ import { useNavigate, useParams, useOutletContext } from 'react-router-dom';
 import { AddButton, Card, CardHeader, NoDataCard } from '@/components/atoms';
 import CustomerApi from '@/api/CustomerApi';
 import { useQuery } from '@tanstack/react-query';
-import SubscriptionTable from '@/components/organisms/Subscription/SubscriptionTable';
-import { Subscription } from '@/models/Subscription';
-import Loader from '@/components/atoms/Loader';
+import { SubscriptionTable } from '@/components/organisms';
+import { Subscription } from '@/models';
+import { Loader } from '@/components/atoms';
 import toast from 'react-hot-toast';
-import CustomerUsageTable from '@/components/molecules/CustomerUsageTable/CustomerUsageTable';
 import { RouteNames } from '@/core/routes/Routes';
+import CustomerUsageTable from '@/components/molecules/CustomerUsageTable';
 
 type ContextType = {
 	isArchived: boolean;

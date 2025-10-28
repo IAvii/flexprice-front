@@ -2,15 +2,14 @@ import { Button, DatePicker, Input, Select } from '@/components/atoms';
 import { currencyOptions } from '@/constants/constants';
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { cn } from '@/lib/utils';
-import { Wallet } from '@/models/Wallet';
+import { Wallet, WALLET_CONFIG_PRICE_TYPE } from '@/models';
 import WalletApi from '@/api/WalletApi';
-import { getCurrencySymbol } from '@/utils/common/helper_functions';
+import { getCurrencySymbol } from '@/utils';
 import { useMutation } from '@tanstack/react-query';
 import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
-import { CreateWalletPayload } from '@/types/dto';
-import { WALLET_CONFIG_PRICE_TYPE } from '@/models/Wallet';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { CreateWalletPayload } from '@/types';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui';
 
 interface Props {
 	customerId: string;

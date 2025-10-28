@@ -2,7 +2,7 @@ import { Select, DatePicker, FormHeader, Label, Toggle } from '@/components/atom
 import PriceTable from '@/components/organisms/Subscription/PriceTable';
 import { cn } from '@/lib/utils';
 import { toSentenceCase } from '@/utils/common/helper_functions';
-import { ExpandedPlan } from '@/types/plan';
+import { ExpandedPlan } from '@/types';
 import { useMemo, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import CreditGrantTable from '@/components/molecules/CreditGrant/CreditGrantTable';

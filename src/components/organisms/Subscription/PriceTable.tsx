@@ -1,16 +1,16 @@
 import { FC, useState, useMemo } from 'react';
 import { ColumnData, FlexpriceTable, LineItemCoupon } from '@/components/molecules';
 import PriceOverrideDialog from '@/components/molecules/PriceOverrideDialog/PriceOverrideDialog';
-import { Price, PRICE_TYPE } from '@/models/Price';
+import { Price, PRICE_TYPE } from '@/models';
 import { ChevronDownIcon, ChevronUpIcon, Pencil, RotateCcw, Tag } from 'lucide-react';
 import { FormHeader } from '@/components/atoms';
 import { motion } from 'framer-motion';
 import { ChargeValueCell } from '@/components/molecules';
 import { capitalize } from 'es-toolkit';
-import { Coupon } from '@/models/Coupon';
+import { Coupon } from '@/models';
 import { BsThreeDots } from 'react-icons/bs';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ExtendedPriceOverride } from '@/utils/common/price_override_helpers';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
+import { ExtendedPriceOverride } from '@/utils';
 
 export interface Props {
 	data: Price[];

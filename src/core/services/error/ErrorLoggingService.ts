@@ -1,4 +1,4 @@
-import { NodeEnv } from '@/types/env';
+import { NodeEnv } from '@/types';
 import * as Sentry from '@sentry/react';
 import posthog from 'posthog-js';
 

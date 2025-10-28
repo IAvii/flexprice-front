@@ -9,7 +9,7 @@ import { RecordPaymentPayload } from '@/types/dto/Payment';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { LoaderCircleIcon } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui';
 import { ServerError } from '@/core/axios/types';
 import { CONNECTION_PROVIDER_TYPE } from '@/models/Connection';
 

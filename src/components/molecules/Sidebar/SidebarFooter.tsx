@@ -1,13 +1,11 @@
 import { BookOpen, ExternalLink, ChevronsUpDown, CodeXml, LogOut, ListChecks, CreditCard, Webhook } from 'lucide-react';
 import { RouteNames } from '@/core/routes/Routes';
-import { SidebarMenuButton, useSidebar } from '@/components/ui/sidebar';
+import { SidebarMenuButton, useSidebar, Popover, PopoverContent, PopoverTrigger, Skeleton } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import AuthService from '@/core/auth/AuthService';
 import useUser from '@/hooks/useUser';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const SidebarFooter = () => {
 	const navigate = useNavigate();

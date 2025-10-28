@@ -1,4 +1,4 @@
-import { NODE_ENV, NodeEnv } from '@/types/env';
+import { NODE_ENV, NodeEnv } from '@/types';
 import supabase from '../services/supbase/config';
 import { RouteNames } from '../routes/Routes';
 

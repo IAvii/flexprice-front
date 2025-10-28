@@ -4,7 +4,7 @@ import * as React from 'react';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, ReferenceArea, Brush } from 'recharts';
 import { useState } from 'react';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui';
 import { GetUsageAnalyticsResponse } from '@/types/dto';
 import { UsageAnalyticItem } from '@/models/Analytics';
 

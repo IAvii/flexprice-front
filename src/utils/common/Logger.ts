@@ -1,4 +1,4 @@
-import { NODE_ENV, NodeEnv } from '@/types/env';
+import { NODE_ENV, NodeEnv } from '@/types';
 
 export enum LogLevel {
 	INFO = 'info',

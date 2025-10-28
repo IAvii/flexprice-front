@@ -8,7 +8,7 @@ import { EyeOff } from 'lucide-react';
 import { EyeIcon } from 'lucide-react';
 import { RouteNames } from '@/core/routes/Routes';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { NODE_ENV, NodeEnv } from '@/types/env';
+import { NODE_ENV, NodeEnv } from '@/types';
 import GoogleSignin from './GoogleSignin';
 interface SignupFormProps {
 	switchTab: (tab: string) => void;

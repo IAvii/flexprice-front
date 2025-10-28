@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, Switch } from '@/components/ui';
 import { Button } from '@/components/atoms';
-import { Switch } from '@/components/ui/switch';
 import { CreditCard, ExternalLink, Copy, CheckCircle } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import PaymentApi from '@/api/PaymentApi';

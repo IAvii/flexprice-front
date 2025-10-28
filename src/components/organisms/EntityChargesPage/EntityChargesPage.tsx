@@ -16,7 +16,7 @@ import UsagePricingForm from '@/components/organisms/PlanForm/UsagePricingForm';
 import { RouteNames } from '@/core/routes/Routes';
 import { useBreadcrumbsStore } from '@/store/useBreadcrumbsStore';
 import { RectangleRadiogroup, RectangleRadiogroupOption, RolloutChargesModal, RolloutOption } from '@/components/molecules';
-import { Dialog } from '@/components/ui/dialog';
+import { Dialog } from '@/components/ui';
 import { Gauge, Repeat } from 'lucide-react';
 import { BILLING_CADENCE, INVOICE_CADENCE } from '@/models/Invoice';
 import { BILLING_MODEL, PRICE_TYPE, PRICE_ENTITY_TYPE, PRICE_UNIT_TYPE } from '@/models/Price';

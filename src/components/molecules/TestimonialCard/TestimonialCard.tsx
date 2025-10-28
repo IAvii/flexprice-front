@@ -1,5 +1,5 @@
 import React from 'react';
-import { Testimonial } from '../../../types/testimonial';
+import { Testimonial } from '@/types';
 import Card from '../../atoms/Card/Card';
 import { getTypographyClass } from '@/lib/typography';
 import { cn } from '@/lib/utils';

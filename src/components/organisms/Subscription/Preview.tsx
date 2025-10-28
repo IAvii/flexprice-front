@@ -13,7 +13,7 @@ import { calculateAnniversaryBillingAnchor, calculateCalendarBillingAnchor } fro
 import { cn } from '@/lib/utils';
 import { Calendar, Receipt } from 'lucide-react';
 import TimelinePreview, { PreviewTimelineItem } from './TimelinePreview';
-import { ExpandedPlan } from '@/types/plan';
+import { ExpandedPlan } from '@/types';
 import { Coupon } from '@/models/Coupon';
 import { ExtendedPriceOverride, getCurrentPriceAmount } from '@/utils/common/price_override_helpers';
 import { TaxRateOverride } from '@/types/dto/tax';

@@ -1,4 +1,4 @@
-declare interface Filters {
+export interface Filters {
 	expand?: string;
 	limit?: number;
 	offset?: number;

@@ -1,12 +1,12 @@
 import { Button, Chip, Dialog, Input, Page, Select, SelectOption, Textarea } from '@/components/atoms';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useBreadcrumbsStore } from '@/store/useBreadcrumbsStore';
+import { Skeleton } from '@/components/ui';
+import { useBreadcrumbsStore } from '@/store';
 import InvoiceApi from '@/api/InvoiceApi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CreditNote } from '@/models';
-import { CreateCreditNoteLineItemRequest, CreateCreditNoteParams, CREDIT_NOTE_REASON, CREDIT_NOTE_TYPE } from '@/types/dto';
+import { CreateCreditNoteLineItemRequest, CreateCreditNoteParams, CREDIT_NOTE_REASON, CREDIT_NOTE_TYPE } from '@/types';
 import CreditNoteApi from '@/api/CreditNoteApi';
 import { PAYMENT_STATUS, formatCurrency, getCurrencySymbol, toSentenceCase } from '@/constants';
 import toast from 'react-hot-toast';

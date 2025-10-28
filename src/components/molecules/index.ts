@@ -87,7 +87,7 @@ export { default as SubscriptionPauseWarning } from './CustomerSubscription/Subs
 
 export { default as DebugMenu } from './DebugMenu';
 
-export { default as PricingCard } from './PricingCard';
+export { default as PricingCard, type PricingCardProps } from './PricingCard';
 
 export { default as ApiDocs, ApiDocsContent } from './ApiDocs';
 
@@ -104,8 +104,8 @@ export { default as UpdateTenantDrawer } from './Tenant/UpdateTenantDrawer';
 export { default as TerminateWalletModal } from './TerminateWalletModal';
 
 export { QueryBuilder, FilterPopover, SortDropdown, FilterMultiSelect } from './QueryBuilder';
-export type { FilterCondition, FilterField, FilterFieldType, FilterOperator, DataType } from '@/types/common/QueryBuilder';
-export { sanitizeFilterConditions, sanitizeSortConditions } from '@/types/formatters/QueryBuilder';
+export type { FilterCondition, FilterField, FilterFieldType, FilterOperator, DataType, SortDirection } from './QueryBuilder';
+export { sanitizeFilterConditions, sanitizeSortConditions } from './QueryBuilder';
 
 export { CreditGrantTable, CreditGrantModal } from './CreditGrant';
 
@@ -134,6 +134,7 @@ export { default as TaxTable } from './TaxTable/TaxTable';
 
 export { default as TaxDrawer } from './TaxDrawer/TaxDrawer';
 
+export { default as TaxAssociationTable } from './TaxAssociationTable';
 export { default as TaxAssociationDialog } from './TaxAssociationDialog';
 
 export { default as AppliedTaxesTable } from './AppliedTaxesTable';
@@ -145,5 +146,8 @@ export { SubscriptionTable } from './SubscriptionTable';
 export { default as CustomerUsageChart } from './CustomerUsageChart';
 export { default as CustomerCostChart } from './CustomerCostChart';
 
-export { CostDataTable } from './CostDataTable';
 export { default as MetricCard } from './MetricCard';
+export { default as TestimonialCard } from './TestimonialCard/TestimonialCard';
+export { default as CustomerHeader } from './Customer/CustomerHeader';
+export { default as CustomerUsageTable } from './CustomerUsageTable';
+export { CostDataTable } from './CostDataTable';

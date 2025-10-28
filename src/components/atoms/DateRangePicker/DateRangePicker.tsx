@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CalendarIcon, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { formatDateShort } from '@/utils/common/helper_functions';
 import { startOfMonth } from 'date-fns';

@@ -1,4 +1,4 @@
-import { NODE_ENV, NodeEnv } from '@/types/env';
+import { NODE_ENV, NodeEnv } from '@/types';
 import { createClient } from '@supabase/supabase-js';
 
 const isSelfHosted = NODE_ENV === NodeEnv.SELF_HOSTED;

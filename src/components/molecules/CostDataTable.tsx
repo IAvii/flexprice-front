@@ -1,8 +1,7 @@
 import React from 'react';
-import FlexpriceTable, { ColumnData } from '@/components/molecules/Table';
-import { CostAnalyticItem } from '@/types/dto/Cost';
-import { formatNumber } from '@/utils/common';
-import { getCurrencySymbol } from '@/utils/common/helper_functions';
+import { FlexpriceTable, type ColumnData } from '@/components/molecules';
+import { CostAnalyticItem } from '@/types';
+import { formatNumber, getCurrencySymbol } from '@/utils';
 
 interface CostDataTableProps {
 	items: CostAnalyticItem[];

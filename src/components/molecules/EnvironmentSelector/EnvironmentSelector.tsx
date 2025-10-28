@@ -1,13 +1,12 @@
 import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui';
 import { Blocks, Rocket, Server, ChevronsUpDown, Plus } from 'lucide-react';
 import { useGlobalLoading } from '@/core/services/tanstack/ReactQueryProvider';
 import useUser from '@/hooks/useUser';
-import { Select, SelectContent } from '@/components/ui/select';
+import { Select, SelectContent, useSidebar } from '@/components/ui';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { SelectOption } from '@/components/atoms/Select/Select';
-import { useSidebar } from '@/components/ui/sidebar';
 import { useNavigate } from 'react-router-dom';
 import { RouteNames } from '@/core/routes/Routes';
 import { useEnvironment } from '@/hooks/useEnvironment';

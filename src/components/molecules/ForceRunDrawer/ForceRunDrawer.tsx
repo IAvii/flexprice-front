@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import { Button, Input, Modal } from '@/components/atoms';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem, Label } from '@/components/ui';
 
 interface ForceRunDrawerProps {
 	isOpen: boolean;

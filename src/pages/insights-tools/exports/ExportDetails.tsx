@@ -8,7 +8,7 @@ import ConnectionApi from '@/api/ConnectionApi';
 import toast from 'react-hot-toast';
 import ForceRunDrawer from '@/components/molecules/ForceRunDrawer/ForceRunDrawer';
 import TaskRunsTable from '@/components/molecules/TaskRunsTable/TaskRunsTable';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui';
 
 const ExportDetails = () => {
 	const { connectionId, exportId } = useParams<{ connectionId: string; exportId: string }>();

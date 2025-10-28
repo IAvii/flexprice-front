@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import EntityChargesPage, { ENTITY_TYPE } from '@/components/organisms/EntityChargesPage';
+import { EntityChargesPage, ENTITY_TYPE } from '@/components/organisms';
 
 const CostSheetChargesPage = () => {
 	const { costSheetId } = useParams<{ costSheetId: string }>();

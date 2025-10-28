@@ -3,14 +3,13 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { Card, CardHeader, AddButton, Loader, NoDataCard, ShortPagination } from '@/components/atoms';
 import { ApiDocsContent } from '@/components/molecules';
 import TaxApi from '@/api/TaxApi';
-import { TAXRATE_ENTITY_TYPE } from '@/models/Tax';
+import { TAXRATE_ENTITY_TYPE } from '@/models';
 import usePagination from '@/hooks/usePagination';
 import toast from 'react-hot-toast';
-import TaxAssociationTable from '@/components/molecules/TaxAssociationTable/TaxAssociationTable';
-import TaxAssociationDialog from '@/components/molecules/TaxAssociationDialog';
-import { CreateTaxAssociationRequest } from '@/types/dto/tax';
+import { TaxAssociationTable, TaxAssociationDialog } from '@/components/molecules';
+import { CreateTaxAssociationRequest } from '@/types';
 import { useState } from 'react';
-import { EXPAND } from '@/models/expand';
+import { EXPAND } from '@/models';
 
 type ContextType = {
 	isArchived: boolean;

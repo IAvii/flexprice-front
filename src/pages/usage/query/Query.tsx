@@ -2,26 +2,18 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Button, Page, Select } from '@/components/atoms';
 import { ApiDocsContent, QueryBuilder } from '@/components/molecules';
 import EventsApi from '@/api/EventsApi';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui';
 import { RefreshCw } from 'lucide-react';
-import {
-	FilterField,
-	FilterFieldType,
-	DEFAULT_OPERATORS_PER_DATA_TYPE,
-	DataType,
-	FilterOperator,
-	SortDirection,
-} from '@/types/common/QueryBuilder';
+import { FilterField, FilterFieldType, DEFAULT_OPERATORS_PER_DATA_TYPE, DataType, FilterOperator, SortDirection } from '@/types';
 import useFilterSorting from '@/hooks/useFilterSorting';
-import { TypedBackendFilter } from '@/types/formatters/QueryBuilder';
-import { GetUsageByMeterPayload } from '@/types/dto/Events';
-import { formatDateShort } from '@/utils/common/helper_functions';
+import { TypedBackendFilter } from '@/types';
+import { GetUsageByMeterPayload } from '@/types';
+import { formatDateShort } from '@/utils';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip as RechartsTooltip } from 'recharts';
-import { Card, CardContent } from '@/components/ui/card';
-import { ChartConfig, ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
-import { formatDateTime } from '@/utils/common/format_date';
+import { Card, CardContent, ChartConfig, ChartContainer, ChartTooltipContent } from '@/components/ui';
+import { formatDateTime } from '@/utils';
 import SelectMeter from '@/components/organisms/PlanForm/SelectMeter';
 
 // Helper function to convert sanitized filters to Usage API parameters

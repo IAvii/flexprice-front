@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import { Loader2, Rocket, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -6,10 +6,10 @@ import useEnvironment from '@/hooks/useEnvironment';
 import { useQuery } from '@tanstack/react-query';
 import CustomerApi from '@/api/CustomerApi';
 import { Link, useNavigate } from 'react-router-dom';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@/components/ui';
 import { RouteNames } from '@/core/routes/Routes';
 import EventsApi from '@/api/EventsApi';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui';
 import { AddButton } from '@/components/atoms';
 
 const TOTAL_EVENTS = 60; // Number of events to simulate

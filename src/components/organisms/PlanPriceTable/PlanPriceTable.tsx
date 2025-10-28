@@ -1,8 +1,7 @@
 import { FC, useCallback, useState, useMemo } from 'react';
 import { Button, Card, CardHeader, NoDataCard } from '@/components/atoms';
 import { FlexpriceTable, ColumnData, DropdownMenu, RolloutChargesModal, RolloutOption } from '@/components/molecules';
-import { Price } from '@/models/Price';
-import { Plan } from '@/models/Plan';
+import { Price, Plan } from '@/models';
 import { Plus, Trash2 } from 'lucide-react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { PriceApi } from '@/api/PriceApi';
@@ -11,11 +10,11 @@ import SubscriptionApi from '@/api/SubscriptionApi';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { RouteNames } from '@/core/routes/Routes';
-import { getPriceTypeLabel } from '@/utils/common/helper_functions';
+import { getPriceTypeLabel } from '@/utils';
 import { BILLING_PERIOD } from '@/constants/constants';
 import { ChargeValueCell } from '@/components/molecules';
 import { formatInvoiceCadence } from '@/pages';
-import { Dialog } from '@/components/ui/dialog';
+import { Dialog } from '@/components/ui';
 
 // ===== TYPES & CONSTANTS =====
 

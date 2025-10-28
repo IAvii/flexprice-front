@@ -7,7 +7,7 @@ import CustomerApi from '@/api/CustomerApi';
 import { PlanApi } from '@/api/PlanApi';
 import SubscriptionApi from '@/api/SubscriptionApi';
 import { toSentenceCase } from '@/utils/common/helper_functions';
-import { ExpandedPlan } from '@/types/plan';
+import { ExpandedPlan } from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';

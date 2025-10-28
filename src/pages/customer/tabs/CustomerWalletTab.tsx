@@ -9,9 +9,7 @@ import {
 	MetadataModal,
 	WalletAlertDialog,
 } from '@/components/molecules';
-import { Dialog } from '@/components/ui/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Dialog, Skeleton, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui';
 import usePagination from '@/hooks/usePagination';
 import { Wallet } from '@/models/Wallet';
 import WalletApi from '@/api/WalletApi';

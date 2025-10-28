@@ -1,12 +1,12 @@
-import { BILLING_MODEL, Price, PRICE_TYPE, TIER_MODE } from '@/models/Price';
-import { getPriceTableCharge, calculateDiscountedPrice } from '@/utils/common/price_helpers';
+import { BILLING_MODEL, Price, PRICE_TYPE, TIER_MODE } from '@/models';
+import { getPriceTableCharge, calculateDiscountedPrice } from '@/utils';
 import { Info } from 'lucide-react';
 import { formatAmount } from '@/components/atoms/Input/Input';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { getCurrencySymbol } from '@/utils/common/helper_functions';
-import { Coupon } from '@/models/Coupon';
-import formatCouponName from '@/utils/common/format_coupon_name';
-import { ExtendedPriceOverride } from '@/utils/common/price_override_helpers';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui';
+import { getCurrencySymbol } from '@/utils';
+import { Coupon } from '@/models';
+import { formatCouponName } from '@/utils';
+import { ExtendedPriceOverride } from '@/utils';
 import { cn } from '@/lib/utils';
 
 interface Props {

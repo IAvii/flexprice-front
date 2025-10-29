@@ -29,6 +29,8 @@ const PlanDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetchQuery
 	});
 	const [metadataString, setMetadataString] = useState<string>(data?.metadata ? JSON.stringify(data.metadata, null, 2) : '');
 	const [errors, setErrors] = useState<Partial<Record<keyof CreatePlanRequest, string>>>({});
+	// Track if user manually edited the lookup key to stop auto-generation
+	const [isLookupKeyManuallyEdited, setIsLookupKeyManuallyEdited] = useState(false);
 
 	const { mutate: updatePlan, isPending } = useMutation<
 		PlanResponse | CreatePlanResponse,
@@ -73,6 +75,8 @@ const PlanDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetchQuery
 			setMetadataString('');
 		}
 		setErrors({});
+		// Reset manual edit tracking when drawer opens/closes or data changes
+		setIsLookupKeyManuallyEdited(false);
 	}, [data]);
 
 	const validateForm = () => {
@@ -156,15 +160,15 @@ const PlanDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetchQuery
 				value={formData.name}
 				error={errors.name}
 				onChange={(e) => {
-					const updates: any = {
+					const newFormData = {
 						...formData,
 						name: e,
 					};
-					// Only auto-generate lookup key if creating a new plan AND lookup key is empty or follows the auto-generated pattern
-					if (!isEdit || !formData.lookup_key) {
-						updates.lookup_key = 'plan-' + e.replace(/\s/g, '-').toLowerCase();
+					// Auto-generate lookup key from plan name, but only if user hasn't manually edited it
+					if (!isLookupKeyManuallyEdited) {
+						newFormData.lookup_key = 'plan-' + e.replace(/\s/g, '-').toLowerCase();
 					}
-					setFormData(updates);
+					setFormData(newFormData);
 				}}
 			/>
 
@@ -172,7 +176,11 @@ const PlanDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetchQuery
 			<Input
 				label='Lookup Key'
 				error={errors.lookup_key}
-				onChange={(e) => setFormData({ ...formData, lookup_key: e })}
+				onChange={(e) => {
+					setFormData({ ...formData, lookup_key: e });
+					// Mark that user manually edited the lookup key, stop auto-generation
+					setIsLookupKeyManuallyEdited(true);
+				}}
 				value={formData.lookup_key}
 				placeholder='Enter a slug for the plan'
 				description={'A system identifier used for API calls and integrations.'}

@@ -1,7 +1,9 @@
 import { FC, useState, useEffect } from 'react';
 import { Button, Input, Sheet, Spacer, Select } from '@/components/atoms';
 import { useMutation } from '@tanstack/react-query';
-import ScheduledTaskApi, { ScheduledTask, CreateScheduledTaskPayload } from '@/api/ScheduledTaskApi';
+import { TaskApi } from '@/api';
+import { ScheduledTask } from '@/models';
+import { CreateScheduledTaskPayload } from '@/types/dto';
 import toast from 'react-hot-toast';
 
 interface ExportDrawerProps {
@@ -116,7 +118,7 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 				},
 			};
 
-			return await ScheduledTaskApi.createScheduledTask(payload);
+			return await TaskApi.createScheduledTask(payload);
 		},
 		onSuccess: (response) => {
 			toast.success('Export task created successfully');
@@ -144,7 +146,7 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 				},
 			};
 
-			return await ScheduledTaskApi.updateScheduledTask(exportTask!.id, payload);
+			return await TaskApi.updateScheduledTask(exportTask!.id, payload);
 		},
 		onSuccess: (response) => {
 			toast.success('Export task updated successfully');

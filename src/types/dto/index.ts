@@ -29,7 +29,16 @@ export type {
 	CostPoint,
 } from './Cost';
 
-export type { GetTasksPayload, GetTasksResponse, AddTaskPayload } from './Task';
+export type {
+	GetTasksPayload,
+	GetTasksResponse,
+	AddTaskPayload,
+	GetScheduledTasksPayload,
+	GetScheduledTasksResponse,
+	CreateScheduledTaskPayload,
+	UpdateScheduledTaskPayload,
+	ForceRunPayload,
+} from './Task';
 
 export type { SignupData, LoginData, LocalUser } from './Auth';
 

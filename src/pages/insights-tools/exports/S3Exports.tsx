@@ -3,8 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Settings, Trash2, Eye, BarChart3 } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import ConnectionApi from '@/api/ConnectionApi';
-import ScheduledTaskApi from '@/api/ScheduledTaskApi';
+import { ConnectionApi, TaskApi } from '@/api';
 import toast from 'react-hot-toast';
 import S3ConnectionDrawer from '@/components/molecules/S3ConnectionDrawer/S3ConnectionDrawer';
 import { ApiDocsContent } from '@/components/molecules';
@@ -33,7 +32,7 @@ const S3Exports = () => {
 			await Promise.all(
 				connections.map(async (connection) => {
 					try {
-						const response = await ScheduledTaskApi.getAllScheduledTasks({
+						const response = await TaskApi.getAllScheduledTasks({
 							connection_id: connection.id,
 						});
 						// Filter out deleted tasks

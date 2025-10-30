@@ -3,8 +3,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Play, Pause, Trash2, RefreshCw } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import ScheduledTaskApi from '@/api/ScheduledTaskApi';
-import ConnectionApi from '@/api/ConnectionApi';
+import { TaskApi, ConnectionApi } from '@/api';
 import toast from 'react-hot-toast';
 import ForceRunDrawer from '@/components/molecules/ForceRunDrawer/ForceRunDrawer';
 import TaskRunsTable from '@/components/molecules/TaskRunsTable/TaskRunsTable';
@@ -23,7 +22,7 @@ const ExportDetails = () => {
 		refetch: refetchExport,
 	} = useQuery({
 		queryKey: ['scheduled-task', exportId],
-		queryFn: () => ScheduledTaskApi.getScheduledTaskById(exportId!),
+		queryFn: () => TaskApi.getScheduledTaskById(exportId!),
 		enabled: !!exportId,
 	});
 
@@ -36,7 +35,7 @@ const ExportDetails = () => {
 
 	// Toggle task enabled/disabled
 	const { mutate: toggleTask, isPending: isTogglingTask } = useMutation({
-		mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) => ScheduledTaskApi.updateScheduledTask(id, { enabled }),
+		mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) => TaskApi.updateScheduledTask(id, { enabled }),
 		onSuccess: () => {
 			toast.success('Export task updated successfully');
 			refetchExport();
@@ -49,7 +48,7 @@ const ExportDetails = () => {
 	// Force run task
 	const { mutate: forceRunTask, isPending: isForceRunning } = useMutation({
 		mutationFn: ({ id, startTime, endTime }: { id: string; startTime?: string; endTime?: string }) =>
-			ScheduledTaskApi.forceRunScheduledTask(id, startTime && endTime ? { start_time: startTime, end_time: endTime } : undefined),
+			TaskApi.forceRunScheduledTask(id, startTime && endTime ? { start_time: startTime, end_time: endTime } : undefined),
 		onSuccess: () => {
 			toast.success('Export task started successfully');
 			setIsForceRunDrawerOpen(false);
@@ -61,7 +60,7 @@ const ExportDetails = () => {
 
 	// Delete task
 	const { mutate: deleteTask, isPending: isDeletingTask } = useMutation({
-		mutationFn: (id: string) => ScheduledTaskApi.deleteScheduledTask(id),
+		mutationFn: (id: string) => TaskApi.deleteScheduledTask(id),
 		onSuccess: () => {
 			toast.success('Export task deleted successfully');
 			navigate(`/tools/exports/s3/${connectionId}/export`);

@@ -3,8 +3,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Trash2, Eye, Settings } from 'lucide-react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import ScheduledTaskApi from '@/api/ScheduledTaskApi';
-import ConnectionApi from '@/api/ConnectionApi';
+import { TaskApi, ConnectionApi } from '@/api';
 import toast from 'react-hot-toast';
 import ExportDrawer from '@/components/molecules/ExportDrawer/ExportDrawer';
 
@@ -27,7 +26,7 @@ const ExportManagement = () => {
 		isLoading: isLoadingTasks,
 	} = useQuery({
 		queryKey: ['scheduled-tasks', connectionId],
-		queryFn: () => ScheduledTaskApi.getAllScheduledTasks({ connection_id: connectionId! }),
+		queryFn: () => TaskApi.getAllScheduledTasks({ connection_id: connectionId! }),
 		enabled: !!connectionId,
 	});
 
@@ -36,7 +35,7 @@ const ExportManagement = () => {
 
 	// Delete task mutation
 	const { mutate: deleteTask, isPending: isDeletingTask } = useMutation({
-		mutationFn: (id: string) => ScheduledTaskApi.deleteScheduledTask(id),
+		mutationFn: (id: string) => TaskApi.deleteScheduledTask(id),
 		onSuccess: () => {
 			toast.success('Export task deleted successfully');
 			refetchTasks();

@@ -126,7 +126,7 @@ const ExportDetails = () => {
 						isLoading={isForceRunning}
 						className='flex items-center gap-2'>
 						<RefreshCw className='w-4 h-4' />
-						Force Run
+						Manual Export
 					</Button>
 					<Button
 						variant='outline'

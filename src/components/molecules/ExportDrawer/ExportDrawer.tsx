@@ -13,7 +13,7 @@ interface ExportDrawerProps {
 }
 
 interface ExportFormData {
-	entity_type: 'events' | 'invoices';
+	entity_type: 'events' | 'invoice';
 	interval: 'hourly' | 'daily';
 	enabled: boolean;
 	bucket: string;
@@ -49,7 +49,7 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 	useEffect(() => {
 		if (exportTask) {
 			setFormData({
-				entity_type: exportTask.entity_type as 'events' | 'invoices',
+				entity_type: exportTask.entity_type as 'events' | 'invoice',
 				interval: exportTask.interval,
 				enabled: exportTask.enabled,
 				bucket: exportTask.job_config.bucket,
@@ -181,11 +181,11 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 					<label className='block text-sm font-medium text-gray-700 mb-2'>Entity Type</label>
 					<Select
 						value={formData.entity_type}
-						onChange={(value) => handleChange('entity_type', value as 'events' | 'invoices')}
+						onChange={(value) => handleChange('entity_type', value as 'events' | 'invoice')}
 						error={errors.entity_type}
 						options={[
 							{ value: 'events', label: 'Events' },
-							{ value: 'invoices', label: 'Invoices' },
+							{ value: 'invoice', label: 'Invoice' },
 						]}
 					/>
 					<p className='text-xs text-gray-500 mt-1'>Select the type of data to export</p>

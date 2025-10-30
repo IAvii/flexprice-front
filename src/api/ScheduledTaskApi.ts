@@ -1,7 +1,7 @@
 import { AxiosClient } from '@/core/axios/verbs';
 import { generateQueryParams } from '@/utils/common/api_helper';
 
-export type ScheduledEntityType = 'events' | 'invoices';
+export type ScheduledEntityType = 'events' | 'invoice';
 
 export interface ScheduledTask {
 	id: string;

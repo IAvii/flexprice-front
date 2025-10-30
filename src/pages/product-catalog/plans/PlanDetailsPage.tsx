@@ -259,8 +259,9 @@ const PlanDetailsPage = () => {
 	}
 
 	const planDetails = [
-		{ label: 'Plan Name', value: planData?.name },
-		{ label: 'Plan Description', value: planData?.description || '--' },
+		{ label: 'Name', value: planData?.name },
+		{ label: 'Lookup Key', value: planData?.lookup_key || '--' },
+		{ label: 'Description', value: planData?.description || '--' },
 		{ label: 'Created Date', value: formatDate(planData?.created_at ?? '') },
 		{
 			label: 'Status',

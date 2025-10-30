@@ -29,8 +29,6 @@ const PlanDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetchQuery
 	});
 	const [metadataString, setMetadataString] = useState<string>(data?.metadata ? JSON.stringify(data.metadata, null, 2) : '');
 	const [errors, setErrors] = useState<Partial<Record<keyof CreatePlanRequest, string>>>({});
-	// Track if user manually edited the lookup key to stop auto-generation
-	const [isLookupKeyManuallyEdited, setIsLookupKeyManuallyEdited] = useState(false);
 
 	const { mutate: updatePlan, isPending } = useMutation<
 		PlanResponse | CreatePlanResponse,
@@ -75,9 +73,14 @@ const PlanDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetchQuery
 			setMetadataString('');
 		}
 		setErrors({});
-		// Reset manual edit tracking when drawer opens/closes or data changes
-		setIsLookupKeyManuallyEdited(false);
 	}, [data, open]);
+
+	// Auto-generate lookup key from name when creating (not editing)
+	useEffect(() => {
+		if (!isEdit) {
+			setFormData((prev) => ({ ...prev, lookup_key: `plan-${prev.name?.toLowerCase().replace(/\s/g, '-') || ''}` }));
+		}
+	}, [formData.name, isEdit]);
 
 	const validateForm = () => {
 		const newErrors: Partial<Record<keyof CreatePlanRequest, string>> = {};
@@ -128,7 +131,7 @@ const PlanDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetchQuery
 			const updateDto: UpdatePlanRequest & { id: string } = {
 				id: formData.id!,
 				name: formData.name.trim(),
-				lookup_key: formData.lookup_key,
+				lookup_key: formData.lookup_key, // Optional - matches backend structure
 				description: formData.description,
 				metadata,
 			};
@@ -160,15 +163,7 @@ const PlanDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetchQuery
 				value={formData.name}
 				error={errors.name}
 				onChange={(e) => {
-					const newFormData = {
-						...formData,
-						name: e,
-					};
-					// Auto-generate lookup key from plan name, but only if user hasn't manually edited it
-					if (!isLookupKeyManuallyEdited) {
-						newFormData.lookup_key = 'plan-' + e.replace(/\s/g, '-').toLowerCase();
-					}
-					setFormData(newFormData);
+					setFormData({ ...formData, name: e });
 				}}
 			/>
 
@@ -178,8 +173,6 @@ const PlanDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetchQuery
 				error={errors.lookup_key}
 				onChange={(e) => {
 					setFormData({ ...formData, lookup_key: e });
-					// Mark that user manually edited the lookup key, stop auto-generation
-					setIsLookupKeyManuallyEdited(true);
 				}}
 				value={formData.lookup_key}
 				placeholder='Enter a slug for the plan'

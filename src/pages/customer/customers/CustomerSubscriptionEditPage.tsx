@@ -154,6 +154,10 @@ const CustomerSubscriptionEditPage: React.FC = () => {
 
 	// Convert LineItem to Price object for PriceOverrideDialog
 	const convertLineItemToPrice = (lineItem: LineItem): Price => {
+		if (lineItem.price) {
+			return lineItem.price;
+		}
+
 		return {
 			id: lineItem.price_id,
 			amount: lineItem.quantity?.toString() || '0',

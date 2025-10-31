@@ -207,13 +207,24 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 		return counts;
 	}, [subscriptionState.addons]);
 
+	// Helper function to check if price should be shown (start_date <= now or no start_date)
+	const isPriceActive = (price: { start_date?: string }) => {
+		if (!price.start_date) return true; // No start_date means it's active
+		const now = new Date();
+		const startDate = new Date(price.start_date);
+		// Check if date is valid
+		if (isNaN(startDate.getTime())) return true; // Invalid date, treat as active
+		return startDate <= now;
+	};
+
 	// Memoized function to get combined prices from subscription and addons
 	const getPrices = useMemo(() => {
 		const subscriptionPrices =
 			subscriptionState.prices?.prices?.filter(
 				(price) =>
 					price.billing_period.toLowerCase() === subscriptionState.billingPeriod.toLowerCase() &&
-					price.currency.toLowerCase() === subscriptionState.currency.toLowerCase(),
+					price.currency.toLowerCase() === subscriptionState.currency.toLowerCase() &&
+					isPriceActive(price),
 			) || [];
 
 		// Get matching addon prices and create unique instances for each count
@@ -224,7 +235,8 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 					addon.prices?.filter(
 						(price) =>
 							price.billing_period.toLowerCase() === subscriptionState.billingPeriod.toLowerCase() &&
-							price.currency.toLowerCase() === subscriptionState.currency.toLowerCase(),
+							price.currency.toLowerCase() === subscriptionState.currency.toLowerCase() &&
+							isPriceActive(price),
 					) || [];
 
 				// Create unique instances for each count with unique IDs
@@ -357,7 +369,9 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 		const currentPrices =
 			prices?.prices?.filter(
 				(price) =>
-					price.billing_period.toLowerCase() === billingPeriod.toLowerCase() && price.currency.toLowerCase() === currency.toLowerCase(),
+					price.billing_period.toLowerCase() === billingPeriod.toLowerCase() &&
+					price.currency.toLowerCase() === currency.toLowerCase() &&
+					isPriceActive(price),
 			) || [];
 		const overrideLineItems = getLineItemOverrides(currentPrices, priceOverrides);
 

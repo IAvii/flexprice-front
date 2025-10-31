@@ -31,7 +31,7 @@ import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { ENTITY_STATUS } from '@/models/base';
 import { EntitlementResponse } from '@/types/dto';
 import { METER_AGGREGATION_TYPE } from '@/models/Meter';
-import { PRICE_ENTITY_TYPE } from '@/models/Price';
+import { PRICE_ENTITY_TYPE } from '@/models';
 import { PriceApi } from '@/api/PriceApi';
 import { formatBillingPeriodForDisplay } from '@/utils/common/helper_functions';
 import { ChargeValueCell } from '@/components/molecules';
@@ -113,12 +113,21 @@ const FeatureDetails = () => {
 
 	const { data: linkedPrices } = useQuery({
 		queryKey: ['fetchLinkedPrices', featureId],
-		queryFn: async () =>
-			await PriceApi.ListPrices({
+		queryFn: async () => {
+			const prices = await PriceApi.ListPrices({
 				expand: generateExpandQueryParams([EXPAND.PLAN, EXPAND.ADDONS]),
 				meter_ids: [data?.meter?.id || ''],
-				entity_types: [PRICE_ENTITY_TYPE.PLAN, PRICE_ENTITY_TYPE.ADDON],
-			}),
+				start_date_lt: new Date().toISOString(),
+			});
+			// Filter prices to only include PLAN or ADDON entity types
+			const filteredPrices = {
+				...prices,
+				items: prices.items.filter(
+					(price) => price.entity_type === PRICE_ENTITY_TYPE.PLAN || price.entity_type === PRICE_ENTITY_TYPE.ADDON,
+				),
+			};
+			return filteredPrices;
+		},
 		enabled: !!data?.meter?.id,
 	});
 

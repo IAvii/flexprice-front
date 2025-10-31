@@ -27,7 +27,6 @@ export interface GetAllPricesResponse extends Pagination {
 export interface PriceFilter extends QueryFilter, TimeRangeFilter {
 	price_ids?: string[];
 	entity_type?: PRICE_ENTITY_TYPE;
-	entity_types?: PRICE_ENTITY_TYPE[];
 	entity_ids?: string[];
 	subscription_id?: string;
 	parent_price_id?: string;

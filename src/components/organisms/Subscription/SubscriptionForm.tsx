@@ -86,12 +86,24 @@ const SubscriptionForm = ({
 		if (!value) return undefined;
 		return value instanceof Date ? value : new Date(value);
 	};
+
+	// Helper function to check if price should be shown (start_date <= now or no start_date)
+	const isPriceActive = (price: { start_date?: string }) => {
+		if (!price.start_date) return true; // No start_date means it's active
+		const now = new Date();
+		const startDate = new Date(price.start_date);
+		// Check if date is valid
+		if (isNaN(startDate.getTime())) return true; // Invalid date, treat as active
+		return startDate <= now;
+	};
+
 	// Price overrides functionality
 	const currentPrices =
 		state.prices?.prices?.filter(
 			(price) =>
 				price.billing_period.toLowerCase() === state.billingPeriod.toLowerCase() &&
-				price.currency.toLowerCase() === state.currency.toLowerCase(),
+				price.currency.toLowerCase() === state.currency.toLowerCase() &&
+				isPriceActive(price),
 		) || [];
 
 	const { overriddenPrices, overridePrice, resetOverride } = usePriceOverrides(currentPrices);
@@ -598,7 +610,7 @@ const SubscriptionForm = ({
 									{state.prices && state.selectedPlan && state.billingPeriod && state.currency && (
 										<div className='mb-2'>
 											<PriceTable
-												data={state.prices.prices || []}
+												data={currentPrices}
 												billingPeriod={state.billingPeriod}
 												currency={state.currency}
 												onPriceOverride={overridePrice}

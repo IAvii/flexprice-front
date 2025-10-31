@@ -15,6 +15,7 @@ const CostAnalyticsPage: React.FC = () => {
 	// Filter states
 	const [customerId, setCustomerId] = useState<string>('');
 	const [selectedFeatures, setSelectedFeatures] = useState<Feature[]>([]);
+	const [fetchedFeatures, setFetchedFeatures] = useState<Feature[]>([]);
 	const [startDate, setStartDate] = useState<Date>(new Date(new Date().setDate(new Date().getDate() - 30)));
 	const [endDate, setEndDate] = useState<Date>(new Date());
 
@@ -30,6 +31,9 @@ const CostAnalyticsPage: React.FC = () => {
 
 		if (selectedFeatures.length > 0) {
 			params.meter_ids = selectedFeatures.map((feature) => feature.meter_id);
+		} else if (fetchedFeatures.length > 0) {
+			// Here if the features are not selected, we should give first 10 features
+			params.meter_ids = fetchedFeatures.slice(0, 10).map((feature) => feature.meter_id);
 		}
 
 		if (startDate) {
@@ -41,7 +45,7 @@ const CostAnalyticsPage: React.FC = () => {
 		}
 
 		return params;
-	}, [customerId, selectedFeatures, startDate, endDate]);
+	}, [customerId, selectedFeatures, fetchedFeatures, startDate, endDate]);
 
 	// Debounced API parameters with 300ms delay
 	const [debouncedApiParams, setDebouncedApiParams] = useState<GetCostAnalyticsRequest | null>(null);
@@ -103,6 +107,7 @@ const CostAnalyticsPage: React.FC = () => {
 							placeholder='Select features'
 							values={selectedFeatures.map((f) => f.id)}
 							onChange={setSelectedFeatures}
+							onFeaturesFetched={setFetchedFeatures}
 							className='text-sm'
 						/>
 					</div>

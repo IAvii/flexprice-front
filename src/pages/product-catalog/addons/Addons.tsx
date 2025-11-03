@@ -184,7 +184,7 @@ const AddonsPage = () => {
 						buttonLabel: 'Create Addon',
 						buttonAction: handleOnAdd,
 					}}
-					tutorials={GUIDES.features.tutorials}
+					tutorials={GUIDES.addons.tutorials}
 					heading='Addons'
 					tags={['Addons']}
 				/>

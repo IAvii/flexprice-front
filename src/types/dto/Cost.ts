@@ -9,7 +9,7 @@ export interface GetCostAnalyticsRequest {
 	external_customer_id?: string; // Optional - for specific customer
 
 	// Additional filters
-	meter_ids?: string[];
+	feature_ids?: string[];
 
 	// Expand options - specify which entities to expand
 	expand?: string[]; // "meter", "price"

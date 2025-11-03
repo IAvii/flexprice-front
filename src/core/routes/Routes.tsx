@@ -54,7 +54,6 @@ import {
 	// Usage pages
 	Events as EventsPage,
 	Query as QueryPage,
-	CostAnalytics as CostAnalyticsPage,
 	// Developer pages
 	DeveloperPage,
 	// Onboarding pages
@@ -324,10 +323,10 @@ export const MainRouter = createBrowserRouter([
 						path: RouteNames.payments,
 						element: <PaymentPage />,
 					},
-					{
-						path: RouteNames.analytics,
-						element: <CostAnalyticsPage />,
-					},
+					// {
+					// 	path: RouteNames.analytics,
+					// 	element: <CostAnalyticsPage />,
+					// },
 					{
 						path: `${RouteNames.customers}/:id`,
 						element: <CustomerProfilePage />,

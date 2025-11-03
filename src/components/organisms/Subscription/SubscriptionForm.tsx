@@ -1,4 +1,4 @@
-import { Select, DatePicker, FormHeader, Label, Toggle } from '@/components/atoms';
+import { Select, DatePicker, FormHeader, Label, Toggle, DecimalUsageInput } from '@/components/atoms';
 import PriceTable from '@/components/organisms/Subscription/PriceTable';
 import { cn } from '@/lib/utils';
 import { toSentenceCase } from '@/utils/common/helper_functions';
@@ -542,6 +542,30 @@ const SubscriptionForm = ({
 					placeholder='Select currency'
 					disabled={isDisabled}
 				/>
+			)}
+
+			{/* Additional Fields */}
+			{state.selectedPlan && (
+				<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+					<DecimalUsageInput
+						label='Commitment Amount'
+						value={state.commitmentAmount}
+						onChange={(value) => setState((prev) => ({ ...prev, commitmentAmount: value }))}
+						placeholder='e.g. $100.00'
+						disabled={isDisabled}
+						precision={2}
+						min={0}
+					/>
+					<DecimalUsageInput
+						label='Overage Factor'
+						value={state.overageFactor}
+						onChange={(value) => setState((prev) => ({ ...prev, overageFactor: value }))}
+						placeholder='e.g. 1.5'
+						disabled={isDisabled}
+						precision={2}
+						min={0}
+					/>
+				</div>
 			)}
 
 			{/* Subscription Phases Section */}

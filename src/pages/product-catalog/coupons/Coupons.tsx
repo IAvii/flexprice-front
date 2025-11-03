@@ -172,7 +172,7 @@ const CouponsPage = () => {
 			<EmptyPage
 				heading='Coupon'
 				tags={['Coupons']}
-				tutorials={GUIDES.features.tutorials}
+				tutorials={GUIDES.coupons.tutorials}
 				emptyStateCard={{
 					heading: 'Add your first coupon',
 					description: 'Create your first coupon to offer discounts to customers.',

@@ -76,7 +76,7 @@ const CustomerAnalyticsTab = () => {
 		};
 
 		if (selectedFeatures.length > 0) {
-			params.meter_ids = selectedFeatures.map((feature) => feature.meter_id);
+			params.feature_ids = selectedFeatures.map((feature) => feature.id);
 		}
 
 		if (startDate) {

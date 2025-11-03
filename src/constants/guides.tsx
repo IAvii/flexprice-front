@@ -114,6 +114,50 @@ const GUIDES: Record<
 			},
 		],
 	},
+	addons: {
+		tutorials: [
+			{
+				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/PLAN_1_j6tdqv.svg',
+				title: 'How to create an Addon?',
+				description: 'Explore how to create a new Addons in Flexprice.',
+				onClick: () => openGuide('https://docs.flexprice.io/api-reference/addons/create-addon'),
+			},
+			{
+				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/PLAN_2_oxi9ld.svg',
+				title: 'How to list all Addons?',
+				description: 'Explore how to list all Addons.',
+				onClick: () => openGuide('https://docs.flexprice.io/api-reference/addons/list-addons'),
+			},
+			{
+				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180995/PLAN_3_lfh1mi.svg',
+				title: 'How to delete an Addon?',
+				description: 'Explore how to delete a Addon.',
+				onClick: () => openGuide('https://docs.flexprice.io/api-reference/addons/delete-addon'),
+			},
+		],
+	},
+	coupons: {
+		tutorials: [
+			{
+				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/PLAN_1_j6tdqv.svg',
+				title: 'How to create a coupon?',
+				description: 'Explore how to create a new Coupon in Flexprice.',
+				onClick: () => openGuide('https://docs.flexprice.io/api-reference/coupons/create-a-new-coupon'),
+			},
+			{
+				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180993/PLAN_2_oxi9ld.svg',
+				title: 'How to update a coupon?',
+				description: 'Explore how to update a Coupon.',
+				onClick: () => openGuide('https://docs.flexprice.io/api-reference/coupons/update-a-coupon'),
+			},
+			{
+				imageUrl: 'https://res.cloudinary.com/daospvham/image/upload/v1753180995/PLAN_3_lfh1mi.svg',
+				title: 'How to delete a coupon?',
+				description: 'Explore how to delete a Coupon.',
+				onClick: () => openGuide('https://docs.flexprice.io/api-reference/coupons/delete-a-coupon'),
+			},
+		],
+	},
 	plans: {
 		tutorials: [
 			{

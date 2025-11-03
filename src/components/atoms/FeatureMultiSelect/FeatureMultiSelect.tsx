@@ -4,7 +4,7 @@ import Feature, { FEATURE_TYPE } from '@/models/Feature';
 import FeatureApi from '@/api/FeatureApi';
 import { useQuery } from '@tanstack/react-query';
 import { Gauge, SquareCheckBig, Wrench, ChevronDown } from 'lucide-react';
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 
 const fetchFeatures = async () => {
 	return await FeatureApi.getAllFeatures({
@@ -22,6 +22,7 @@ interface Props {
 	className?: string;
 	disabledFeatures?: string[];
 	maxCount?: number;
+	onFeaturesFetched?: (features: Feature[]) => void;
 }
 
 const getFeatureIcon = (featureType: string) => {
@@ -45,6 +46,7 @@ const FeatureMultiSelect: FC<Props> = ({
 	className,
 	disabledFeatures,
 	maxCount,
+	onFeaturesFetched,
 }) => {
 	const [selectedCount, setSelectedCount] = React.useState(values.length);
 
@@ -56,6 +58,13 @@ const FeatureMultiSelect: FC<Props> = ({
 		queryKey: ['fetchFeatures2'],
 		queryFn: fetchFeatures,
 	});
+
+	// Call the callback when features are fetched
+	useEffect(() => {
+		if (featuresData?.items && onFeaturesFetched) {
+			onFeaturesFetched(featuresData.items);
+		}
+	}, [featuresData, onFeaturesFetched]);
 
 	if (isLoading) {
 		return <div></div>;

@@ -31,4 +31,6 @@ export interface ScheduledTaskJobConfig {
 	compression?: string;
 	encryption?: string;
 	max_file_size_mb?: number;
+	endpoint_url?: string;
+	use_path_style?: boolean;
 }

@@ -23,6 +23,8 @@ interface ExportFormData {
 	key_prefix: string;
 	compression: string;
 	encryption: string;
+	endpoint_url: string;
+	use_path_style: boolean;
 }
 
 interface ValidationErrors {
@@ -43,6 +45,8 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 		key_prefix: 'flexprice-exports',
 		compression: 'none',
 		encryption: 'AES256',
+		endpoint_url: '',
+		use_path_style: true,
 	});
 
 	const [errors, setErrors] = useState<ValidationErrors>({});
@@ -59,6 +63,8 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 				key_prefix: exportTask.job_config.key_prefix,
 				compression: exportTask.job_config.compression || 'none',
 				encryption: exportTask.job_config.encryption || 'AES256',
+				endpoint_url: exportTask.job_config.endpoint_url || '',
+				use_path_style: exportTask.job_config.use_path_style ?? true,
 			});
 		} else {
 			setFormData({
@@ -70,13 +76,24 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 				key_prefix: 'flexprice-exports',
 				compression: 'none',
 				encryption: 'AES256',
+				endpoint_url: '',
+				use_path_style: true,
 			});
 		}
 		setErrors({});
 	}, [exportTask, isOpen]);
 
 	const handleChange = (field: keyof ExportFormData, value: string | number | boolean) => {
-		setFormData((prev) => ({ ...prev, [field]: value }));
+		setFormData((prev) => {
+			const updated = { ...prev, [field]: value };
+
+			// Automatically set use_path_style to true when endpoint_url is filled
+			if (field === 'endpoint_url' && typeof value === 'string' && value.trim()) {
+				updated.use_path_style = true;
+			}
+
+			return updated;
+		});
 		// Clear error when user starts typing
 		if (errors[field as keyof ValidationErrors]) {
 			setErrors((prev) => ({ ...prev, [field as keyof ValidationErrors]: undefined }));
@@ -104,18 +121,26 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 
 	const { mutate: createExport, isPending: isCreating } = useMutation({
 		mutationFn: async () => {
+			const jobConfig: any = {
+				bucket: formData.bucket,
+				region: formData.region,
+				key_prefix: formData.key_prefix,
+				compression: formData.compression,
+				encryption: formData.encryption,
+			};
+
+			// Only include endpoint_url and use_path_style if endpoint_url is filled
+			if (formData.endpoint_url.trim()) {
+				jobConfig.endpoint_url = formData.endpoint_url;
+				jobConfig.use_path_style = formData.use_path_style;
+			}
+
 			const payload: CreateScheduledTaskPayload = {
 				connection_id: connectionId,
 				entity_type: formData.entity_type,
 				interval: formData.interval,
 				enabled: formData.enabled,
-				job_config: {
-					bucket: formData.bucket,
-					region: formData.region,
-					key_prefix: formData.key_prefix,
-					compression: formData.compression,
-					encryption: formData.encryption,
-				},
+				job_config: jobConfig,
 			};
 
 			return await TaskApi.createScheduledTask(payload);
@@ -132,18 +157,26 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 
 	const { mutate: updateExport, isPending: isUpdating } = useMutation({
 		mutationFn: async () => {
+			const jobConfig: any = {
+				bucket: formData.bucket,
+				region: formData.region,
+				key_prefix: formData.key_prefix,
+				compression: formData.compression,
+				encryption: formData.encryption,
+			};
+
+			// Only include endpoint_url and use_path_style if endpoint_url is filled
+			if (formData.endpoint_url.trim()) {
+				jobConfig.endpoint_url = formData.endpoint_url;
+				jobConfig.use_path_style = formData.use_path_style;
+			}
+
 			const payload: CreateScheduledTaskPayload = {
 				connection_id: connectionId,
 				entity_type: formData.entity_type,
 				interval: formData.interval,
 				enabled: formData.enabled,
-				job_config: {
-					bucket: formData.bucket,
-					region: formData.region,
-					key_prefix: formData.key_prefix,
-					compression: formData.compression,
-					encryption: formData.encryption,
-				},
+				job_config: jobConfig,
 			};
 
 			return await TaskApi.updateScheduledTask(exportTask!.id, payload);
@@ -262,6 +295,15 @@ const ExportDrawer: FC<ExportDrawerProps> = ({ isOpen, onOpenChange, connectionI
 					/>
 					<p className='text-xs text-gray-500 mt-1'>Encryption method for exported files</p>
 				</div>
+
+				{/* Endpoint URL */}
+				<Input
+					label='Endpoint URL (Optional)'
+					placeholder='Enter custom S3 endpoint URL'
+					value={formData.endpoint_url}
+					onChange={(value) => handleChange('endpoint_url', value)}
+					description='Custom endpoint URL for S3-compatible storage (e.g., MinIO, DigitalOcean Spaces)'
+				/>
 
 				{/* Enabled */}
 				<div className='flex items-center space-x-2'>

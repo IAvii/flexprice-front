@@ -150,6 +150,7 @@ export const cancellationTypeOptions = [
 	{ label: 'Immediate', value: SUBSCRIPTION_CANCELLATION_TYPE.IMMEDIATE },
 	{ label: 'End of Period', value: SUBSCRIPTION_CANCELLATION_TYPE.END_OF_PERIOD },
 ];
+
 export const subscriptionLineItemEntityTypeOptions = [
 	{ label: 'Plan', value: SUBSCRIPTION_LINE_ITEM_ENTITY_TYPE.PLAN },
 	{ label: 'Addon', value: SUBSCRIPTION_LINE_ITEM_ENTITY_TYPE.ADDON },

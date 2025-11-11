@@ -255,12 +255,14 @@ const SubscriptionActionButton: React.FC<Props> = ({ subscription }) => {
 			<Modal
 				isOpen={state.isCancelModalOpen}
 				onOpenChange={(open) => setState((prev) => ({ ...prev, isCancelModalOpen: open }))}
-				className='bg-white rounded-lg p-6 w-[800px] max-w-[90vw]'>
+				className='card bg-white w-[560px] max-w-[90vw]'>
 				<div className='space-y-4'>
 					<FormHeader
 						title='Cancel Subscription'
 						variant='sub-header'
 						subtitle='This action cannot be undone. The subscription will be cancelled immediately.'
+						titleClassName='!mb-1'
+						subtitleClassName='!text-sm !max-w-[440px] !leading-6'
 					/>
 					<div className='flex justify-end gap-3 pt-4'>
 						<Button

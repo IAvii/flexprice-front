@@ -167,8 +167,8 @@ const DebugMenu = () => {
 						}}
 						dragElastic={0.1}
 						dragMomentum={false}>
-						<div className='p-4'>
-							<div className='flex items-center justify-between mb-3'>
+						<div className='p-5'>
+							<div className='flex items-center justify-between mb-4'>
 								<h2 className='text-base font-semibold'>
 									{eventsCompleted ? 'Sample Events Created' : isLoading ? 'Loading...' : 'Stream Sample Events'}
 								</h2>
@@ -187,15 +187,14 @@ const DebugMenu = () => {
 									<AddButton onClick={handleCreateCustomer} className='w-full' />
 								</div>
 							) : !hasSubscription ? (
-								<div className='space-y-3'>
-									<p className='text-sm text-muted-foreground'>
-										Customer{' '}
+								<div className='space-y-5'>
+									<p className='text-sm text-muted-foreground leading-6'>
+										Assign a subscription to stream sample events to{' '}
 										<Link to={`${RouteNames.customers}/${customerData.items?.[0]?.id}`} className='text-blue-500'>
 											{customerData.items?.[0]?.name}
-										</Link>{' '}
-										has no subscriptions.
+										</Link>
 									</p>
-									<AddButton onClick={handleCreateSubscription} className='w-full' />
+									<AddButton onClick={handleCreateSubscription} className='w-full !mt-6' />
 								</div>
 							) : eventsCompleted ? (
 								<>

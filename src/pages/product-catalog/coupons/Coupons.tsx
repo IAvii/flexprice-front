@@ -1,4 +1,4 @@
-import { AddButton, Page, ShortPagination, Spacer } from '@/components/atoms';
+import { AddButton, Loader, Page, ShortPagination, Spacer } from '@/components/atoms';
 import { ApiDocsContent, CouponTable, CouponDrawer } from '@/components/molecules';
 import EmptyPage from '@/components/organisms/EmptyPage/EmptyPage';
 import GUIDES from '@/constants/guides';
@@ -164,6 +164,10 @@ const CouponsPage = () => {
 	if (isError) {
 		toast.error('Error fetching coupons');
 		return null;
+	}
+
+	if (isLoading) {
+		return <Loader />;
 	}
 
 	// Render empty state when no coupons and no search query

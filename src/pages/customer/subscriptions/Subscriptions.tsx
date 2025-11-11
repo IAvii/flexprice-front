@@ -174,6 +174,10 @@ const SubscriptionsPage = () => {
 		return null;
 	}
 
+	if (isLoading) {
+		return <Loader />;
+	}
+
 	// Render empty state when no subscriptions and no search query
 	if (showEmptyPage) {
 		return (

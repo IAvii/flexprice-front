@@ -39,6 +39,10 @@ const GroupsPage: FC = () => {
 		return null;
 	}
 
+	if (isLoading) {
+		return <Loader />;
+	}
+
 	const showEmptyPage = !isLoading && groupsData?.items.length === 0;
 
 	if (showEmptyPage) {

@@ -160,6 +160,10 @@ const CostSheetsPage = () => {
 		return null;
 	}
 
+	if (isLoading) {
+		return <Loader />;
+	}
+
 	if (showEmptyPage) {
 		return (
 			<div className='space-y-6'>

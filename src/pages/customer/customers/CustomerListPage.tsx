@@ -176,6 +176,10 @@ const CustomerListPage = () => {
 		return <div>Error fetching customers</div>;
 	}
 
+	if (isLoading) {
+		return <Loader />;
+	}
+
 	if (showEmptyPage) {
 		return (
 			<EmptyPage

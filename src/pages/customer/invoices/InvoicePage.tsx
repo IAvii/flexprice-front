@@ -205,6 +205,10 @@ const InvoicesPage = () => {
 		return <div>Error fetching invoices</div>;
 	}
 
+	if (isLoading) {
+		return <Loader />;
+	}
+
 	if (showEmptyPage) {
 		return (
 			<EmptyPage

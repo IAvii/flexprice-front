@@ -1,4 +1,4 @@
-import { AddButton, Page, ShortPagination, Spacer } from '@/components/atoms';
+import { AddButton, Loader, Page, ShortPagination, Spacer } from '@/components/atoms';
 import { ApiDocsContent, FeatureTable } from '@/components/molecules';
 import EmptyPage from '@/components/organisms/EmptyPage/EmptyPage';
 import { RouteNames } from '@/core/routes/Routes';
@@ -157,6 +157,10 @@ const FeaturesPage = () => {
 	const showEmptyPage = useMemo(() => {
 		return !isLoading && probeData?.items.length === 0 && featureData?.items.length === 0;
 	}, [isLoading, probeData, featureData]);
+
+	if (isLoading) {
+		return <Loader />;
+	}
 
 	// Handle error state
 	if (isError) {

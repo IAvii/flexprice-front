@@ -327,6 +327,7 @@ const PricingPage = () => {
 		return (
 			<div className='space-y-6'>
 				<EmptyPage
+					heading='Pricing Widgets'
 					onAddClick={() => setPlanDrawerOpen(true)}
 					emptyStateCard={{
 						heading: 'Set Up Your Pricing Widget',
@@ -334,7 +335,6 @@ const PricingPage = () => {
 						buttonLabel: 'Create Plan',
 						buttonAction: () => setPlanDrawerOpen(true),
 					}}
-					heading='Pricing Widget'
 					tags={['Plans']}
 					tutorials={GUIDES.plans.tutorials}
 				/>
@@ -346,7 +346,7 @@ const PricingPage = () => {
 	return (
 		<Page
 			headingClassName='items-center'
-			heading='Pricing Widget'
+			heading='Pricing Widgets'
 			headingCTA={
 				<div className='w-full flex justify-start gap-4'>
 					<Select

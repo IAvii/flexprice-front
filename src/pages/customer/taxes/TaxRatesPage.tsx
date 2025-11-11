@@ -77,7 +77,7 @@ const TaxPage = () => {
 	}
 
 	return (
-		<Page heading='Tax Rates' headingCTA={<AddButton label='Add Taxrate' onClick={handleCreateNew} />}>
+		<Page heading='Tax Rates' headingCTA={<AddButton onClick={handleCreateNew} />}>
 			<ApiDocsContent tags={['Taxes']} />
 			<div className='px-0'>
 				<TaxTable data={taxData?.items || []} onEdit={handleEdit} />

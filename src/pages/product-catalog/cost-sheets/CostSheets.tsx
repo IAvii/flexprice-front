@@ -186,7 +186,7 @@ const CostSheetsPage = () => {
 	}
 
 	return (
-		<Page heading='Cost Sheets' headingCTA={<AddButton label='Add Cost Sheet' onClick={handleOnAdd} />}>
+		<Page heading='Cost Sheets' headingCTA={<AddButton onClick={handleOnAdd} />}>
 			<CostSheetDrawer
 				data={activeCostSheet}
 				open={costSheetDrawerOpen}

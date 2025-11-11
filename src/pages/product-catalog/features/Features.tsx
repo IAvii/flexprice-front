@@ -168,7 +168,7 @@ const FeaturesPage = () => {
 	if (showEmptyPage) {
 		return (
 			<EmptyPage
-				heading='Feature'
+				heading='Features'
 				tags={['Features']}
 				tutorials={GUIDES.features.tutorials}
 				emptyStateCard={{
@@ -188,7 +188,7 @@ const FeaturesPage = () => {
 			headingCTA={
 				<div className='flex justify-between items-center gap-2'>
 					<Link to={RouteNames.createFeature}>
-						<AddButton label='Add Feature' />
+						<AddButton />
 					</Link>
 				</div>
 			}>

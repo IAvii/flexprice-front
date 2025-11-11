@@ -208,7 +208,7 @@ const InvoicesPage = () => {
 	if (showEmptyPage) {
 		return (
 			<EmptyPage
-				heading='Invoice'
+				heading='Invoices'
 				tags={['Invoices']}
 				emptyStateCard={{
 					heading: 'Create your first invoice',

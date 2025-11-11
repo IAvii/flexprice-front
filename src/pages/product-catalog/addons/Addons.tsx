@@ -193,7 +193,7 @@ const AddonsPage = () => {
 	}
 
 	return (
-		<Page heading='Addons' headingCTA={<AddButton label='Add Addon' onClick={handleOnAdd} />}>
+		<Page heading='Addons' headingCTA={<AddButton onClick={handleOnAdd} />}>
 			<AddonDrawer data={activeAddon} open={addonDrawerOpen} onOpenChange={setAddonDrawerOpen} refetchQueryKeys={['fetchAddons']} />
 			<ApiDocsContent tags={['Addons']} />
 			<div className='space-y-6'>

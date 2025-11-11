@@ -31,12 +31,12 @@ const PaymentPage = () => {
 	if ((payments?.items ?? []).length === 0) {
 		return (
 			<EmptyPage
+				heading='Payments'
 				emptyStateCard={{
 					heading: 'Record your first payment',
 					description: 'Add a payment record to manage customer charges and settlements.',
 				}}
 				tutorials={GUIDES.payments.tutorials}
-				heading='Payments'
 				tags={['Payments']}
 			/>
 		);

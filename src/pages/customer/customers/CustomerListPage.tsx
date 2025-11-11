@@ -179,7 +179,7 @@ const CustomerListPage = () => {
 	if (showEmptyPage) {
 		return (
 			<EmptyPage
-				heading='Customer'
+				heading='Customers'
 				tags={['Customers']}
 				emptyStateCard={{
 					heading: 'Create your first customer',
@@ -208,7 +208,6 @@ const CustomerListPage = () => {
 					<CreateCustomerDrawer
 						trigger={
 							<AddButton
-								label='Add Customer'
 								onClick={() => {
 									setactiveCustomer(undefined);
 								}}

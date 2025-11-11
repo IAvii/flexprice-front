@@ -172,6 +172,7 @@ const PlansPage = () => {
 			<div className='space-y-6'>
 				<PlanDrawer data={activePlan} open={planDrawerOpen} onOpenChange={setPlanDrawerOpen} refetchQueryKeys={['fetchPlans']} />
 				<EmptyPage
+					heading='Plans'
 					onAddClick={handleOnAdd}
 					emptyStateCard={{
 						heading: 'Set Up Your First Plan',
@@ -180,14 +181,13 @@ const PlansPage = () => {
 						buttonAction: handleOnAdd,
 					}}
 					tutorials={GUIDES.plans.tutorials}
-					heading='Pricing Plans'
 					tags={['Plans']}
 				/>
 			</div>
 		);
 	}
 	return (
-		<Page heading='Plans' headingCTA={<AddButton label='Add Plan' onClick={handleOnAdd} />}>
+		<Page heading='Plans' headingCTA={<AddButton onClick={handleOnAdd} />}>
 			<PlanDrawer data={activePlan} open={planDrawerOpen} onOpenChange={setPlanDrawerOpen} refetchQueryKeys={['fetchPlans']} />
 			<ApiDocsContent tags={['Plans']} />
 			<div className='space-y-6'>

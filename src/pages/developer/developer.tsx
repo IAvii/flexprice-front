@@ -32,7 +32,6 @@ export const formatPermissionDisplay = (permissions: readonly string[]): string 
 	}
 };
 
-
 export const getPermissionIcon = (permissions: readonly string[]): LucideIcon => {
 	if (!permissions || permissions.length === 0) {
 		return EyeOff;
@@ -201,6 +200,7 @@ const DeveloperPage = () => {
 
 			{secretKeys?.items.length === 0 && (
 				<EmptyPage
+					heading='API Keys'
 					onAddClick={handleAddSecretKey}
 					emptyStateCard={{
 						heading: 'Generate a secret key',
@@ -209,7 +209,6 @@ const DeveloperPage = () => {
 						buttonAction: handleAddSecretKey,
 					}}
 					tutorials={GUIDES.secrets.tutorials}
-					heading='Secret Keys'
 					tags={['secrets']}
 				/>
 			)}

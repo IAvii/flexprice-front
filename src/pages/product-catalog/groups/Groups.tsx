@@ -62,7 +62,7 @@ const GroupsPage: FC = () => {
 	}
 
 	return (
-		<Page heading='Groups' headingCTA={<AddButton label='Add Group' onClick={handleOnAdd} />}>
+		<Page heading='Groups' headingCTA={<AddButton onClick={handleOnAdd} />}>
 			<GroupDrawer data={activeGroup} open={groupDrawerOpen} onOpenChange={setGroupDrawerOpen} refetchQueryKeys={['fetchGroups']} />
 			<ApiDocsContent tags={['Groups']} />
 			<div className='space-y-6'>

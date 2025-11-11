@@ -91,6 +91,7 @@ const ImportExport = () => {
 	if (data?.items.length === 0) {
 		return (
 			<EmptyPage
+				heading='Bulk Imports'
 				onAddClick={() => setdrawerOpen(true)}
 				emptyStateCard={{
 					heading: 'Ready to Import Data?',
@@ -101,7 +102,6 @@ const ImportExport = () => {
 					},
 				}}
 				tutorials={GUIDES.importExport.tutorials}
-				heading='Import Tasks'
 				tags={['Import Export', 'Tasks']}>
 				<ImportFileDrawer taskId={activeTask} isOpen={drawerOpen} onOpenChange={(value) => setdrawerOpen(value)} />
 			</EmptyPage>

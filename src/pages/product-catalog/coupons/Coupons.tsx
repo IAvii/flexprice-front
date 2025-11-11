@@ -170,7 +170,7 @@ const CouponsPage = () => {
 	if (showEmptyPage) {
 		return (
 			<EmptyPage
-				heading='Coupon'
+				heading='Coupons'
 				tags={['Coupons']}
 				tutorials={GUIDES.coupons.tutorials}
 				emptyStateCard={{
@@ -191,7 +191,7 @@ const CouponsPage = () => {
 				heading='Coupons'
 				headingCTA={
 					<div className='flex justify-between items-center gap-2'>
-						<AddButton label='Add Coupon' onClick={handleCreateCoupon} />
+						<AddButton onClick={handleCreateCoupon} />
 					</div>
 				}>
 				<ApiDocsContent tags={['Coupons']} />

@@ -178,7 +178,7 @@ const SubscriptionsPage = () => {
 	if (showEmptyPage) {
 		return (
 			<EmptyPage
-				heading='Subscription'
+				heading='Subscriptions'
 				tags={['Subscriptions']}
 				tutorials={GUIDES.customers.tutorials}
 				emptyStateCard={{

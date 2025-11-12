@@ -25,6 +25,7 @@ export interface LineItem extends BaseModel {
 	readonly end_date: string;
 	readonly metadata: Metadata;
 	readonly price?: Price;
+	readonly subscription_phase_id?: string;
 }
 
 export interface Pause extends BaseModel {

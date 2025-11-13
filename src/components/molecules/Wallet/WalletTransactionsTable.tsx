@@ -35,6 +35,8 @@ const fomatTransactionTitle = ({ type, reason }: { type: string; reason: string 
 			return 'Wallet Terminated';
 		case WALLET_TRANSACTION_REASON.CREDIT_NOTE:
 			return 'Credit Note Refund';
+		case WALLET_TRANSACTION_REASON.MANUAL_BALANCE_DEBIT:
+			return 'Manual Debit';
 		default:
 			return type === 'credit' ? 'Credited' : 'Debited';
 	}

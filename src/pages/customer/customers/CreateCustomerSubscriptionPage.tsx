@@ -1,5 +1,5 @@
 // React imports
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // Third-party libraries
@@ -10,10 +10,10 @@ import toast from 'react-hot-toast';
 // Internal components
 import { Button, SelectOption } from '@/components/atoms';
 import { ApiDocsContent } from '@/components/molecules';
-import { Preview, UsageTable, SubscriptionForm } from '@/components/organisms';
+import { UsageTable, SubscriptionForm } from '@/components/organisms';
 
 // API imports
-import { AddonApi, CustomerApi, PlanApi, SubscriptionApi, TaxApi } from '@/api';
+import { CustomerApi, PlanApi, SubscriptionApi, TaxApi } from '@/api';
 
 // Core services and routes
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
@@ -130,22 +130,6 @@ const useSubscriptionData = (subscription_id: string | undefined) => {
 	});
 };
 
-// Hook to fetch addons data
-const useAddons = (addonIds: string[] = []) => {
-	return useQuery({
-		queryKey: ['addons', addonIds],
-		queryFn: async () => {
-			if (!addonIds.length) return { items: [] };
-			const response = await AddonApi.ListAddon({
-				addon_ids: addonIds,
-				expand: 'prices,entitlements',
-			});
-			return response;
-		},
-		enabled: addonIds.length > 0,
-	});
-};
-
 const CreateCustomerSubscriptionPage: React.FC = () => {
 	const { id: customerId, subscription_id } = useParams<Params>();
 	const navigate = useNavigate();
@@ -209,66 +193,6 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 	const { data: plans, isLoading: plansLoading, isError: plansError } = usePlans();
 	const { data: customerData } = useCustomerData(customerId);
 	const { data: subscriptionData } = useSubscriptionData(subscription_id);
-
-	// Get addon IDs from subscription state
-	const addonIds = useMemo(() => subscriptionState.addons?.map((addon) => addon.addon_id) || [], [subscriptionState.addons]);
-	const { data: addons } = useAddons(addonIds);
-
-	// Helper function to count addon ID occurrences
-	const getAddonCounts = useMemo(() => {
-		const counts = new Map<string, number>();
-		subscriptionState.addons?.forEach((addon) => {
-			counts.set(addon.addon_id, (counts.get(addon.addon_id) || 0) + 1);
-		});
-		return counts;
-	}, [subscriptionState.addons]);
-
-	// Helper function to check if price should be shown (start_date <= now or no start_date)
-	const isPriceActive = (price: { start_date?: string }) => {
-		if (!price.start_date) return true; // No start_date means it's active
-		const now = new Date();
-		const startDate = new Date(price.start_date);
-		// Check if date is valid
-		if (isNaN(startDate.getTime())) return true; // Invalid date, treat as active
-		return startDate <= now;
-	};
-
-	// Memoized function to get combined prices from subscription and addons
-	const getPrices = useMemo(() => {
-		const subscriptionPrices =
-			subscriptionState.prices?.prices?.filter(
-				(price) =>
-					price.billing_period.toLowerCase() === subscriptionState.billingPeriod.toLowerCase() &&
-					price.currency.toLowerCase() === subscriptionState.currency.toLowerCase() &&
-					isPriceActive(price),
-			) || [];
-
-		// Get matching addon prices and create unique instances for each count
-		const addonPrices =
-			addons?.items?.flatMap((addon) => {
-				const count = getAddonCounts.get(addon.id) || 0;
-				const matchingPrices =
-					addon.prices?.filter(
-						(price) =>
-							price.billing_period.toLowerCase() === subscriptionState.billingPeriod.toLowerCase() &&
-							price.currency.toLowerCase() === subscriptionState.currency.toLowerCase() &&
-							isPriceActive(price),
-					) || [];
-
-				// Create unique instances for each count with unique IDs
-				return Array.from({ length: count }, (_, index) =>
-					matchingPrices.map((price) => ({
-						...price,
-						// Append instance index to make price ID unique for each instance
-						id: `${price.id}_instance_${index}`,
-					})),
-				).flat();
-			}) || [];
-
-		return [...subscriptionPrices, ...addonPrices];
-	}, [subscriptionState.prices, subscriptionState.billingPeriod, subscriptionState.currency, addons, getAddonCounts]);
-
-	// Coupons are handled in SubscriptionForm
 
 	// Update breadcrumb when customer data changes
 	useEffect(() => {
@@ -387,6 +311,16 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 			return;
 		}
 
+		// Helper function to check if price should be shown (start_date <= now or no start_date)
+		const isPriceActive = (price: { start_date?: string }) => {
+			if (!price.start_date) return true; // No start_date means it's active
+			const now = new Date();
+			const startDate = new Date(price.start_date);
+			// Check if date is valid
+			if (isNaN(startDate.getTime())) return true; // Invalid date, treat as active
+			return startDate <= now;
+		};
+
 		// Get price overrides for backend
 		const currentPrices =
 			prices?.prices?.filter(
@@ -463,8 +397,6 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 
 	const navigateBack = () => navigate(`${RouteNames.customers}/${customerId}`);
 
-	const showPreview = subscriptionState.selectedPlan && !subscriptionData?.usage;
-
 	return (
 		<div className={cn('flex gap-8 mt-5 relative mb-12')}>
 			<ApiDocsContent tags={['Subscriptions']} />
@@ -498,22 +430,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 				)}
 			</div>
 
-			<div className='flex-[4]'>
-				<div className='sticky top-6'>
-					{showPreview && (
-						<Preview
-							data={getPrices}
-							selectedPlan={subscriptionState.prices}
-							phases={subscriptionState.phases}
-							coupons={subscriptionState.linkedCoupon ? [subscriptionState.linkedCoupon] : []}
-							priceOverrides={subscriptionState.priceOverrides}
-							lineItemCoupons={subscriptionState.lineItemCoupons}
-							taxRateOverrides={subscriptionState.tax_rate_overrides}
-							addons={subscriptionState.addons || []}
-						/>
-					)}
-				</div>
-			</div>
+			<div className='flex-[3]'></div>
 		</div>
 	);
 };

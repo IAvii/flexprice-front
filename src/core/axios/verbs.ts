@@ -1,5 +1,5 @@
 import axiosClient from './config';
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 type DataObject = Record<string, any>;
 
@@ -21,9 +21,9 @@ export class AxiosClient {
 	}
 
 	// T is the expected response type, D is the type of the data being sent
-	public static async post<T, D extends DataObject = any>(url: string, data?: D): Promise<T> {
+	public static async post<T, D extends DataObject = any>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> {
 		const sanitizedData = sanitizeData(data);
-		const response: AxiosResponse<T> = await axiosClient.post(url, sanitizedData);
+		const response: AxiosResponse<T> = await axiosClient.post(url, sanitizedData, config);
 		return response as T;
 	}
 

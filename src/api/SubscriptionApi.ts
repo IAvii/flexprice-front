@@ -134,7 +134,9 @@ class SubscriptionApi {
 	 * Get subscription invoices preview
 	 */
 	public static async getSubscriptionInvoicesPreview(payload: GetSubscriptionDetailsPayload): Promise<GetSubscriptionPreviewResponse> {
-		return await AxiosClient.post('/invoices/preview', payload);
+		return await AxiosClient.post('/invoices/preview', payload, {
+			timeout: 30000, // 30 seconds
+		});
 	}
 
 	// =============================================================================

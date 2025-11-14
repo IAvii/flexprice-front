@@ -10,6 +10,7 @@ export interface Connection extends BaseModel {
 
 export enum CONNECTION_PROVIDER_TYPE {
 	STRIPE = 'stripe',
+	RAZORPAY = 'razorpay',
 	S3 = 's3',
 	HUBSPOT = 'hubspot',
 	// Add more providers as needed

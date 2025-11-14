@@ -89,12 +89,12 @@ const IntegrationCard = ({ integration }: { integration: Integration; installed?
 						<img src={integration.logo} alt={integration.name} className='w-12 h-12 object-contain' />
 					</div>
 					<div className='ml-4 flex-1'>
-						<div className='w-full mb-4'>
+						<div className={cn('w-full', integration.premium ? 'mb-4' : 'mb-1')}>
 							<h3 className='font-semibold text-lg'>{integration.name}</h3>
 							{integration.premium && <span className='text-[#c58e20]'>Premium</span>}
 						</div>
 						<p className='text-gray-500 text-sm'>{integration.description}</p>
-						<div className='mt-2 flex items-center gap-2 '>
+						<div className='mt-4 flex items-center gap-2 '>
 							{integration.tags.map((tag, idx) => (
 								<span key={idx} className='text-xs bg-[#f4f4f4] text-[#5e5e5e] px-2 py-1 rounded-md mb-1'>
 									{tag}

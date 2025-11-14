@@ -1,16 +1,18 @@
+import { useState, useCallback, useMemo } from 'react';
+import { Trash2, GripVertical, ListFilter, X } from 'lucide-react';
+import { v4 as uuidv4 } from 'uuid';
+
+import { Combobox, DatePicker, Toggle, Button, Select } from '@/components/atoms';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Sortable, SortableContent, SortableItem, SortableItemHandle, SortableOverlay } from '@/components/ui/sortable';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { Trash2, GripVertical, ListFilter, X } from 'lucide-react';
-import { useState, useCallback, useMemo } from 'react';
-import { FilterField, FilterCondition, FilterOperator, FilterFieldType } from '@/types/common/QueryBuilder';
-import { Input } from '@/components/ui/input';
-import { Combobox, DatePicker, Toggle, Button, Select } from '@/components/atoms';
 import { Switch } from '@/components/ui/switch';
-import FilterMultiSelect from './FilterMultiSelect';
-import { v4 as uuidv4 } from 'uuid';
+import { cn } from '@/lib/utils';
+import { FilterField, FilterCondition, FilterOperator, FilterFieldType } from '@/types/common/QueryBuilder';
 import { sanitizeFilterConditions } from '@/types/formatters/QueryBuilder';
+
+import FilterMultiSelect from './FilterMultiSelect';
 
 interface Props {
 	fields: FilterField[];

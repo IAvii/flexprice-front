@@ -56,6 +56,7 @@ import {
 	Query as QueryPage,
 	// Developer pages
 	DeveloperPage,
+	ServiceAccountsPage,
 	// Onboarding pages
 	OnboardingTenant,
 	// Webhooks pages
@@ -131,6 +132,12 @@ export const RouteNames = {
 	// group routes
 	groups: '/product-catalog/groups',
 
+	// developers routes
+	developers: '/developers',
+	webhooks: '/developers/webhooks',
+	apiKeys: '/developers/api-keys',
+	serviceAccounts: '/developers/service-accounts',
+
 	// tools routes
 	tools: '/tools',
 	bulkImports: '/tools/bulk-imports',
@@ -143,10 +150,8 @@ export const RouteNames = {
 	s3TaskRuns: '/tools/exports/s3/:connectionId/export/:exportId/runs',
 
 	// footer
-	developers: '/developers',
 	onboarding: '/onboarding',
 	customerBilling: '/settings/billing',
-	webhooks: '/webhooks',
 };
 
 const DefaultRoute = () => {
@@ -197,18 +202,6 @@ export const MainRouter = createBrowserRouter([
 				path: RouteNames.productCatalog,
 				children: [
 					{
-						path: RouteNames.plan,
-						element: <PricingPlans />,
-					},
-					{
-						path: RouteNames.pricing,
-						element: <PricingPage />,
-					},
-					{
-						path: `${RouteNames.plan}/:planId`,
-						element: <PlanDetailsPage />,
-					},
-					{
 						path: RouteNames.features,
 						element: <FeaturesPage />,
 					},
@@ -219,6 +212,26 @@ export const MainRouter = createBrowserRouter([
 					{
 						path: `${RouteNames.featureDetails}/:id`,
 						element: <FeatureDetails />,
+					},
+					{
+						path: RouteNames.plan,
+						element: <PricingPlans />,
+					},
+					{
+						path: `${RouteNames.plan}/:planId`,
+						element: <PlanDetailsPage />,
+					},
+					{
+						path: RouteNames.addCharges,
+						element: <AddChargesPage />,
+					},
+					{
+						path: RouteNames.coupons,
+						element: <CouponsPage />,
+					},
+					{
+						path: `${RouteNames.couponDetails}/:id`,
+						element: <CouponDetails />,
 					},
 					{
 						path: RouteNames.addons,
@@ -245,58 +258,8 @@ export const MainRouter = createBrowserRouter([
 						element: <CostSheetChargesPage />,
 					},
 					{
-						path: RouteNames.addCharges,
-						element: <AddChargesPage />,
-					},
-					{
-						path: RouteNames.coupons,
-						element: <CouponsPage />,
-					},
-					{
-						path: `${RouteNames.couponDetails}/:id`,
-						element: <CouponDetails />,
-					},
-					{
 						path: RouteNames.groups,
 						element: <GroupsPage />,
-					},
-				],
-			},
-
-			{
-				path: RouteNames.tools,
-				children: [
-					{
-						path: RouteNames.bulkImports,
-						element: <ImportExport />,
-					},
-					{
-						path: RouteNames.integrations,
-						element: <Integrations />,
-					},
-					{
-						path: `${RouteNames.integrationDetails}/:id`,
-						element: <IntegrationDetails />,
-					},
-					{
-						path: RouteNames.exports,
-						element: <Exports />,
-					},
-					{
-						path: RouteNames.s3Exports,
-						element: <S3Exports />,
-					},
-					{
-						path: RouteNames.s3ExportManagement,
-						element: <ExportManagement />,
-					},
-					{
-						path: RouteNames.s3ExportDetails,
-						element: <ExportDetails />,
-					},
-					{
-						path: RouteNames.s3TaskRuns,
-						element: <TaskRunsPage />,
 					},
 				],
 			},
@@ -318,6 +281,30 @@ export const MainRouter = createBrowserRouter([
 					{
 						path: `${RouteNames.customers}/:id/add-subscription`,
 						element: <CreateCustomerSubscriptionPage />,
+					},
+					{
+						path: RouteNames.taxes,
+						element: <TaxPage />,
+					},
+					{
+						path: `${RouteNames.taxes}/:taxrateId`,
+						element: <TaxrateDetailsPage />,
+					},
+					{
+						path: RouteNames.invoices,
+						element: <InvoicePage />,
+					},
+					{
+						path: `${RouteNames.invoices}/:invoiceId`,
+						element: <InvoiceDetailsPage />,
+					},
+					{
+						path: RouteNames.creditNotes,
+						element: <CreditNotesPage />,
+					},
+					{
+						path: `${RouteNames.creditNotes}/:credit_note_id`,
+						element: <CreditNoteDetailsPage />,
 					},
 					{
 						path: RouteNames.payments,
@@ -388,30 +375,6 @@ export const MainRouter = createBrowserRouter([
 						path: `${RouteNames.customers}/:customerId/invoices/create`,
 						element: <CreateInvoicePage />,
 					},
-					{
-						path: RouteNames.invoices,
-						element: <InvoicePage />,
-					},
-					{
-						path: RouteNames.taxes,
-						element: <TaxPage />,
-					},
-					{
-						path: `${RouteNames.taxes}/:taxrateId`,
-						element: <TaxrateDetailsPage />,
-					},
-					{
-						path: `${RouteNames.invoices}/:invoiceId`,
-						element: <InvoiceDetailsPage />,
-					},
-					{
-						path: RouteNames.creditNotes,
-						element: <CreditNotesPage />,
-					},
-					{
-						path: `${RouteNames.creditNotes}/:credit_note_id`,
-						element: <CreditNoteDetailsPage />,
-					},
 				],
 			},
 			{
@@ -427,14 +390,63 @@ export const MainRouter = createBrowserRouter([
 					},
 				],
 			},
-
 			{
-				path: RouteNames.developers,
-				element: <DeveloperPage />,
+				path: RouteNames.pricing,
+				element: <PricingPage />,
 			},
 			{
-				path: RouteNames.webhooks,
-				element: <WebhookDashboard />,
+				path: RouteNames.developers,
+				children: [
+					{
+						path: RouteNames.webhooks,
+						element: <WebhookDashboard />,
+					},
+					{
+						path: RouteNames.apiKeys,
+						element: <DeveloperPage />,
+					},
+					{
+						path: RouteNames.serviceAccounts,
+						element: <ServiceAccountsPage />,
+					},
+				],
+			},
+			{
+				path: RouteNames.tools,
+				children: [
+					{
+						path: RouteNames.integrations,
+						element: <Integrations />,
+					},
+					{
+						path: `${RouteNames.integrationDetails}/:id`,
+						element: <IntegrationDetails />,
+					},
+					{
+						path: RouteNames.bulkImports,
+						element: <ImportExport />,
+					},
+					{
+						path: RouteNames.exports,
+						element: <Exports />,
+					},
+					{
+						path: RouteNames.s3Exports,
+						element: <S3Exports />,
+					},
+					{
+						path: RouteNames.s3ExportManagement,
+						element: <ExportManagement />,
+					},
+					{
+						path: RouteNames.s3ExportDetails,
+						element: <ExportDetails />,
+					},
+					{
+						path: RouteNames.s3TaskRuns,
+						element: <TaskRunsPage />,
+					},
+				],
 			},
 			{
 				path: RouteNames.onboarding,

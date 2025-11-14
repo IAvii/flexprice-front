@@ -26,6 +26,12 @@ export interface CreateConnectionPayload {
 				webhook_secret?: string;
 		  }
 		| {
+				provider_type: CONNECTION_PROVIDER_TYPE.RAZORPAY;
+				key_id?: string;
+				secret_key?: string;
+				webhook_secret?: string;
+		  }
+		| {
 				provider_type: CONNECTION_PROVIDER_TYPE.S3;
 				aws_access_key_id?: string;
 				aws_secret_access_key?: string;

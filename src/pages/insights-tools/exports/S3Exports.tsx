@@ -95,7 +95,7 @@ const S3Exports = () => {
 					}}
 					className='flex items-center gap-2'>
 					<Plus className='w-4 h-4' />
-					Add S3 Connection
+					Add
 				</Button>
 			</div>
 
@@ -150,12 +150,13 @@ const S3Exports = () => {
 					</div>
 				</div>
 			) : (
-				<div className='card text-center py-12'>
+				<div className='card text-center !py-12'>
 					<div className='text-gray-500 mb-4'>
 						<Settings className='w-12 h-12 mx-auto mb-4 text-gray-300' />
 						<h3 className='text-lg font-medium text-gray-900 mb-2'>No S3 Connections</h3>
-						<p className='text-gray-500 mb-4'>Create your first S3 connection to start exporting data.</p>
+						<p className='text-gray-500 mb-6'>Create your first S3 connection to start exporting data.</p>
 						<Button
+							variant='outline'
 							onClick={() => {
 								setIsDrawerOpen(true);
 							}}
@@ -168,7 +169,7 @@ const S3Exports = () => {
 			)}
 
 			{/* Overview Section */}
-			<div className='card space-y-6'>
+			<div className='card space-y-6 mt-8'>
 				<h3 className='text-xl font-semibold text-gray-900'>S3 Export Features</h3>
 				<div className='space-y-4'>
 					<div>

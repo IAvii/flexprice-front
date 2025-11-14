@@ -147,7 +147,13 @@ const TopupCard: FC<TopupCardProps> = ({ walletId, currency, conversion_rate = 1
 			});
 		},
 		onSuccess: async () => {
-			toast.success('Wallet topped up successfully');
+			// Show different message based on transaction type
+			const transactionReason = getTransactionReason();
+			if (transactionReason === WALLET_TRANSACTION_REASON.PURCHASED_CREDIT_INVOICED) {
+				toast.success('Invoice created successfully. Credits will be added once the invoice is paid.');
+			} else {
+				toast.success('Wallet topped up successfully');
+			}
 			onSuccess?.();
 			setTopupPayload({
 				credits_type: CreditsType.FreeCredit,
@@ -194,10 +200,11 @@ const TopupCard: FC<TopupCardProps> = ({ walletId, currency, conversion_rate = 1
 					value={topupPayload.credits_type}
 					onChange={(value) => {
 						// Reset related fields when changing credits type
+						// Set generate_invoice to true by default for Purchased credits
 						updateTopupPayload({
 							credits_type: value as CreditsType,
 							credits_to_add: undefined,
-							generate_invoice: undefined,
+							generate_invoice: value === CreditsType.PurchasedCredits ? true : undefined,
 							expiry_date: undefined,
 							reference_id: undefined,
 						});

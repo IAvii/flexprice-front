@@ -1,7 +1,7 @@
 import { AxiosClient } from '@/core/axios/verbs';
 import { User } from '@/models';
 import { CreateUserRequest, UpdateTenantPayload } from '@/types/dto';
-import { GetServiceAccountsResponse } from '@/types/dto/UserApi';
+import { CreateServiceAccountPayload, GetServiceAccountsResponse } from '@/types/dto/UserApi';
 
 export class UserApi {
 	private static baseUrl = '/users';
@@ -35,6 +35,11 @@ export class UserApi {
 	// Create a new user
 	public static async createUser(data: CreateUserRequest): Promise<User> {
 		return await AxiosClient.post<User, CreateUserRequest>(this.baseUrl, data);
+	}
+
+	// Create a new service account
+	public static async createServiceAccount(data: CreateServiceAccountPayload): Promise<User> {
+		return await AxiosClient.post<User>(this.baseUrl, data);
 	}
 
 	// Update an existing user

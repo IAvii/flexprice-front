@@ -3,6 +3,7 @@ import {
 	DropdownMenu,
 	DropdownMenuOption,
 	TopupCard,
+	DebitCard,
 	WalletTransactionsTable,
 	ApiDocsContent,
 	TerminateWalletModal,
@@ -19,7 +20,7 @@ import toast from 'react-hot-toast';
 import { IoSearch } from 'react-icons/io5';
 import { useParams, useOutletContext } from 'react-router-dom';
 import CreateCustomerWalletModal from '../customers/CreateCustomerWalletModal';
-import { EllipsisVertical, Info, Pencil, SlidersHorizontal, Trash2, Wallet as WalletIcon, Bell } from 'lucide-react';
+import { EllipsisVertical, Info, Pencil, SlidersHorizontal, Trash2, Wallet as WalletIcon, Bell, Minus } from 'lucide-react';
 import { getCurrencySymbol } from '@/utils/common/helper_functions';
 import useQueryParams from '@/hooks/useQueryParams';
 import { DetailsCard } from '@/components/molecules';
@@ -51,6 +52,7 @@ const CustomerWalletTab = () => {
 
 	const [showCreateWalletModal, setShowCreateWalletModal] = useState(false);
 	const [showTopupModal, setShowTopupModal] = useState(false);
+	const [showDebitModal, setShowDebitModal] = useState(false);
 	const [showTerminateModal, setShowTerminateModal] = useState(false);
 	const [showMetadataModal, setShowMetadataModal] = useState(false);
 	const [showAlertDialog, setShowAlertDialog] = useState(false);
@@ -119,6 +121,11 @@ const CustomerWalletTab = () => {
 							icon: <Bell />,
 							label: 'Alert Settings',
 							onSelect: () => setShowAlertDialog(true),
+						},
+						{
+							icon: <Minus />,
+							label: 'Manual Debit',
+							onSelect: () => setShowDebitModal(true),
 						},
 						{
 							icon: <Trash2 />,
@@ -190,6 +197,18 @@ const CustomerWalletTab = () => {
 					currency={activeWallet?.currency ?? ''}
 				/>
 			</Dialog>
+
+			{/* Debit Modal */}
+			<DebitCard
+				isOpen={showDebitModal}
+				onOpenChange={setShowDebitModal}
+				onSuccess={() => {
+					setShowDebitModal(false);
+				}}
+				walletId={activeWallet?.id}
+				conversion_rate={activeWallet?.conversion_rate}
+				currency={activeWallet?.currency ?? ''}
+			/>
 
 			{/* Terminate Wallet Modal */}
 			{activeWallet && (

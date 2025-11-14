@@ -1,9 +1,9 @@
-import { BookOpen, ExternalLink, ChevronsUpDown, CodeXml, LogOut, ListChecks, CreditCard, Webhook } from 'lucide-react';
+import { BookOpen, ExternalLink, ChevronsUpDown, LogOut, ListChecks, CreditCard } from 'lucide-react';
 import { RouteNames } from '@/core/routes/Routes';
 import { SidebarMenuButton, useSidebar, Popover, PopoverContent, PopoverTrigger, Skeleton } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AuthService from '@/core/auth/AuthService';
 import useUser from '@/hooks/useUser';
 
@@ -15,11 +15,6 @@ const SidebarFooter = () => {
 
 	const { loading, user } = useUser();
 	const { open: sidebarOpen } = useSidebar();
-	const location = useLocation();
-
-	const isActive = (path: string) => {
-		return location.pathname.includes(path);
-	};
 
 	if (loading) return <Skeleton className='w-full h-10' />;
 
@@ -49,45 +44,10 @@ const SidebarFooter = () => {
 		<div className='flex flex-col gap-2 w-full'>
 			<SidebarMenuButton
 				onClick={() => {
-					navigate(RouteNames.developers);
-				}}
-				tooltip={'Developers'}
-				className={cn(
-					`flex items-center justify-between gap-2 hover:bg-muted transition-colors my-0 py-1 `,
-					isActive(RouteNames.developers) && 'bg-muted',
-				)}>
-				<span className='flex items-center gap-2'>
-					<CodeXml className={cn('size-5 mr-1 !stroke-[1.5px]', isActive(RouteNames.developers) ? 'text-[#3C87D2]' : 'text-[#3F3F46]')} />
-					<span className='text-sm select-none'>{'Developers'}</span>
-				</span>
-				<div></div>
-			</SidebarMenuButton>
-
-			<SidebarMenuButton
-				onClick={() => {
-					navigate(RouteNames.webhooks);
-				}}
-				tooltip={'Webhooks'}
-				className={cn(
-					`flex items-center justify-between gap-2 hover:bg-muted transition-colors my-0 py-1 `,
-					isActive(RouteNames.webhooks) && 'bg-muted',
-				)}>
-				<span className='flex items-center gap-2'>
-					<Webhook className={cn('size-5 mr-1 !stroke-[1.5px]', isActive(RouteNames.webhooks) ? 'text-[#3C87D2]' : 'text-[#3F3F46]')} />
-					<span className='text-sm select-none'>{'Webhooks'}</span>
-				</span>
-				<div></div>
-			</SidebarMenuButton>
-
-			<SidebarMenuButton
-				onClick={() => {
 					window.open('https://docs.flexprice.io', '_blank');
 				}}
 				tooltip={'Documentation'}
-				className={cn(
-					`flex items-center justify-between gap-2 hover:bg-muted transition-colors my-0 py-1 `,
-					isActive(RouteNames.developers) && 'bg-muted',
-				)}>
+				className={cn(`flex items-center justify-between gap-2 hover:bg-muted transition-colors my-0 py-1 `)}>
 				<span className='flex items-center gap-2'>
 					<BookOpen className={cn('size-5 mr-1 !stroke-[1.5px]')} />
 					<span className='text-sm select-none'>{'Documentation'}</span>

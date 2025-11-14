@@ -48,7 +48,7 @@ const EmptyPage: FC<Props> = ({ onAddClick, tags, heading, children, addButtonLa
 					/>
 				)
 			}>
-			<div className='bg-[#fafafa] border border-[#E9E9E9] rounded-xl w-[1008px] h-[360px] flex flex-col items-center justify-center mx-auto '>
+			<div className='bg-[#fafafa] border border-[#E9E9E9] rounded-xl w-full h-[360px] flex flex-col items-center justify-center mx-auto '>
 				{card?.icon && <div className='mb-8'>{card?.icon}</div>}
 				{card?.heading && <div className=' font-medium text-[20px] leading-normal text-gray-700 mb-4 text-center'>{card?.heading}</div>}
 				{card?.description && (

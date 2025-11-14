@@ -105,6 +105,9 @@ const RecordPaymentTopup: FC<Props> = ({
 			if (connection.provider_type === CONNECTION_PROVIDER_TYPE.STRIPE) {
 				return { label: 'Stripe', value: connection.id, description: `Process payment through Stripe (${connection.name})` };
 			}
+			if (connection.provider_type === CONNECTION_PROVIDER_TYPE.RAZORPAY) {
+				return { label: 'Razorpay', value: connection.id, description: `Process payment through Razorpay (${connection.name})` };
+			}
 			return null;
 		})
 		.filter((option): option is { label: string; value: string; description: string } => option !== null);

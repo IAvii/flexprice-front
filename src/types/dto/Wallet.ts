@@ -44,6 +44,13 @@ export interface TopupWalletPayload {
 	transaction_reason: WALLET_TRANSACTION_REASON;
 }
 
+export interface DebitWalletPayload {
+	credits: number;
+	walletId: string;
+	idempotency_key: string;
+	transaction_reason: WALLET_TRANSACTION_REASON;
+}
+
 export interface WalletTransactionPayload extends Pagination {
 	walletId: string;
 }

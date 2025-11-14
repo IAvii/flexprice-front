@@ -1,4 +1,4 @@
-import { Card, FormHeader, Page, Spacer } from '@/components/atoms';
+import { Card, FormHeader, Page, Spacer, Chip } from '@/components/atoms';
 import { ColumnData, SubscriptionPauseWarning } from '@/components/molecules';
 import { SubscriptionPreviewLineItemTable } from '@/components/molecules/InvoiceLineItemTable';
 import SubscriptionActionButton from '@/components/organisms/Subscription/SubscriptionActionButton';
@@ -153,6 +153,52 @@ const CustomerSubscriptionDetailsPage: FC = () => {
 
 	const isPaused = subscriptionDetails?.subscription_status.toUpperCase() === 'PAUSED';
 	const activePauseDetails = subscriptionDetails?.pauses?.find((pause) => pause.id === subscriptionDetails.active_pause_id);
+	// Determine if subscription is scheduled to cancel soon (within 15 days)
+	const getCancellationEffectiveDate = (): Date | null => {
+		if (!subscriptionDetails) return null;
+		// If cancel_at is set, that is the effective cancellation date
+		if (subscriptionDetails.cancel_at) {
+			const d = new Date(subscriptionDetails.cancel_at);
+			return isNaN(d.getTime()) ? null : d;
+		}
+		// If cancel_at_period_end, then cancellation is effective at current period end
+		if (subscriptionDetails.cancel_at_period_end && subscriptionDetails.current_period_end) {
+			const d = new Date(subscriptionDetails.current_period_end);
+			return isNaN(d.getTime()) ? null : d;
+		}
+		return null;
+	};
+
+	const cancellationEffectiveDate = getCancellationEffectiveDate();
+	const showCancelsByTag =
+		subscriptionDetails?.subscription_status === SUBSCRIPTION_STATUS.ACTIVE &&
+		!!cancellationEffectiveDate &&
+		(() => {
+			const now = new Date();
+			const diffMs = cancellationEffectiveDate.getTime() - now.getTime();
+			const diffDays = diffMs / (1000 * 60 * 60 * 24);
+			return diffDays >= 0 && diffDays <= 15;
+		})();
+	// Prefer explicit end_date if it's a meaningful value and within 15 days (avoid epoch/default like 1970/0001)
+	const showEndDateTag = (() => {
+		const dStr = subscriptionDetails?.end_date;
+		if (!dStr) return false;
+		const d = new Date(dStr);
+		if (isNaN(d.getTime())) return false;
+		const year = d.getUTCFullYear();
+		// Treat early sentinel years as "default" (e.g., 0001, 1970, 1971)
+		if (year <= 1971) return false;
+		const now = new Date();
+		const diffMs = d.getTime() - now.getTime();
+		const diffDays = diffMs / (1000 * 60 * 60 * 24);
+		return diffDays >= 0 && diffDays <= 15;
+	})();
+	// Local formatter to show date without year (e.g., "Nov 12")
+	const formatDateNoYear = (dateString: string | Date) => {
+		const d = new Date(dateString);
+		if (isNaN(d.getTime())) return '--';
+		return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+	};
 
 	return (
 		<div>
@@ -176,7 +222,17 @@ const CustomerSubscriptionDetailsPage: FC = () => {
 				<Spacer className='!my-4' />
 				<div className='w-full flex justify-between items-center'>
 					<p className='text-[#71717A] text-sm'>Status</p>
-					<p className='text-[#09090B] text-sm'>{getSubscriptionStatus(subscriptionDetails?.subscription_status ?? '')}</p>
+					<div className='text-[#09090B] text-sm flex items-center gap-2'>
+						{getSubscriptionStatus(subscriptionDetails?.subscription_status ?? '')}
+						{showEndDateTag ? (
+							<Chip variant='default' label={`Cancels on ${formatDateNoYear(subscriptionDetails!.end_date)}`} />
+						) : (
+							showCancelsByTag &&
+							cancellationEffectiveDate && (
+								<Chip variant='default' label={`Cancels by ${formatDateShort(cancellationEffectiveDate.toISOString())}`} />
+							)
+						)}
+					</div>
 				</div>
 				<Spacer className='!my-4' />
 

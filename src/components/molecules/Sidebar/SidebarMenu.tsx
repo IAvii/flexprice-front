@@ -1,11 +1,10 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { SidebarGroup, SidebarMenu } from '@/components/ui/sidebar';
 import SidebarItem from './SidebarItem';
 import { useLocation } from 'react-router-dom';
 import { LucideIcon } from 'lucide-react';
-import { RouteNames } from '@/core/routes/Routes';
 
 export type NavItem = {
 	title: string;
@@ -18,11 +17,46 @@ export type NavItem = {
 		url: string;
 	}[];
 	isOpen?: boolean;
-	onToggle?: () => void;
+	onToggle?: (isOpen: boolean) => void;
 };
 
 const SidebarNav: FC<{ items: NavItem[] }> = ({ items }) => {
 	const location = useLocation();
+	const [openItemTitle, setOpenItemTitle] = useState<string | null>(null);
+
+	// Determine which item should be open based on current route
+	useEffect(() => {
+		for (const item of items) {
+			if (item.items && item.items.length > 0) {
+				const isMainItemActive = location.pathname.startsWith(item.url) && item.url !== '#';
+				const isSubItemActive = item.items?.some((subItem) => location.pathname.startsWith(subItem.url));
+				const isActive = isMainItemActive || isSubItemActive;
+
+				// Special case: If we're on any product catalog route, open Product Catalog section
+				const isProductCatalogRoute = location.pathname.startsWith('/product-catalog');
+				const isProductCatalog = item.title === 'Product Catalog';
+				const shouldOpen = isActive || (isProductCatalogRoute && isProductCatalog);
+
+				if (shouldOpen) {
+					setOpenItemTitle(item.title);
+					return;
+				}
+			}
+		}
+	}, [location.pathname, items]);
+
+	const handleToggle = (itemTitle: string, isOpen: boolean) => {
+		// Use requestAnimationFrame for smoother state updates
+		requestAnimationFrame(() => {
+			if (isOpen) {
+				// If opening, set this as the open item (closing others)
+				setOpenItemTitle(itemTitle);
+			} else {
+				// If closing, clear the open item
+				setOpenItemTitle(null);
+			}
+		});
+	};
 
 	return (
 		<SidebarGroup className='mb-0'>
@@ -33,15 +67,19 @@ const SidebarNav: FC<{ items: NavItem[] }> = ({ items }) => {
 					const isSubItemActive = item.items?.some((subItem) => location.pathname.startsWith(subItem.url));
 					const isActive = isMainItemActive || isSubItemActive;
 
-					// Special case: If we're on the pricing route (default route) or any product catalog route, open Product Catalog section
-					const isPricingRoute = location.pathname === RouteNames.pricing;
-					const isProductCatalogRoute = location.pathname.startsWith('/product-catalog');
-					const isProductCatalog = item.title === 'Product Catalog';
-					const shouldOpenByDefault = isActive || ((isPricingRoute || isProductCatalogRoute) && isProductCatalog);
-
 					item.isActive = isActive;
 
-					return <SidebarItem key={item.title} {...item} defaultOpen={shouldOpenByDefault} />;
+					const isOpen = openItemTitle === item.title;
+					const hasChildren = item.items && item.items.length > 0;
+
+					return (
+						<SidebarItem
+							key={item.title}
+							{...item}
+							isOpen={hasChildren ? isOpen : undefined}
+							onToggle={hasChildren ? (open) => handleToggle(item.title, open) : undefined}
+						/>
+					);
 				})}
 			</SidebarMenu>
 		</SidebarGroup>

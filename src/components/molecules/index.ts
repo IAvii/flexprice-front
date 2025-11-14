@@ -37,6 +37,8 @@ export { default as WalletTransactionsTable } from './Wallet';
 
 export { default as TopupCard } from './WalletTopupCard';
 
+export { default as DebitCard } from './WalletDebitCard';
+
 export { default as RecordPaymentTopup } from './RecordPaymentTopup';
 
 export { default as RolloutChargesModal, RolloutOption } from './RolloutChargesModal';

@@ -8,3 +8,8 @@ export interface GetServiceAccountsResponse {
 		offset: number;
 	};
 }
+
+export interface CreateServiceAccountPayload {
+	type: 'service_account';
+	roles: string[];
+}

@@ -248,19 +248,20 @@ const FeatureDetails = () => {
 	return (
 		<Page
 			headingCTA={
-				<div className='flex gap-2'>
+				<div className='flex gap-1'>
 					<Button
 						isLoading={isArchiving}
 						disabled={isArchiving || data?.status === ENTITY_STATUS.ARCHIVED}
 						variant={'outline'}
+						size={'lg'}
 						onClick={() => archiveFeature()}
-						className='flex gap-2'>
+						className='flex gap-1 px-3'>
 						<EyeOff className='w-4 h-4' />
 						{isArchiving ? 'Archiving...' : 'Archive'}
 					</Button>
 					<DropdownMenu
 						options={dropdownOptions}
-						trigger={<Button variant={'outline'} prefixIcon={<EllipsisVertical />} size={'icon'}></Button>}
+						trigger={<Button variant={'outline'} prefixIcon={<EllipsisVertical />} size={'icon'} className='h-10 w-10 p-0'></Button>}
 					/>
 				</div>
 			}

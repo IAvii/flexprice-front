@@ -4,7 +4,7 @@ import SidebarNav, { NavItem } from './SidebarMenu';
 import FlexpriceSidebarFooter from './SidebarFooter';
 import { RouteNames } from '@/core/routes/Routes';
 import { EnvironmentSelector } from '@/components/molecules';
-import { Settings, Landmark, Layers2, Gauge } from 'lucide-react';
+import { Settings, Landmark, Layers2, Gauge, LayoutPanelLeft, CodeXml } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }) => {
@@ -12,7 +12,7 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 	const navMain: NavItem[] = [
 		{
 			title: 'Product Catalog',
-			url: '#',
+			url: RouteNames.features,
 			icon: Layers2,
 			items: [
 				{
@@ -22,10 +22,6 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 				{
 					title: 'Plans',
 					url: RouteNames.plan,
-				},
-				{
-					title: 'Pricing Widget',
-					url: RouteNames.pricing,
 				},
 				{
 					title: 'Coupons',
@@ -47,7 +43,7 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 		},
 		{
 			title: 'Billing',
-			url: '#',
+			url: RouteNames.customers,
 			icon: Landmark,
 			items: [
 				{
@@ -74,15 +70,11 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 					title: 'Payments',
 					url: RouteNames.payments,
 				},
-				// {
-				// 	title: 'Analytics',
-				// 	url: RouteNames.analytics,
-				// },
 			],
 		},
 		{
 			title: 'Usage Tracking',
-			url: '#',
+			url: RouteNames.events,
 			icon: Gauge,
 			items: [
 				{
@@ -96,8 +88,27 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 			],
 		},
 		{
+			title: 'Developers',
+			url: RouteNames.webhooks,
+			icon: CodeXml,
+			items: [
+				{
+					title: 'Webhooks',
+					url: RouteNames.webhooks,
+				},
+				{
+					title: 'API Keys',
+					url: RouteNames.apiKeys,
+				},
+				{
+					title: 'Service Accounts',
+					url: RouteNames.serviceAccounts,
+				},
+			],
+		},
+		{
 			title: 'Tools',
-			url: '#',
+			url: RouteNames.integrations,
 			icon: Settings,
 			items: [
 				{
@@ -113,6 +124,11 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 					url: RouteNames.exports,
 				},
 			],
+		},
+		{
+			title: 'Pricing Widget',
+			url: RouteNames.pricing,
+			icon: LayoutPanelLeft,
 		},
 	];
 

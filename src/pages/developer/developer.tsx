@@ -1,4 +1,4 @@
-import { Button, Page, ShortPagination } from '@/components/atoms';
+import { Button, Page, ShortPagination, SectionHeader } from '@/components/atoms';
 import { ColumnData, FlexpriceTable, SecretKeyDrawer, ApiDocsContent } from '@/components/molecules';
 import SecretKeysApi from '@/api/SecretKeysApi';
 import { useQuery } from '@tanstack/react-query';
@@ -198,6 +198,7 @@ const DeveloperPage = () => {
 			<ApiDocsContent tags={['secrets']} />
 			<SecretKeyDrawer isOpen={isSecretKeyDrawerOpen} onOpenChange={setIsSecretKeyDrawerOpen} />
 
+			{/* API Keys Section */}
 			{secretKeys?.items.length === 0 && (
 				<EmptyPage
 					heading='API Keys'
@@ -213,14 +214,13 @@ const DeveloperPage = () => {
 				/>
 			)}
 			{(secretKeys?.items.length || 0) > 0 && (
-				<Page
-					heading='API Keys'
-					headingCTA={
+				<Page>
+					<SectionHeader title='API Keys' titleClassName='text-3xl font-medium'>
 						<Button prefixIcon={<Plus />} onClick={handleAddSecretKey}>
 							Add
 						</Button>
-					}>
-					<div>
+					</SectionHeader>
+					<div className='pb-12 mt-2'>
 						<FlexpriceTable showEmptyRow columns={columns} data={secretKeys?.items || []} />
 						<ShortPagination unit='Secret Keys' totalItems={secretKeys?.pagination.total || 0} />
 					</div>

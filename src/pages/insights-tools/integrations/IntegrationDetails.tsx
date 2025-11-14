@@ -5,6 +5,7 @@ import { Button, FormHeader, Page, Dialog } from '@/components/atoms';
 import { useState } from 'react';
 import IntegrationDrawer from '@/components/molecules/IntegrationDrawer/IntegrationDrawer';
 import StripeConnectionDrawer from '@/components/molecules/StripeConnectionDrawer';
+import RazorpayConnectionDrawer from '@/components/molecules/RazorpayConnectionDrawer';
 import HubSpotConnectionDrawer from '@/components/molecules/HubSpotConnectionDrawer';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -127,6 +128,16 @@ const IntegrationDetails = () => {
 			{/* Integration Drawer for Add/Edit */}
 			{name.toLowerCase() === CONNECTION_PROVIDER_TYPE.STRIPE ? (
 				<StripeConnectionDrawer
+					isOpen={isDrawerOpen}
+					onOpenChange={(open) => {
+						setIsDrawerOpen(open);
+						if (!open) setEditingConnection(null);
+					}}
+					connection={editingConnection}
+					onSave={handleSaveConnection}
+				/>
+			) : name.toLowerCase() === CONNECTION_PROVIDER_TYPE.RAZORPAY ? (
+				<RazorpayConnectionDrawer
 					isOpen={isDrawerOpen}
 					onOpenChange={(open) => {
 						setIsDrawerOpen(open);

@@ -344,7 +344,7 @@ const FeatureDetailsSection = ({
 
 			<div className='w-full min-w-[200px] overflow-hidden'>
 				<Select
-					label='Type'
+					label='Type*'
 					options={FEATURE_TYPE_OPTIONS}
 					className='w-full overflow-hidden'
 					value={data.type}
@@ -417,7 +417,7 @@ const EventDetailsSection = ({
 			<Input
 				value={meter?.event_name || ''}
 				placeholder='tokens_total'
-				label='Event Name'
+				label='Event Name*'
 				description='A unique identifier for the event used to filter and measure usage e.g. user_signup, api_calls, etc.'
 				error={meterErrors.event_name}
 				onChange={handleEventNameChange}
@@ -482,6 +482,7 @@ const AggregationSection = ({
 		if (currentValue !== multiplierInput) {
 			setMultiplierInput(currentValue);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [meter.aggregation?.multiplier]);
 
 	const handleMultiplierChange = useCallback(
@@ -535,7 +536,7 @@ const AggregationSection = ({
 					value={meter.aggregation?.type || AGGREGATION_OPTIONS[0].value}
 					onChange={handleAggregationTypeChange}
 					description='Choose how values are aggregated.'
-					label='Aggregation Function'
+					label='Aggregation Function*'
 					placeholder='SUM'
 					error={meterErrors.aggregation_type}
 					hideSelectedTick={true}
@@ -546,7 +547,7 @@ const AggregationSection = ({
 						value={meter.aggregation?.field || ''}
 						disabled={meter.aggregation?.type === METER_AGGREGATION_TYPE.COUNT}
 						onChange={handleAggregationFieldChange}
-						label='Aggregation Field'
+						label='Aggregation Field*'
 						placeholder='tokens'
 						description='Specify the property in the event data that will be aggregated. e.g. tokens, messages_sent, storage_used.'
 						error={meterErrors.aggregation_field}
@@ -557,7 +558,7 @@ const AggregationSection = ({
 					<Input
 						value={multiplierInput}
 						onChange={handleMultiplierChange}
-						label='Aggregation Multiplier'
+						label='Aggregation Multiplier*'
 						placeholder='1'
 						description='Specify the multiplier for the aggregation. e.g. 1.5, 0.25, or 1000.'
 						error={meterErrors.aggregation_multiplier}
@@ -716,7 +717,7 @@ const AddFeaturePage = () => {
 			<Spacer height='16px' />
 
 			<div className={cn('flex gap-6 relative !mb-24', isMeteredType && 'w-full')}>
-				<div className='flex-[8] gap-7'>
+				<div className='flex-[6] gap-7'>
 					<FeatureDetailsSection
 						data={data}
 						errors={errors}
@@ -748,7 +749,7 @@ const AddFeaturePage = () => {
 					<Spacer height='16px' />
 				</div>
 
-				<div className={cn('flex-[3] max-w-lg relative')}>{isMeteredType && <CodePreviewSection meter={meter} />}</div>
+				<div className={cn('flex-[5] max-w-lg relative')}>{isMeteredType && <CodePreviewSection meter={meter} />}</div>
 			</div>
 		</Page>
 	);

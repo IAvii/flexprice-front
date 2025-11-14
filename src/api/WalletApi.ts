@@ -3,6 +3,7 @@ import { Wallet, RealtimeWalletBalance } from '@/models';
 import {
 	CreateWalletPayload,
 	TopupWalletPayload,
+	DebitWalletPayload,
 	WalletTransactionResponse,
 	WalletTransactionPayload,
 	UpdateWalletRequest,
@@ -32,6 +33,10 @@ class WalletApi {
 
 	static async topupWallet(data: TopupWalletPayload): Promise<Wallet> {
 		return await AxiosClient.post<Wallet>(`${this.baseUrl}/${data.walletId}/top-up`, data);
+	}
+
+	static async debitWallet(data: DebitWalletPayload): Promise<Wallet> {
+		return await AxiosClient.post<Wallet>(`${this.baseUrl}/${data.walletId}/debit`, data);
 	}
 
 	static async terminateWallet(walletId: string): Promise<void> {

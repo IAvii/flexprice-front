@@ -42,7 +42,7 @@ export type {
 
 export type { SignupData, LoginData, LocalUser } from './Auth';
 
-export type { GetServiceAccountsResponse } from './UserApi';
+export type { GetServiceAccountsResponse, CreateServiceAccountPayload } from './UserApi';
 
 export type { RbacRole, GetRolesResponse } from '@/api/RbacApi';
 
@@ -130,6 +130,7 @@ export type { CreateUserRequest, UpdateTenantPayload } from './User';
 export type {
 	CreateWalletPayload,
 	TopupWalletPayload,
+	DebitWalletPayload,
 	WalletTransactionResponse,
 	WalletTransactionPayload,
 	UpdateWalletRequest,
@@ -228,6 +229,8 @@ export {
 	getSubscriptionWebhookEvents,
 	getInvoiceWebhookEvents,
 } from '../enums/StripeWebhookEvents';
+
+export { RazorpayWebhookEvents, getDefaultRazorpayWebhookEvents } from '../enums/RazorpayWebhookEvents';
 
 // Additional DTO types
 export type { Testimonial } from './Testimonial';

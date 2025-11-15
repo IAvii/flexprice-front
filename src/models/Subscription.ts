@@ -25,6 +25,7 @@ export interface LineItem extends BaseModel {
 	readonly end_date: string;
 	readonly metadata: Metadata;
 	readonly price?: Price;
+	readonly subscription_phase_id?: string;
 }
 
 export interface Pause extends BaseModel {
@@ -73,15 +74,18 @@ export interface Subscription extends BaseModel {
 	readonly pause_status: PauseStatus;
 	readonly metadata: Metadata;
 	readonly customer: Customer;
-	readonly plan: Plan;
 	readonly billing_cycle: BILLING_CYCLE;
 	readonly line_items: LineItem[];
+	readonly plan: Plan;
 	readonly pauses: Pause[];
 
 	// experimental fields
 	credit_grants?: CreditGrant[];
 	commitment_amount?: number;
 	overage_factor?: number;
+
+	// Subscription phases
+	readonly phases?: SubscriptionPhase[];
 
 	// experimental fields
 	readonly schedule: Schedule;
@@ -142,21 +146,13 @@ export enum BILLING_CYCLE {
 	CALENDAR = 'calendar',
 }
 
-export interface SubscriptionPhaseLineItem extends BaseModel {
-	price_id: string;
-	quantity?: number;
-	override_amount?: string;
-}
-
 export interface SubscriptionPhase extends BaseModel {
-	billing_cycle?: BILLING_CYCLE;
-	start_date: Date | string;
-	end_date: Date | null | string;
-	line_items?: SubscriptionPhaseLineItem[];
-	prorate_charges?: boolean;
-	credit_grants?: CreditGrant[];
-	commitment_amount?: number;
-	overage_factor?: number;
+	readonly id: string;
+	readonly subscription_id: string;
+	readonly start_date: string;
+	readonly end_date?: string | null;
+	readonly metadata?: Metadata;
+	readonly environment_id: string;
 }
 
 export interface Schedule extends BaseModel {

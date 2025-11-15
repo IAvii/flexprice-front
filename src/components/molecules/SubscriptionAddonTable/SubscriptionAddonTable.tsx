@@ -203,7 +203,7 @@ const SubscriptionAddonTable: React.FC<Props> = ({ data, onChange, disabled, get
 					<FormHeader className='mb-0' title='Addons' variant='sub-header' />
 					<AddButton onClick={handleOpenCreate} disabled={disabled} />
 				</div>
-				<div className='rounded-xl border border-gray-300 space-y-6 mt-2 '>
+				<div className='rounded-xl border border-gray-300'>
 					<FlexpriceTable data={extendedData} columns={columns} showEmptyRow />
 				</div>
 			</div>

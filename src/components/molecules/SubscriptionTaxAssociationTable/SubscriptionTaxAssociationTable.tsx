@@ -82,7 +82,7 @@ const SubscriptionTaxAssociationTable: FC<Props> = ({ data, onChange, disabled }
 	];
 
 	return (
-		<div className='mt-4'>
+		<div>
 			<TaxAssociationDialog
 				open={isOpen}
 				onOpenChange={setIsOpen}
@@ -113,7 +113,7 @@ const SubscriptionTaxAssociationTable: FC<Props> = ({ data, onChange, disabled }
 						disabled={disabled}
 					/>
 				</div>
-				<div className='rounded-xl border border-gray-300 space-y-6 mt-2'>
+				<div className='rounded-xl border border-gray-300'>
 					<FlexpriceTable data={data} columns={columns} showEmptyRow />
 				</div>
 			</div>

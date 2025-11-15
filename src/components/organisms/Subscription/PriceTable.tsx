@@ -205,11 +205,11 @@ const PriceTable: FC<Props> = ({
 	const displayedData = showAllRows ? mappedData : mappedData.slice(0, 5);
 
 	return (
-		<div>
+		<div className='space-y-4'>
 			<div>
 				<FormHeader title='Charges' variant='sub-header' />
 			</div>
-			<div className='rounded-xl border border-gray-300 space-y-6 mt-2 '>
+			<div className='rounded-xl border border-gray-300'>
 				<motion.div
 					initial={{ height: 'auto' }}
 					// animate={{ height: showAllRows ? 'auto' : 200 }}
@@ -219,18 +219,22 @@ const PriceTable: FC<Props> = ({
 				</motion.div>
 			</div>
 			{mappedData.length > 5 && (
-				<div className='text-center mt-4 w-full flex justify-center'>
-					<span className='flex items-center gap-1 text-xs duration-300 transition-all' onClick={() => setShowAllRows((prev) => !prev)}>
+				<div className='flex justify-center mt-3'>
+					<button
+						onClick={() => setShowAllRows((prev) => !prev)}
+						className='flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors py-2 px-3 rounded-md hover:bg-gray-50'>
 						{showAllRows ? (
 							<>
+								<span>Show less</span>
 								<ChevronUpIcon className='w-4 h-4' />
 							</>
 						) : (
 							<>
+								<span>Show {mappedData.length - 5} more</span>
 								<ChevronDownIcon className='w-4 h-4' />
 							</>
 						)}
-					</span>
+					</button>
 				</div>
 			)}
 

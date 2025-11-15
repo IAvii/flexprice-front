@@ -6,7 +6,7 @@ import SubscriptionApi from '@/api/SubscriptionApi';
 import { getCurrencySymbol } from '@/utils/common/helper_functions';
 import formatDate from '@/utils/common/format_date';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 import { LineItem } from '@/models/Subscription';
@@ -90,6 +90,44 @@ const CustomerSubscriptionEditPage: React.FC = () => {
 			updateBreadcrumb(1, customer.external_id, `${RouteNames.customers}/${customer.id}`);
 		}
 	}, [subscriptionDetails, updateBreadcrumb, customer, subscriptionId]);
+
+	// Group line items by phase ID
+	const groupedLineItems = useMemo(() => {
+		if (!subscriptionDetails?.line_items) return { withoutPhase: [], byPhase: {} };
+
+		const lineItems = subscriptionDetails.line_items;
+		const withoutPhase: LineItem[] = [];
+		const byPhase: Record<string, LineItem[]> = {};
+
+		lineItems.forEach((lineItem) => {
+			if (lineItem.subscription_phase_id) {
+				if (!byPhase[lineItem.subscription_phase_id]) {
+					byPhase[lineItem.subscription_phase_id] = [];
+				}
+				byPhase[lineItem.subscription_phase_id].push(lineItem);
+			} else {
+				withoutPhase.push(lineItem);
+			}
+		});
+
+		return { withoutPhase, byPhase };
+	}, [subscriptionDetails?.line_items]);
+
+	// Get phase details for each phase ID
+	const phaseDetails = useMemo(() => {
+		if (!subscriptionDetails?.phases) return {};
+
+		const details: Record<string, { index: number; startDate: string; endDate?: string }> = {};
+		subscriptionDetails.phases.forEach((phase, index) => {
+			details[phase.id] = {
+				index: index + 1,
+				startDate: phase.start_date,
+				endDate: phase.end_date || undefined,
+			};
+		});
+
+		return details;
+	}, [subscriptionDetails?.phases]);
 
 	const handleEditLineItem = (lineItem: LineItem) => {
 		setEditingLineItem(lineItem);
@@ -232,12 +270,77 @@ const CustomerSubscriptionEditPage: React.FC = () => {
 			<div className='space-y-6'>
 				<DetailsCard variant='stacked' title='Subscription Details' data={subscriptionDetailsData} />
 
-				<SubscriptionLineItemTable
-					data={subscriptionDetails?.line_items || []}
-					isLoading={isSubscriptionDetailsLoading}
-					onEdit={handleEditLineItem}
-					onTerminate={handleTerminateLineItem}
-				/>
+				{/* Line Items without Phase (Subscription-level) */}
+				{groupedLineItems.withoutPhase.length > 0 && (
+					<div className='space-y-4'>
+						<div className='flex items-center gap-2'>
+							<h3 className='text-lg font-semibold text-gray-900'>Subscription Line Items</h3>
+							<span className='text-sm text-gray-500'>({groupedLineItems.withoutPhase.length} items)</span>
+						</div>
+						<SubscriptionLineItemTable
+							data={groupedLineItems.withoutPhase}
+							isLoading={isSubscriptionDetailsLoading}
+							onEdit={handleEditLineItem}
+							onTerminate={handleTerminateLineItem}
+						/>
+					</div>
+				)}
+
+				{/* Line Items grouped by Phase */}
+				{Object.keys(groupedLineItems.byPhase).length > 0 && (
+					<div className='space-y-6'>
+						{Object.entries(groupedLineItems.byPhase)
+							.sort(([phaseIdA], [phaseIdB]) => {
+								// Sort by start date chronologically (earliest to latest)
+								const startDateA = phaseDetails[phaseIdA]?.startDate;
+								const startDateB = phaseDetails[phaseIdB]?.startDate;
+
+								if (!startDateA && !startDateB) return 0;
+								if (!startDateA) return 1;
+								if (!startDateB) return -1;
+
+								return new Date(startDateA).getTime() - new Date(startDateB).getTime();
+							})
+							.map(([phaseId, lineItems], index) => {
+								const phase = phaseDetails[phaseId];
+								const phaseNumber = index + 1; // Assign phase number based on chronological order
+								const startDate = phase?.startDate ? formatDate(phase.startDate) : 'N/A';
+								const endDate = phase?.endDate ? formatDate(phase.endDate) : 'Forever';
+
+								return (
+									<div key={phaseId} className='space-y-4'>
+										<div className='flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200'>
+											<div>
+												<h3 className='text-base font-semibold text-gray-900'>Phase {phaseNumber}</h3>
+												<p className='text-sm text-gray-600 mt-1'>
+													{startDate} → {endDate}
+													<span className='ml-2 text-gray-500'>
+														• {lineItems.length} line item{lineItems.length > 1 ? 's' : ''}
+													</span>
+												</p>
+											</div>
+										</div>
+										<SubscriptionLineItemTable
+											data={lineItems}
+											isLoading={isSubscriptionDetailsLoading}
+											onEdit={handleEditLineItem}
+											onTerminate={handleTerminateLineItem}
+										/>
+									</div>
+								);
+							})}
+					</div>
+				)}
+
+				{/* Show single table if no phases exist */}
+				{groupedLineItems.withoutPhase.length === 0 && Object.keys(groupedLineItems.byPhase).length === 0 && (
+					<SubscriptionLineItemTable
+						data={subscriptionDetails?.line_items || []}
+						isLoading={isSubscriptionDetailsLoading}
+						onEdit={handleEditLineItem}
+						onTerminate={handleTerminateLineItem}
+					/>
+				)}
 
 				{/* Subscription Entitlements Section */}
 				{subscriptionId && <SubscriptionEntitlementsSection subscriptionId={subscriptionId} />}

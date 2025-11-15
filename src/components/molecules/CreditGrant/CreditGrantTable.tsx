@@ -107,7 +107,7 @@ const CreditGrantTable: React.FC<Props> = ({ data, onChange, disabled, getEmptyC
 						disabled={disabled}
 					/>
 				</div>
-				<div className='rounded-xl border border-gray-300 space-y-6 mt-2 '>
+				<div className='rounded-xl border border-gray-300'>
 					<FlexpriceTable data={data} columns={columns} showEmptyRow />
 				</div>
 			</div>

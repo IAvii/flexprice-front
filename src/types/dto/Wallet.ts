@@ -40,7 +40,7 @@ export interface TopupWalletPayload {
 	expiry_date?: number;
 	expiry_date_utc?: Date;
 	metadata?: Record<string, any>;
-	idempotency_key: string;
+	idempotency_key?: string;
 	transaction_reason: WALLET_TRANSACTION_REASON;
 }
 

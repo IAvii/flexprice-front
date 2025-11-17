@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 import { Button, Input, Sheet, Spacer } from '@/components/atoms';
+import { Switch } from '@/components/ui';
 import { useUser } from '@/hooks/UserContext';
 import { useEnvironment } from '@/hooks/useEnvironment';
 import { useMutation } from '@tanstack/react-query';
@@ -21,6 +22,9 @@ interface RazorpayFormData {
 	key_id: string;
 	secret_key: string;
 	webhook_secret: string;
+	sync_config: {
+		invoice: boolean; // push to Razorpay
+	};
 }
 
 const RazorpayConnectionDrawer: FC<RazorpayConnectionDrawerProps> = ({ isOpen, onOpenChange, connection, onSave }) => {
@@ -32,6 +36,9 @@ const RazorpayConnectionDrawer: FC<RazorpayConnectionDrawerProps> = ({ isOpen, o
 		key_id: '',
 		secret_key: '',
 		webhook_secret: '',
+		sync_config: {
+			invoice: false, // push to Razorpay
+		},
 	});
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [webhookCopied, setWebhookCopied] = useState(false);
@@ -51,11 +58,16 @@ const RazorpayConnectionDrawer: FC<RazorpayConnectionDrawerProps> = ({ isOpen, o
 	useEffect(() => {
 		if (isOpen) {
 			if (connection) {
+				// Handle sync config from connection
+				const syncConfig = connection.sync_config || {};
 				setFormData({
 					name: connection.name || '',
 					key_id: connection.key_id || '',
 					secret_key: connection.secret_key || '',
 					webhook_secret: connection.webhook_secret || '',
+					sync_config: {
+						invoice: syncConfig.invoice?.outbound || false,
+					},
 				});
 			} else {
 				setFormData({
@@ -63,6 +75,9 @@ const RazorpayConnectionDrawer: FC<RazorpayConnectionDrawerProps> = ({ isOpen, o
 					key_id: '',
 					secret_key: '',
 					webhook_secret: '',
+					sync_config: {
+						invoice: false,
+					},
 				});
 			}
 			setErrors({});
@@ -73,6 +88,16 @@ const RazorpayConnectionDrawer: FC<RazorpayConnectionDrawerProps> = ({ isOpen, o
 	const handleChange = (field: keyof RazorpayFormData, value: string) => {
 		setFormData((prev) => ({ ...prev, [field]: value }));
 		setErrors((prev) => ({ ...prev, [field]: '' }));
+	};
+
+	const handleSyncConfigChange = (category: keyof typeof formData.sync_config, value: boolean) => {
+		setFormData((prev) => ({
+			...prev,
+			sync_config: {
+				...prev.sync_config,
+				[category]: value,
+			},
+		}));
 	};
 
 	const validateForm = () => {
@@ -110,7 +135,16 @@ const RazorpayConnectionDrawer: FC<RazorpayConnectionDrawerProps> = ({ isOpen, o
 					secret_key: formData.secret_key,
 					webhook_secret: formData.webhook_secret,
 				},
+				sync_config: {} as Record<string, { inbound: boolean; outbound: boolean }>,
 			};
+
+			// Only add invoice config if toggle is true
+			if (formData.sync_config.invoice) {
+				payload.sync_config.invoice = {
+					inbound: false,
+					outbound: true,
+				};
+			}
 
 			return await ConnectionApi.createConnection(payload);
 		},
@@ -126,9 +160,18 @@ const RazorpayConnectionDrawer: FC<RazorpayConnectionDrawerProps> = ({ isOpen, o
 
 	const { mutate: updateConnection, isPending: isUpdating } = useMutation({
 		mutationFn: async () => {
-			const payload = {
+			const payload: any = {
 				name: formData.name,
+				sync_config: {} as Record<string, { inbound: boolean; outbound: boolean }>,
 			};
+
+			// Only add invoice config if toggle is true
+			if (formData.sync_config.invoice) {
+				payload.sync_config.invoice = {
+					inbound: false,
+					outbound: true,
+				};
+			}
 
 			return await ConnectionApi.updateConnection(connection.id, payload);
 		},
@@ -208,6 +251,23 @@ const RazorpayConnectionDrawer: FC<RazorpayConnectionDrawerProps> = ({ isOpen, o
 						description='Your Razorpay secret key from the API keys section'
 					/>
 				)}
+
+				{/* Sync Configuration Section */}
+				<div className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
+					<h3 className='text-sm font-medium text-gray-800 mb-3'>Sync Configuration</h3>
+					<p className='text-xs text-gray-600 mb-4'>Configure what data to sync between Razorpay and Flexprice</p>
+
+					<div className='space-y-4'>
+						{/* Invoices */}
+						<div className='flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg'>
+							<div>
+								<label className='text-sm font-medium text-gray-700'>Invoices</label>
+								<p className='text-xs text-gray-500'>Push to Razorpay</p>
+							</div>
+							<Switch checked={formData.sync_config.invoice} onCheckedChange={(checked) => handleSyncConfigChange('invoice', checked)} />
+						</div>
+					</div>
+				</div>
 
 				{/* Webhook Section */}
 				<div className='p-4 bg-blue-50 border border-blue-200 rounded-lg'>

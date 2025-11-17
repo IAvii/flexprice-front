@@ -126,7 +126,7 @@ const RazorpayConnectionDrawer: FC<RazorpayConnectionDrawerProps> = ({ isOpen, o
 
 	const { mutate: createConnection, isPending: isCreating } = useMutation({
 		mutationFn: async () => {
-			const payload: any = {
+			const payload = {
 				name: formData.name,
 				provider_type: CONNECTION_PROVIDER_TYPE.RAZORPAY,
 				encrypted_secret_data: {

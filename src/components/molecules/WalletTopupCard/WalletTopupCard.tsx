@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { getCurrencySymbol } from '@/utils';
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { WALLET_TRANSACTION_REASON } from '@/models';
+import { v4 as uuidv4 } from 'uuid';
 import { Label, Switch } from '@/components/ui';
 import { getCurrencyAmountFromCredits } from '@/utils';
 import { TopupWalletPayload } from '@/types';
@@ -88,7 +89,7 @@ const TopupCard: FC<TopupCardProps> = ({ walletId, currency, conversion_rate = 1
 
 	// Validate topup payload
 	const validateTopup = useCallback((): boolean => {
-		const { credits_type, credits_to_add, expiry_date_utc } = topupPayload;
+		const { credits_type, credits_to_add, expiry_date_utc, reference_id } = topupPayload;
 
 		if (!credits_type) {
 			toast.error('Please select a credits type');
@@ -101,6 +102,10 @@ const TopupCard: FC<TopupCardProps> = ({ walletId, currency, conversion_rate = 1
 		}
 
 		// Validate reference ID for purchased credits with invoice generation
+		if (credits_type === CreditsType.PurchasedCredits && topupPayload.generate_invoice && (!reference_id || reference_id.trim() === '')) {
+			toast.error('Please enter a reference ID for purchased credits with invoice');
+			return false;
+		}
 
 		if (expiry_date_utc) {
 			// Reset time to start of the day for both dates
@@ -136,7 +141,7 @@ const TopupCard: FC<TopupCardProps> = ({ walletId, currency, conversion_rate = 1
 			return WalletApi.topupWallet({
 				walletId,
 				credits_to_add: topupPayload.credits_to_add,
-				idempotency_key: topupPayload.reference_id,
+				idempotency_key: topupPayload.reference_id || uuidv4(),
 				transaction_reason: getTransactionReason(),
 				expiry_date_utc: topupPayload.expiry_date_utc,
 				priority: topupPayload.priority,

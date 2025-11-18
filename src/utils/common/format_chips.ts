@@ -1,12 +1,12 @@
-import { BaseEntityStatus } from '@/types/common';
+import { ENTITY_STATUS } from '@/models';
 
 const formatChips = (data: string): string => {
 	switch (data) {
-		case BaseEntityStatus.PUBLISHED:
+		case ENTITY_STATUS.PUBLISHED:
 			return 'Active';
-		case BaseEntityStatus.ARCHIVED:
+		case ENTITY_STATUS.ARCHIVED:
 			return 'Inactive';
-		case BaseEntityStatus.DELETED:
+		case ENTITY_STATUS.DELETED:
 			return 'Inactive';
 		default:
 			return 'Inactive';

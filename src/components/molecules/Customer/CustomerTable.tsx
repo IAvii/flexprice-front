@@ -7,7 +7,7 @@ import Customer from '@/models/Customer';
 import CustomerApi from '@/api/CustomerApi';
 import { useNavigate } from 'react-router-dom';
 import { RouteNames } from '@/core/routes/Routes';
-import { BaseEntityStatus } from '@/types/common';
+import { ENTITY_STATUS } from '@/models';
 
 export interface Props {
 	data: Customer[];
@@ -46,12 +46,12 @@ const CustomerTable: FC<Props> = ({ data, onEdit }) => {
 					refetchQueryKey='fetchCustomers'
 					entityName='Customer'
 					edit={{
-						enabled: row.status !== BaseEntityStatus.ARCHIVED,
+						enabled: row.status === ENTITY_STATUS.PUBLISHED,
 						path: `/billing/customers/edit-customer?id=${row.id}`,
 						onClick: () => onEdit(row),
 					}}
 					archive={{
-						enabled: row.status !== BaseEntityStatus.ARCHIVED,
+						enabled: row.status === ENTITY_STATUS.PUBLISHED,
 					}}
 				/>
 			),

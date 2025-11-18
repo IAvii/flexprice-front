@@ -19,6 +19,7 @@ import { Price, BILLING_MODEL, TIER_MODE } from '@/models/Price';
 import { ExtendedPriceOverride } from '@/utils/common/price_override_helpers';
 import { RouteNames } from '@/core/routes/Routes';
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
+import { ENTITY_STATUS } from '@/models';
 
 type Params = {
 	id: string;
@@ -55,6 +56,7 @@ const CustomerSubscriptionEditPage: React.FC = () => {
 		queryFn: async () => {
 			return await CreditGrantApi.List({
 				subscription_ids: [subscriptionId!],
+				status: ENTITY_STATUS.PUBLISHED,
 			});
 		},
 		enabled:

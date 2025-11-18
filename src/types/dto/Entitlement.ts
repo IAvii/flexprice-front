@@ -1,4 +1,4 @@
-import { BaseEntityStatus } from '../common';
+import { ENTITY_STATUS } from '@/models';
 import {
 	Entitlement,
 	ENTITLEMENT_ENTITY_TYPE,
@@ -23,7 +23,7 @@ export interface EntitlementFilters {
 	entity_ids?: string[];
 	sort?: string;
 	start_time?: string;
-	status?: BaseEntityStatus;
+	status?: ENTITY_STATUS;
 }
 
 export interface EntitlementResponse extends Entitlement {

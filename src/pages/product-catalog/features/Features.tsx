@@ -18,7 +18,7 @@ import {
 	SortDirection,
 } from '@/types/common/QueryBuilder';
 import { QueryBuilder } from '@/components/molecules';
-import { BaseEntityStatus } from '@/types/common';
+import { ENTITY_STATUS } from '@/models';
 import { FEATURE_TYPE } from '@/models/Feature';
 import useFilterSorting from '@/hooks/useFilterSorting';
 import { useQueryWithEmptyState } from '@/hooks/useQueryWithEmptyState';
@@ -63,8 +63,8 @@ const filterOptions: FilterField[] = [
 		operators: [FilterOperator.IS_ANY_OF, FilterOperator.IS_NOT_ANY_OF],
 		dataType: DataType.ARRAY,
 		options: [
-			{ value: BaseEntityStatus.PUBLISHED, label: 'Active' },
-			{ value: BaseEntityStatus.ARCHIVED, label: 'Inactive' },
+			{ value: ENTITY_STATUS.PUBLISHED, label: 'Active' },
+			{ value: ENTITY_STATUS.ARCHIVED, label: 'Inactive' },
 		],
 	},
 	{
@@ -98,7 +98,7 @@ const FeaturesPage = () => {
 			{
 				field: 'status',
 				operator: FilterOperator.IS_ANY_OF,
-				valueArray: [BaseEntityStatus.PUBLISHED],
+				valueArray: [ENTITY_STATUS.PUBLISHED],
 				dataType: DataType.ARRAY,
 				id: 'initial-status',
 			},

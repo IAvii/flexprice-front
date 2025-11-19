@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import ConnectionApi from '@/api/ConnectionApi';
 import toast from 'react-hot-toast';
 import { Copy, CheckCircle, ChevronDown, ChevronRight } from 'lucide-react';
-import { ChargebeeWebhookEvents, getDefaultChargebeeWebhookEvents } from '@/types';
+import { ChargebeeWebhookEvents, getDefaultChargebeeWebhookEvents, CreateConnectionPayload } from '@/types';
 import { CONNECTION_PROVIDER_TYPE } from '@/models';
 
 interface ChargebeeConnectionDrawerProps {
@@ -134,7 +134,7 @@ const ChargebeeConnectionDrawer: FC<ChargebeeConnectionDrawerProps> = ({ isOpen,
 
 	const { mutate: createConnection, isPending: isCreating } = useMutation({
 		mutationFn: async () => {
-			const payload = {
+			const payload: CreateConnectionPayload = {
 				name: formData.name,
 				provider_type: CONNECTION_PROVIDER_TYPE.CHARGEBEE,
 				encrypted_secret_data: {
@@ -144,14 +144,17 @@ const ChargebeeConnectionDrawer: FC<ChargebeeConnectionDrawerProps> = ({ isOpen,
 					webhook_username: formData.webhook_username,
 					webhook_password: formData.webhook_password,
 				},
-				sync_config: {} as Record<string, { inbound: boolean; outbound: boolean }>,
+				sync_config: {},
 			};
 
 			// Only add invoice config if toggle is true
 			if (formData.sync_config.invoice) {
-				payload.sync_config.invoice = {
-					inbound: false,
-					outbound: true,
+				payload.sync_config = {
+					...payload.sync_config,
+					invoice: {
+						inbound: false,
+						outbound: true,
+					},
 				};
 			}
 

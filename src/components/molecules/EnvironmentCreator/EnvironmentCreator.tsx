@@ -53,8 +53,8 @@ const EnvironmentCreator: React.FC<Props> = ({ isOpen, onOpenChange, onEnvironme
 			// Call callback with the created environment ID (await if it's async)
 			await onEnvironmentCreated(result?.id);
 		},
-		onError: (error: Error) => {
-			toast.error(error.message || 'Failed to create environment');
+		onError: (error: ServerError) => {
+			toast.error(error.error?.message || 'Failed to create environment');
 		},
 	});
 

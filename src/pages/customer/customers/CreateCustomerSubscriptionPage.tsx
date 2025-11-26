@@ -67,6 +67,7 @@ export type SubscriptionFormState = {
 	tax_rate_overrides: TaxRateOverride[];
 	entitlementOverrides: Record<string, EntitlementOverrideRequest>;
 	creditGrants: InternalCreditGrantRequest[];
+	enable_true_up: boolean;
 };
 
 const usePlans = () => {
@@ -186,6 +187,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 		tax_rate_overrides: [],
 		entitlementOverrides: {},
 		creditGrants: [],
+		enable_true_up: false,
 	});
 
 	const { data: plans, isLoading: plansLoading, isError: plansError } = usePlans();
@@ -250,6 +252,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 					tax_rate_overrides: [],
 					entitlementOverrides: {},
 					creditGrants: (subscriptionData.details.credit_grants || []).map(creditGrantToInternal),
+					enable_true_up: (subscriptionData.details as any).enable_true_up ?? false,
 				});
 			}
 		}
@@ -383,6 +386,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 			tax_rate_overrides: tax_rate_overrides.length > 0 ? tax_rate_overrides : undefined,
 			override_entitlements: Object.keys(entitlementOverrides).length > 0 ? Object.values(entitlementOverrides) : undefined,
 			credit_grants: creditGrants.length > 0 ? creditGrants.map(internalToCreateRequest) : undefined,
+			enable_true_up: subscriptionState.enable_true_up,
 		};
 
 		createSubscription(payload);

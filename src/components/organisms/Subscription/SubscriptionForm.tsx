@@ -1,4 +1,5 @@
 import { Select, FormHeader, Label, DecimalUsageInput, DatePicker } from '@/components/atoms';
+import { Switch } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { toSentenceCase } from '@/utils/common/helper_functions';
 import { ExpandedPlan } from '@/types';
@@ -561,26 +562,37 @@ const SubscriptionForm = ({
 
 			{/* Commitment and Overage - Always visible */}
 			{state.selectedPlan && (
-				<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-200'>
-					<DecimalUsageInput
-						label='Commitment Amount'
-						value={state.commitmentAmount}
-						onChange={(value) => setState((prev) => ({ ...prev, commitmentAmount: value }))}
-						placeholder='e.g. $100.00'
-						disabled={isDisabled}
-						precision={2}
-						min={0}
-					/>
-					<DecimalUsageInput
-						label='Overage Factor'
-						value={state.overageFactor}
-						onChange={(value) => setState((prev) => ({ ...prev, overageFactor: value }))}
-						placeholder='e.g. 1.5'
-						disabled={isDisabled}
-						precision={2}
-						min={0}
-					/>
-				</div>
+				<>
+					<div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-6 border-t border-gray-200'>
+						<DecimalUsageInput
+							label='Commitment Amount'
+							value={state.commitmentAmount}
+							onChange={(value) => setState((prev) => ({ ...prev, commitmentAmount: value }))}
+							placeholder='e.g. $100.00'
+							disabled={isDisabled}
+							precision={2}
+							min={0}
+						/>
+						<DecimalUsageInput
+							label='Overage Factor'
+							value={state.overageFactor}
+							onChange={(value) => setState((prev) => ({ ...prev, overageFactor: value }))}
+							placeholder='e.g. 1.5'
+							disabled={isDisabled}
+							precision={2}
+							min={0}
+						/>
+					</div>
+					{/* Enable True Up */}
+					<div className='flex flex-col space-y-2 mt-4'>
+						<Label label='Enable True Up' />
+						<Switch
+							checked={state.enable_true_up}
+							onCheckedChange={(checked) => setState((prev) => ({ ...prev, enable_true_up: checked }))}
+							disabled={isDisabled}
+						/>
+					</div>
+				</>
 			)}
 
 			{/* Credit Grants (Subscription Level) */}

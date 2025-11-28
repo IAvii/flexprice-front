@@ -48,6 +48,17 @@ export interface CreateConnectionPayload {
 				site?: string;
 				webhook_username?: string;
 				webhook_password?: string;
+		  }
+		| {
+				provider_type: CONNECTION_PROVIDER_TYPE.QUICKBOOKS;
+				client_id?: string;
+				client_secret?: string;
+				access_token?: string;
+				refresh_token?: string;
+				realm_id?: string;
+				environment?: 'sandbox' | 'production';
+				token_expires_at?: number;
+				income_account_id?: string;
 		  };
 	sync_config?: {
 		plan?: {
@@ -75,6 +86,14 @@ export interface CreateConnectionPayload {
 
 export interface UpdateConnectionPayload {
 	name: string;
+	encrypted_secret_data?:
+		| {
+				provider_type: CONNECTION_PROVIDER_TYPE.QUICKBOOKS;
+				realm_id?: string;
+				environment?: 'sandbox' | 'production';
+				income_account_id?: string;
+		  }
+		| Record<string, any>;
 	sync_config?: {
 		plan?: {
 			inbound: boolean;

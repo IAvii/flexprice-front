@@ -190,8 +190,17 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 		mutationFn: async () => {
 			if (!connection) return;
 
+			// Get existing connection to preserve encrypted data
+			const existingConnection = await ConnectionApi.Get(connection.id);
+			const existingSecretData = (existingConnection as any).encrypted_secret_data || {};
+
 			const payload: any = {
 				name: formData.name,
+				encrypted_secret_data: {
+					provider_type: CONNECTION_PROVIDER_TYPE.QUICKBOOKS,
+					...existingSecretData,
+					income_account_id: formData.income_account_id || undefined,
+				},
 				sync_config: {} as Record<string, { inbound: boolean; outbound: boolean }>,
 			};
 

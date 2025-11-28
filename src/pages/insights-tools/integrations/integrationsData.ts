@@ -184,6 +184,45 @@ export const integrations: Integration[] = [
 			},
 		],
 	},
+	{
+		name: 'QuickBooks',
+		description: 'Sync plans, customers, and invoices from Flexprice to QuickBooks Online for seamless accounting operations.',
+		logo: '/assets/company-logo/quickbooks.svg',
+		tags: ['Accounting', 'Invoices'],
+		type: 'available',
+		info: [
+			{
+				title: 'Overview',
+				description: [
+					'The Flexprice QuickBooks integration enables one-way sync from Flexprice to QuickBooks Online. Automatically sync plans, customers, and invoices to keep your accounting system up to date.',
+				],
+			},
+			{
+				title: 'Plan/Price Sync',
+				description: [
+					'Automatically create QuickBooks Items (Service type) when plans are created in Flexprice. Each price is mapped to a QuickBooks Item for accurate invoice line items.',
+				],
+			},
+			{
+				title: 'Customer Sync',
+				description: [
+					'Customers are automatically created in QuickBooks when invoices are synced. Customer data including name, email, and billing address is synchronized.',
+				],
+			},
+			{
+				title: 'Invoice Sync',
+				description: [
+					'Automatically sync invoices from Flexprice to QuickBooks Online. Invoice line items are mapped to QuickBooks Items, ensuring accurate accounting records.',
+				],
+			},
+			{
+				title: 'Automatic Token Refresh',
+				description: [
+					'OAuth tokens are automatically refreshed by the backend when they expire, ensuring uninterrupted sync operations without manual intervention.',
+				],
+			},
+		],
+	},
 ];
 
 export const installedIntegrations = integrations.filter((integration) => integration.type === 'installed');

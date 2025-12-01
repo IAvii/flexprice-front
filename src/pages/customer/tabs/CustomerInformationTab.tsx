@@ -4,20 +4,17 @@ import ConnectionApi from '@/api/ConnectionApi';
 import { useQuery } from '@tanstack/react-query';
 import { Country } from 'country-state-city';
 import { CreateCustomerDrawer, Detail, DetailsCard, MetadataModal, SaveCardModal } from '@/components/molecules';
-import { useParams, useOutletContext } from 'react-router';
-import { Pencil, CreditCard } from 'lucide-react';
+import { useParams, useOutletContext, Link } from 'react-router';
+import { Pencil, CreditCard, ExternalLink } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getTypographyClass } from '@/lib/typography';
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { logger } from '@/utils/common/Logger';
 import { CONNECTION_PROVIDER_TYPE } from '@/models/Connection';
+import { RouteNames } from '@/core/routes/Routes';
 
 type ContextType = {
 	isArchived: boolean;
-};
-
-const fetchCustomer = async (customerId: string) => {
-	return await CustomerApi.getCustomerById(customerId);
 };
 
 const filterStringMetadata = (meta: Record<string, unknown> | undefined): Record<string, string> => {
@@ -31,7 +28,7 @@ const CustomerInformationTab = () => {
 
 	const { data: customer, isLoading } = useQuery({
 		queryKey: ['fetchCustomerDetails', customerId],
-		queryFn: () => fetchCustomer(customerId!),
+		queryFn: () => CustomerApi.getCustomerById(customerId!),
 		enabled: !!customerId,
 	});
 
@@ -72,6 +69,21 @@ const CustomerInformationTab = () => {
 			label: 'Email',
 			value: customer?.email || '--',
 		},
+		...(customer?.parent_customer_id
+			? [
+					{
+						label: 'Parent Customer',
+						value: (
+							<Link
+								to={`${RouteNames.customers}/${customer.parent_customer_id}`}
+								className='inline-flex items-center text-muted-foreground gap-1.5 hover:underline transition-colors'>
+								{customer?.parent_customer?.name || customer?.parent_customer?.external_id || customer.parent_customer_id}
+								<ExternalLink className='w-3.5 h-3.5' />
+							</Link>
+						),
+					} as Detail,
+				]
+			: []),
 		{
 			variant: 'divider',
 		},

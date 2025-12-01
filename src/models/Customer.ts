@@ -13,6 +13,7 @@ export interface Customer extends BaseModel {
 	name: string;
 	environment_id: string;
 	parent_customer_id?: string;
+	parent_customer?: Customer;
 }
 
 export default Customer;

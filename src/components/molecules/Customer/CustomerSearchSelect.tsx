@@ -1,7 +1,8 @@
 import React from 'react';
 import AsyncSearchableSelect, { AsyncSearchableSelectProps } from '@/components/atoms/Select/AsyncSearchableSelect';
 import CustomerApi from '@/api/CustomerApi';
-import { Customer } from '@/models';
+import { Customer, ENTITY_STATUS } from '@/models';
+import { SelectOption } from '@/components/atoms/Select/Select';
 
 export interface CustomerSearchSelectProps extends Omit<AsyncSearchableSelectProps<Customer>, 'search' | 'extractors'> {
 	/** Maximum number of results to fetch (default: 20) */
@@ -21,11 +22,42 @@ const CustomerSearchSelect: React.FC<CustomerSearchSelectProps> = ({
 }) => {
 	const searchFn = async (query: string) => {
 		const response = await CustomerApi.searchCustomers(query, limit);
-		return response.items.map((customer) => ({
-			value: customer.id,
-			label: customer.name,
-			data: customer, // Include full customer object
-		}));
+
+		const rootCustomer: Customer = {
+			id: '',
+			name: 'None',
+			email: '',
+			external_id: 'root',
+			address_city: '',
+			address_country: '',
+			address_line1: '',
+			address_line2: '',
+			address_postal_code: '',
+			address_state: '',
+			metadata: {},
+			environment_id: '',
+			created_at: new Date().toISOString(),
+			updated_at: new Date().toISOString(),
+			created_by: '',
+			updated_by: '',
+			tenant_id: '',
+			status: ENTITY_STATUS.PUBLISHED,
+		};
+
+		const items: Array<SelectOption & { data: Customer }> = [
+			{
+				value: rootCustomer.id,
+				label: rootCustomer.name,
+				data: rootCustomer,
+			},
+			...response.items.map((customer) => ({
+				value: customer.id,
+				label: customer.name,
+				data: customer,
+			})),
+		];
+
+		return items;
 	};
 
 	return (

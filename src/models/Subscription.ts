@@ -50,6 +50,9 @@ export interface Subscription extends BaseModel {
 	readonly id: string;
 	readonly lookup_key: string;
 	readonly customer_id: string;
+	// InvoicingCustomerID is the customer ID to use for invoicing
+	// This can differ from the subscription customer (e.g., parent company invoicing for child company)
+	readonly invoicing_customer_id?: string;
 	readonly plan_id: string;
 	readonly environment_id: string;
 	readonly tenant_id: string;
@@ -144,6 +147,12 @@ export interface Charge extends BaseModel {
 export enum BILLING_CYCLE {
 	ANNIVERSARY = 'anniversary',
 	CALENDAR = 'calendar',
+}
+
+// InvoiceBillingConfig determines which customer should receive invoices for a subscription
+export enum INVOICE_BILLING_CONFIG {
+	INVOICED_BY_PARENT = 'invoiced_by_parent',
+	INVOICED_VIA_SELF = 'invoiced_via_self',
 }
 
 export interface SubscriptionPhase extends BaseModel {

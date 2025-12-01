@@ -3,16 +3,17 @@ import { useNavigate, useParams } from 'react-router';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
-import { Button, SelectOption } from '@/components/atoms';
+import { Button, SelectOption, RadioGroup, RadioMenuItem } from '@/components/atoms';
 import { ApiDocsContent } from '@/components/molecules';
 import { UsageTable, SubscriptionForm } from '@/components/organisms';
+import { Building, User } from 'lucide-react';
 
 import { AddonApi, CustomerApi, PlanApi, SubscriptionApi, TaxApi, CouponApi } from '@/api';
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { RouteNames } from '@/core/routes/Routes';
 import { ServerError } from '@/core/axios/types';
 
-import { BILLING_CADENCE, SubscriptionPhase, Coupon, TAXRATE_ENTITY_TYPE, EXPAND, BILLING_CYCLE, SUBSCRIPTION_STATUS } from '@/models';
+import { BILLING_CADENCE, SubscriptionPhase, Coupon, TAXRATE_ENTITY_TYPE, EXPAND, BILLING_CYCLE, SUBSCRIPTION_STATUS, INVOICE_BILLING_CONFIG } from '@/models';
 import { InternalCreditGrantRequest, creditGrantToInternal, internalToCreateRequest } from '@/types/dto/CreditGrant';
 import { BILLING_PERIOD } from '@/constants/constants';
 
@@ -68,6 +69,7 @@ export type SubscriptionFormState = {
 	entitlementOverrides: Record<string, EntitlementOverrideRequest>;
 	creditGrants: InternalCreditGrantRequest[];
 	enable_true_up: boolean;
+	invoiceCustomerId?: INVOICE_BILLING_CONFIG;
 };
 
 const usePlans = () => {
@@ -189,6 +191,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 		entitlementOverrides: {},
 		creditGrants: [],
 		enable_true_up: false,
+		invoiceCustomerId: undefined,
 	});
 
 	const { data: plans, isLoading: plansLoading, isError: plansError } = usePlans();
@@ -217,6 +220,13 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 	useEffect(() => {
 		if (customerData?.external_id) {
 			updateBreadcrumb(2, customerData.external_id);
+		}
+		// Initialize invoice customer ID to parent if customer has parent
+		if (customerData?.parent_customer_id) {
+			setSubscriptionState((prev) => ({
+				...prev,
+				invoiceCustomerId: INVOICE_BILLING_CONFIG.INVOICED_BY_PARENT,
+			}));
 		}
 	}, [customerData, updateBreadcrumb]);
 
@@ -296,6 +306,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 			commitmentAmount,
 			entitlementOverrides,
 			creditGrants,
+			invoiceCustomerId,
 		} = subscriptionState;
 
 		if (!billingPeriod || !selectedPlan) {
@@ -390,6 +401,10 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 			credit_grants: creditGrants.length > 0 ? creditGrants.map(internalToCreateRequest) : undefined,
 			enable_true_up: subscriptionState.enable_true_up,
 			subscription_status: isDraftParam ? SUBSCRIPTION_STATUS.DRAFT : undefined,
+			invoicing_customer_id:
+				invoiceCustomerId === INVOICE_BILLING_CONFIG.INVOICED_BY_PARENT && customerData?.parent_customer_id
+					? customerData.parent_customer_id
+					: undefined,
 		};
 
 		setIsDraft(isDraftParam);
@@ -405,6 +420,24 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 	};
 
 	const navigateBack = () => navigate(`${RouteNames.customers}/${customerId}`);
+
+	const invoiceOptions: RadioMenuItem[] = [
+		{
+			value: INVOICE_BILLING_CONFIG.INVOICED_BY_PARENT,
+			label: 'Invoice via Parent',
+			icon: Building,
+			description: 'Invoices will be sent to the parent customer',
+		},
+		{
+			value: INVOICE_BILLING_CONFIG.INVOICED_VIA_SELF,
+			label: 'Invoice via Self',
+			icon: User,
+			description: 'Invoices will be sent to this customer',
+		},
+	];
+
+	const currentInvoiceValue = subscriptionState.invoiceCustomerId || INVOICE_BILLING_CONFIG.INVOICED_BY_PARENT;
+	const selectedInvoiceOption = invoiceOptions.find((opt) => opt.value === currentInvoiceValue) || invoiceOptions[0];
 
 	return (
 		<div className={cn('flex gap-8 mt-5 relative mb-12')}>
@@ -450,7 +483,31 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 				)}
 			</div>
 
-			<div className='flex-[4]'></div>
+			<div className='flex-[4]'>
+				{customerData?.parent_customer_id && subscriptionState.selectedPlan && !subscription_id && (
+					<div className='sticky top-5'>
+						<div className='bg-white rounded-lg border border-gray-200 p-6 shadow-sm'>
+							<RadioGroup
+								title='Invoice Customer'
+								items={invoiceOptions}
+								selected={selectedInvoiceOption}
+								onChange={(item) => {
+									if (item.value) {
+										setSubscriptionState((prev) => ({
+											...prev,
+											invoiceCustomerId: item.value as INVOICE_BILLING_CONFIG,
+										}));
+									}
+								}}
+							/>
+							<p className='mt-4 text-sm text-gray-500'>
+								This setting determines which customer will receive invoices for this subscription. This cannot be changed after the
+								subscription is created.
+							</p>
+						</div>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

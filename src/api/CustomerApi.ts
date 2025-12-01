@@ -12,6 +12,8 @@ import {
 	ListCreditGrantApplicationsResponse,
 } from '@/types/dto';
 import { generateQueryParams } from '@/utils/common/api_helper';
+import { TypedBackendFilter } from '@/types/formatters/QueryBuilder';
+import { DataType, FilterOperator } from '@/types/common/QueryBuilder';
 
 class CustomerApi {
 	private static baseUrl = '/customers';
@@ -61,6 +63,48 @@ class CustomerApi {
 	 */
 	public static async getUpcomingCreditGrantApplications(customerId: string): Promise<ListCreditGrantApplicationsResponse> {
 		return await AxiosClient.get<ListCreditGrantApplicationsResponse>(`${this.baseUrl}/${customerId}/grants/upcoming`);
+	}
+
+	/**
+	 * Search customers by query string (searches name and email)
+	 * If query is empty, returns all customers
+	 * @param query - Search query string (can be empty)
+	 * @param limit - Maximum number of results (default: 20)
+	 * @returns Promise with customer search results
+	 */
+	public static async searchCustomers(query: string, limit: number = 20): Promise<GetCustomerResponse> {
+		// If query is empty, return all customers without filters
+		if (!query || query.trim() === '') {
+			return await this.getCustomersByFilters({
+				limit,
+				offset: 0,
+				filters: [],
+				sort: [],
+			});
+		}
+
+		// Create filters for name and email contains search
+		const filters: TypedBackendFilter[] = [
+			{
+				field: 'name',
+				operator: FilterOperator.CONTAINS,
+				data_type: DataType.STRING,
+				value: { string: query },
+			},
+			{
+				field: 'email',
+				operator: FilterOperator.CONTAINS,
+				data_type: DataType.STRING,
+				value: { string: query },
+			},
+		];
+
+		return await this.getCustomersByFilters({
+			limit,
+			offset: 0,
+			filters,
+			sort: [],
+		});
 	}
 }
 

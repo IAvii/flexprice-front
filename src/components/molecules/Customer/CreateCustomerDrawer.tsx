@@ -10,6 +10,7 @@ import { Country, State, City, IState } from 'country-state-city';
 import { z } from 'zod';
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { logger } from '@/utils/common/Logger';
+import { CustomerSearchSelect } from '@/components/molecules/Customer';
 
 interface Props {
 	data?: Customer;
@@ -25,6 +26,7 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 	const [internalOpen, setInternalOpen] = useState(false);
 	const isControlled = open !== undefined && onOpenChange !== undefined;
 	const [showBillingDetails, setShowBillingDetails] = useState(false);
+	const [parentCustomer, setParentCustomer] = useState<Customer | undefined>(undefined);
 
 	const handleChange = (name: keyof typeof formData, value: string | undefined) => {
 		setFormData((prev) => ({ ...prev, [name]: value }));
@@ -46,6 +48,20 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 				setactiveState(undefined);
 				setFormData((prev) => ({ ...prev, address_state: undefined, address_city: undefined }));
 			}
+			// Fetch parent customer if parent_customer_id exists
+			if (data.parent_customer_id) {
+				CustomerApi.getCustomerById(data.parent_customer_id)
+					.then((parent) => {
+						setParentCustomer(parent);
+					})
+					.catch((error) => {
+						logger.error('Failed to fetch parent customer', error);
+					});
+			} else {
+				setParentCustomer(undefined);
+			}
+		} else {
+			setParentCustomer(undefined);
 		}
 	}, [data]);
 
@@ -139,6 +155,8 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 					address_state: activeState?.name || undefined,
 					address_postal_code: formData.address_postal_code || undefined,
 					address_country: formData.address_country || undefined,
+					parent_customer_id: formData.parent_customer_id,
+					parent_customer_external_id: formData.parent_customer_external_id,
 				};
 
 				// Remove undefined values
@@ -161,6 +179,8 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 					address_state: activeState?.name || undefined,
 					address_postal_code: formData.address_postal_code || undefined,
 					address_country: formData.address_country || undefined,
+					parent_customer_id: formData.parent_customer_id,
+					parent_customer_external_id: formData.parent_customer_external_id,
 				};
 
 				// Remove undefined values
@@ -239,6 +259,34 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 								value={formData.email || ''}
 								onChange={(e) => handleChange('email', e)}
 								error={errors.email}
+							/>
+							<CustomerSearchSelect
+								value={parentCustomer}
+								onChange={(customer) => {
+									setParentCustomer(customer || undefined);
+									setFormData((prev) => {
+										if (customer) {
+											// Use internal ID when customer is selected
+											return {
+												...prev,
+												parent_customer_id: customer.id,
+												parent_customer_external_id: undefined, // Clear external_id when using internal ID
+											};
+										} else {
+											// Clear both when deselected
+											return {
+												...prev,
+												parent_customer_id: undefined,
+												parent_customer_external_id: undefined,
+											};
+										}
+									});
+								}}
+								display={{
+									label: 'Parent Customer (Optional)',
+									placeholder: 'Select parent customer (optional)',
+								}}
+								searchPlaceholder='Search for parent customer...'
 							/>
 						</div>
 					</div>

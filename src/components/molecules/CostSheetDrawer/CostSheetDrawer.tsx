@@ -52,15 +52,7 @@ const CostSheetDrawer: FC<Props> = ({ data, open, onOpenChange, trigger, refetch
 			refetchQueries(refetchQueryKeys);
 		},
 		onError: (error: ServerError) => {
-			const errorMessage =
-				error &&
-				typeof error === 'object' &&
-				'error' in error &&
-				typeof error.error === 'object' &&
-				error.error !== null &&
-				'message' in error.error
-					? String(error.error.message)
-					: `Failed to ${isEdit ? 'update' : 'create'} cost sheet. Please try again.`;
+			const errorMessage = error?.error?.message || `Failed to ${isEdit ? 'update' : 'create'} cost sheet. Please try again.`;
 			toast.error(errorMessage);
 		},
 	});

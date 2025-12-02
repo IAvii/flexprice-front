@@ -16,6 +16,7 @@ import {
 	TIER_MODE,
 	CreatePriceTier,
 	TransformQuantity,
+	INVOICE_BILLING,
 } from '@/models';
 import { BILLING_PERIOD } from '@/constants/constants';
 import { QueryFilter, TimeRangeFilter } from './base';
@@ -153,8 +154,7 @@ export interface CreateSubscriptionRequest {
 	// Customer identification - prioritized over external_customer_id if both provided
 	customer_id?: string;
 	external_customer_id?: string;
-	// InvoiceBillingConfig determines which customer should receive invoices for a subscription
-	invoice_billing_config?: string;
+	invoice_billing?: INVOICE_BILLING;
 
 	// Plan and billing configuration
 	plan_id: string;

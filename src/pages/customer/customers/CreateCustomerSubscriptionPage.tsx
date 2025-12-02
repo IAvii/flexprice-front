@@ -13,7 +13,7 @@ import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { RouteNames } from '@/core/routes/Routes';
 import { ServerError } from '@/core/axios/types';
 
-import { BILLING_CADENCE, SubscriptionPhase, Coupon, TAXRATE_ENTITY_TYPE, EXPAND, BILLING_CYCLE, SUBSCRIPTION_STATUS, INVOICE_BILLING_CONFIG } from '@/models';
+import { BILLING_CADENCE, SubscriptionPhase, Coupon, TAXRATE_ENTITY_TYPE, EXPAND, BILLING_CYCLE, INVOICE_BILLING, SUBSCRIPTION_STATUS } from '@/models';
 import { InternalCreditGrantRequest, creditGrantToInternal, internalToCreateRequest } from '@/types/dto/CreditGrant';
 import { BILLING_PERIOD } from '@/constants/constants';
 
@@ -69,7 +69,7 @@ export type SubscriptionFormState = {
 	entitlementOverrides: Record<string, EntitlementOverrideRequest>;
 	creditGrants: InternalCreditGrantRequest[];
 	enable_true_up: boolean;
-	invoiceBillingConfig?: INVOICE_BILLING_CONFIG;
+	invoiceBillingConfig?: INVOICE_BILLING;
 };
 
 const usePlans = () => {
@@ -225,7 +225,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 		if (customerData?.parent_customer_id) {
 			setSubscriptionState((prev) => ({
 				...prev,
-				invoiceBillingConfig: INVOICE_BILLING_CONFIG.INVOICED_BY_PARENT,
+				invoiceBillingConfig: INVOICE_BILLING.INVOICED_TO_PARENT,
 			}));
 		}
 	}, [customerData, updateBreadcrumb]);
@@ -401,7 +401,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 			credit_grants: creditGrants.length > 0 ? creditGrants.map(internalToCreateRequest) : undefined,
 			enable_true_up: subscriptionState.enable_true_up,
 			subscription_status: isDraftParam ? SUBSCRIPTION_STATUS.DRAFT : undefined,
-			invoice_billing_config: invoiceBillingConfig,
+			invoice_billing: invoiceBillingConfig,
 		};
 
 		setIsDraft(isDraftParam);
@@ -420,20 +420,20 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 
 	const invoiceOptions = [
 		{
-			value: INVOICE_BILLING_CONFIG.INVOICED_BY_PARENT,
+			value: INVOICE_BILLING.INVOICED_TO_PARENT,
 			label: 'Invoice via Parent',
 			icon: Building,
 			description: 'Invoices will be sent to the parent customer',
 		},
 		{
-			value: INVOICE_BILLING_CONFIG.INVOICED_VIA_SELF,
+			value: INVOICE_BILLING.INVOICED_TO_SELF,
 			label: 'Invoice via Self',
 			icon: User,
 			description: 'Invoices will be sent to this customer',
 		},
 	];
 
-	const currentInvoiceValue = subscriptionState.invoiceBillingConfig || INVOICE_BILLING_CONFIG.INVOICED_BY_PARENT;
+	const currentInvoiceValue = subscriptionState.invoiceBillingConfig || INVOICE_BILLING.INVOICED_TO_PARENT;
 	const selectedInvoiceOption = invoiceOptions.find((opt) => opt.value === currentInvoiceValue) || invoiceOptions[0];
 
 	return (
@@ -498,7 +498,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 												if (item.value) {
 													setSubscriptionState((prev) => ({
 														...prev,
-														invoiceBillingConfig: item.value as INVOICE_BILLING_CONFIG,
+														invoiceBillingConfig: item.value as INVOICE_BILLING,
 													}));
 												}
 											}}

@@ -150,9 +150,9 @@ export enum BILLING_CYCLE {
 }
 
 // InvoiceBillingConfig determines which customer should receive invoices for a subscription
-export enum INVOICE_BILLING_CONFIG {
-	INVOICED_BY_PARENT = 'invoiced_by_parent',
-	INVOICED_VIA_SELF = 'invoiced_via_self',
+export enum INVOICE_BILLING {
+	INVOICED_TO_PARENT = 'invoice_to_parent',
+	INVOICED_TO_SELF = 'invoice_to_self',
 }
 
 export interface SubscriptionPhase extends BaseModel {

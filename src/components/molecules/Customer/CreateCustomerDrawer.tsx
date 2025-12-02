@@ -1,4 +1,4 @@
-import { Button, Input, Select, SelectOption, Sheet, Spacer, Toggle } from '@/components/atoms';
+import { Button, Input, Select, SelectOption, Sheet, Spacer } from '@/components/atoms';
 import { FC, useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -23,7 +23,6 @@ interface UIState {
 	internalOpen: boolean;
 	showBillingDetails: boolean;
 	parentCustomer: Customer | undefined;
-	hasHierarchy: boolean;
 	activeState: IState | undefined;
 }
 
@@ -37,7 +36,6 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 		internalOpen: false,
 		showBillingDetails: false,
 		parentCustomer: undefined,
-		hasHierarchy: false,
 		activeState: undefined,
 	});
 
@@ -53,7 +51,6 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 		if (!data) {
 			setFormData({});
 			updateUIState({
-				hasHierarchy: false,
 				parentCustomer: undefined,
 				showBillingDetails: false,
 				activeState: undefined,
@@ -78,7 +75,6 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 
 		// Handle parent customer
 		updateUIState({
-			hasHierarchy: !!data.parent_customer,
 			parentCustomer: data.parent_customer,
 		});
 	}, [data]);
@@ -260,43 +256,30 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 								onChange={(e) => handleChange('email', e)}
 								error={errors.email}
 							/>
-							<div className='space-y-2'>
-								<div className='flex items-center justify-between'>
-									<Toggle
-										checked={uiState.hasHierarchy}
-										label='Enable Customer Hierarchy'
-										onChange={(checked: boolean) => {
-											updateUIState({ hasHierarchy: checked });
-											if (!checked) {
-												updateUIState({ parentCustomer: undefined });
-												setFormData((prev) => ({
-													...prev,
-													parent_customer_id: undefined,
-													parent_customer_external_id: undefined,
-												}));
-											}
-										}}
-									/>
-								</div>
-								{uiState.hasHierarchy && (
-									<CustomerSearchSelect
-										value={uiState.parentCustomer}
-										onChange={(customer) => {
-											updateUIState({ parentCustomer: customer || undefined });
-											setFormData((prev) => ({
-												...prev,
-												parent_customer_id: customer?.id,
-												parent_customer_external_id: undefined,
-											}));
-										}}
-										display={{
-											label: 'Parent Customer',
-											placeholder: 'Select parent customer',
-										}}
-										searchPlaceholder='Search for parent customer...'
-									/>
-								)}
-							</div>
+							{isEdit && (
+								<CustomerSearchSelect
+									value={uiState.parentCustomer}
+									excludeId={data?.id}
+									onChange={(customer) => {
+										// Guard against self-referential parent selection
+										const currentCustomerId = data?.id;
+										if (customer && customer.id === currentCustomerId) {
+											return;
+										}
+										updateUIState({ parentCustomer: customer || undefined });
+										setFormData((prev) => ({
+											...prev,
+											parent_customer_id: customer?.id,
+											parent_customer_external_id: undefined,
+										}));
+									}}
+									display={{
+										label: 'Parent Customer',
+										placeholder: 'Select parent customer',
+									}}
+									searchPlaceholder='Search for parent customer...'
+								/>
+							)}
 						</div>
 					</div>
 

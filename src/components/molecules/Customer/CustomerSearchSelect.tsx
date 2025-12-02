@@ -9,6 +9,8 @@ export interface CustomerSearchSelectProps extends Omit<AsyncSearchableSelectPro
 	limit?: number;
 	/** Search input placeholder */
 	searchPlaceholder?: string;
+	/** Customer ID(s) to exclude from search results */
+	excludeId?: string | string[];
 }
 
 /**
@@ -18,10 +20,17 @@ export interface CustomerSearchSelectProps extends Omit<AsyncSearchableSelectPro
 const CustomerSearchSelect: React.FC<CustomerSearchSelectProps> = ({
 	limit = 20,
 	searchPlaceholder = 'Search for customer...',
+	excludeId,
 	...props
 }) => {
 	const searchFn = async (query: string) => {
 		const response = await CustomerApi.searchCustomers(query, limit);
+
+		// Convert excludeId to array for easier filtering
+		const excludeIds = excludeId ? (Array.isArray(excludeId) ? excludeId : [excludeId]) : [];
+
+		// Filter out excluded customers
+		const filteredCustomers = response.items.filter((customer) => !excludeIds.includes(customer.id));
 
 		const rootCustomer: Customer = {
 			id: '',
@@ -50,7 +59,7 @@ const CustomerSearchSelect: React.FC<CustomerSearchSelectProps> = ({
 				label: rootCustomer.name,
 				data: rootCustomer,
 			},
-			...response.items.map((customer) => ({
+			...filteredCustomers.map((customer) => ({
 				value: customer.id,
 				label: customer.name,
 				data: customer,

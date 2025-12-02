@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import { Loader, Page } from '@/components/atoms';
 import toast from 'react-hot-toast';
@@ -10,6 +10,7 @@ const QuickBooksOAuthCallback = () => {
 	const [searchParams] = useSearchParams();
 	const navigate = useNavigate();
 	const [error, setError] = useState<string | null>(null);
+	const hasProcessed = useRef(false); // Prevent double processing
 
 	const code = searchParams.get('code');
 	const realmId = searchParams.get('realmId');
@@ -20,8 +21,27 @@ const QuickBooksOAuthCallback = () => {
 	const storedState = sessionStorage.getItem('qb_oauth_state');
 	const storedConnectionData = sessionStorage.getItem('qb_connection_data');
 
+	// Debug logging
+	useEffect(() => {
+		console.log('🔍 QuickBooks OAuth Callback Debug:', {
+			receivedState: state,
+			storedState: storedState,
+			stateMatch: state === storedState,
+			code: code?.substring(0, 20) + '...',
+			realmId,
+			hasStoredData: !!storedConnectionData,
+			hasProcessed: hasProcessed.current,
+		});
+	}, [state, storedState, code, realmId, storedConnectionData]);
+
 	// Validate state
 	useEffect(() => {
+		// Prevent double processing
+		if (hasProcessed.current) {
+			console.log('⏭️ Already processed, skipping validation');
+			return;
+		}
+
 		if (errorParam) {
 			setError(`OAuth error: ${errorParam}`);
 			toast.error(`QuickBooks authorization failed: ${errorParam}`);
@@ -117,7 +137,9 @@ const QuickBooksOAuthCallback = () => {
 
 	// Create connection when component mounts and validation passes
 	useEffect(() => {
-		if (code && realmId && state === storedState && storedConnectionData && !errorParam && !isPending && !error) {
+		if (code && realmId && state === storedState && storedConnectionData && !errorParam && !isPending && !error && !hasProcessed.current) {
+			hasProcessed.current = true; // Mark as processed
+			console.log('✅ Starting connection creation');
 			createConnection();
 		}
 	}, [code, realmId, state, storedState, storedConnectionData, errorParam, createConnection, isPending, error]);

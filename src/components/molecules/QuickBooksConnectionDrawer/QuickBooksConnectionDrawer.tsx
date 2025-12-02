@@ -5,6 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import ConnectionApi from '@/api/ConnectionApi';
 import toast from 'react-hot-toast';
 import { CONNECTION_PROVIDER_TYPE, Connection } from '@/models';
+import { useEnvironment } from '@/hooks/useEnvironment';
 
 interface QuickBooksConnection extends Connection {
 	encrypted_secret_data?: {
@@ -28,7 +29,6 @@ interface QuickBooksFormData {
 	name: string;
 	client_id: string;
 	client_secret: string;
-	redirect_uri: string;
 	environment: 'sandbox' | 'production';
 	income_account_id: string;
 	sync_config: {
@@ -37,12 +37,19 @@ interface QuickBooksFormData {
 }
 
 const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpen, onOpenChange, connection, onSave }) => {
+	const { isProduction } = useEnvironment();
+
+	// Determine QuickBooks environment based on Flexprice environment
+	const qbEnvironment: 'sandbox' | 'production' = isProduction ? 'production' : 'sandbox';
+
+	// Fixed redirect URI
+	const redirectUri = `${window.location.origin}/tools/integrations/quickbooks/oauth/callback`;
+
 	const [formData, setFormData] = useState<QuickBooksFormData>({
 		name: '',
 		client_id: '',
 		client_secret: '',
-		redirect_uri: `${window.location.origin}/tools/integrations/quickbooks/oauth/callback`,
-		environment: 'sandbox',
+		environment: qbEnvironment,
 		income_account_id: '',
 		sync_config: {
 			invoice: false,
@@ -60,8 +67,7 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 					name: connection.name || '',
 					client_id: '',
 					client_secret: '',
-					redirect_uri: `${window.location.origin}/tools/integrations/quickbooks/oauth/callback`,
-					environment: (secretData.environment as 'sandbox' | 'production') || 'sandbox',
+					environment: (secretData.environment as 'sandbox' | 'production') || qbEnvironment,
 					income_account_id: secretData.income_account_id || '',
 					sync_config: {
 						invoice: syncConfig.invoice?.outbound || false,
@@ -72,8 +78,7 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 					name: '',
 					client_id: '',
 					client_secret: '',
-					redirect_uri: `${window.location.origin}/tools/integrations/quickbooks/oauth/callback`,
-					environment: 'sandbox',
+					environment: qbEnvironment,
 					income_account_id: '',
 					sync_config: {
 						invoice: false,
@@ -82,7 +87,7 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 			}
 			setErrors({});
 		}
-	}, [isOpen, connection]);
+	}, [isOpen, connection, qbEnvironment]);
 
 	const handleChange = (field: keyof QuickBooksFormData, value: string | 'sandbox' | 'production') => {
 		setFormData((prev) => ({ ...prev, [field]: value }));
@@ -113,9 +118,6 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 			}
 			if (!formData.client_secret.trim()) {
 				newErrors.client_secret = 'Client secret is required';
-			}
-			if (!formData.redirect_uri.trim()) {
-				newErrors.redirect_uri = 'Redirect URI is required';
 			}
 		}
 
@@ -177,6 +179,9 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 	};
 
 	const initiateOAuth = () => {
+		// Generate state for CSRF protection
+		const state = generateState();
+
 		// Store form data in sessionStorage to retrieve after OAuth callback
 		sessionStorage.setItem(
 			'qb_connection_data',
@@ -184,16 +189,22 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 				name: formData.name,
 				client_id: formData.client_id,
 				client_secret: formData.client_secret,
-				redirect_uri: formData.redirect_uri,
+				redirect_uri: redirectUri,
 				environment: formData.environment,
 				income_account_id: formData.income_account_id,
 				sync_config: formData.sync_config,
 			}),
 		);
 
-		// Generate state for CSRF protection
-		const state = generateState();
 		sessionStorage.setItem('qb_oauth_state', state);
+
+		// Debug logging
+		console.log('🚀 Initiating QuickBooks OAuth:', {
+			state,
+			storedState: sessionStorage.getItem('qb_oauth_state'),
+			redirectUri,
+			environment: formData.environment,
+		});
 
 		// Build OAuth URL
 		const scope = 'com.intuit.quickbooks.accounting';
@@ -203,7 +214,7 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 			`https://appcenter.intuit.com/connect/oauth2?` +
 			`client_id=${encodeURIComponent(formData.client_id)}` +
 			`&scope=${encodeURIComponent(scope)}` +
-			`&redirect_uri=${encodeURIComponent(formData.redirect_uri)}` +
+			`&redirect_uri=${encodeURIComponent(redirectUri)}` +
 			`&response_type=${responseType}` +
 			`&state=${state}`;
 
@@ -266,49 +277,14 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 					/>
 				)}
 
-				{/* Redirect URI */}
-				{!connection && (
-					<Input
-						label='Redirect URI'
-						placeholder='https://yourdomain.com/tools/integrations/quickbooks/oauth/callback'
-						value={formData.redirect_uri}
-						onChange={(value) => handleChange('redirect_uri', value)}
-						error={errors.redirect_uri}
-						description='OAuth callback URL. This MUST match exactly what you configured in QuickBooks Developer Dashboard under Redirect URIs'
-					/>
-				)}
-
-				{/* Environment Selection */}
-				{!connection && (
-					<div>
-						<label className='block text-sm font-medium text-gray-700 mb-2'>Environment</label>
-						<div className='flex gap-4'>
-							<label className='flex items-center gap-2 cursor-pointer'>
-								<input
-									type='radio'
-									name='environment'
-									value='sandbox'
-									checked={formData.environment === 'sandbox'}
-									onChange={(e) => handleChange('environment', e.target.value as 'sandbox' | 'production')}
-									className='w-4 h-4'
-								/>
-								<span className='text-sm text-gray-700'>Sandbox</span>
-							</label>
-							<label className='flex items-center gap-2 cursor-pointer'>
-								<input
-									type='radio'
-									name='environment'
-									value='production'
-									checked={formData.environment === 'production'}
-									onChange={(e) => handleChange('environment', e.target.value as 'sandbox' | 'production')}
-									className='w-4 h-4'
-								/>
-								<span className='text-sm text-gray-700'>Production</span>
-							</label>
-						</div>
-						<p className='text-xs text-gray-500 mt-1'>Select the QuickBooks environment you want to connect to</p>
+				{/* Environment Display (Read-only, auto-selected based on Flexprice environment) */}
+				<div>
+					<label className='block text-sm font-medium text-gray-700 mb-2'>Environment</label>
+					<div className='flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg'>
+						<div className={`w-3 h-3 rounded-full ${formData.environment === 'production' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+						<span className='text-sm font-medium text-gray-900 capitalize'>{formData.environment}</span>
 					</div>
-				)}
+				</div>
 
 				{/* Income Account ID */}
 				<Input
@@ -341,9 +317,9 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 				{!connection && (
 					<div className='p-4 bg-blue-50 border border-blue-200 rounded-lg'>
 						<h3 className='text-sm font-medium text-blue-800 mb-2'>OAuth Authorization Required</h3>
-						<p className='text-xs text-blue-700'>
+						<p className='text-xs text-blue-700 mb-2'>
 							After clicking "Connect to QuickBooks", you will be redirected to QuickBooks to authorize this connection. Make sure you have
-							the Client ID and Client Secret ready from your QuickBooks Developer Dashboard.
+							the Client ID and Client Secret ready from your QuickBooks Dashboard.
 						</p>
 					</div>
 				)}
@@ -351,17 +327,7 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 				{/* Connection Info (when editing) */}
 				{connection && (
 					<div className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
-						<div className='space-y-2'>
-							<div className='flex items-center justify-between'>
-								<span className='text-sm text-gray-600'>Company ID (Realm ID):</span>
-								<span className='text-sm font-mono text-gray-900'>{connection.encrypted_secret_data?.realm_id || 'N/A'}</span>
-							</div>
-							<div className='flex items-center justify-between'>
-								<span className='text-sm text-gray-600'>Environment:</span>
-								<span className='text-sm capitalize text-gray-900'>{connection.encrypted_secret_data?.environment || 'N/A'}</span>
-							</div>
-						</div>
-						<p className='text-xs text-gray-500 mt-3'>
+						<p className='text-xs text-gray-500'>
 							Note: OAuth credentials are encrypted and not displayed for security. To update credentials, delete this connection and create
 							a new one.
 						</p>

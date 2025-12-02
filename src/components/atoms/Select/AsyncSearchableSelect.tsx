@@ -41,10 +41,14 @@ export interface DisplayConfig {
 	className?: string;
 	/** Custom trigger element */
 	trigger?: React.ReactNode;
-	/** Max height of dropdown */
-	maxHeight?: number;
 	/** Default open state */
 	defaultOpen?: boolean;
+	/** Popover side positioning */
+	side?: 'top' | 'bottom' | 'left' | 'right';
+	/** Popover align positioning */
+	align?: 'start' | 'center' | 'end';
+	/** Side offset for popover */
+	sideOffset?: number;
 }
 
 export interface OptionsConfig {
@@ -95,8 +99,10 @@ const AsyncSearchableSelect = <T = any,>({
 		error,
 		className,
 		trigger,
-		maxHeight = 300,
 		defaultOpen = false,
+		side = 'top',
+		align = 'start',
+		sideOffset = 4,
 	} = display;
 
 	const { noOptionsText = 'No options found', emptyText = 'No results found.', hideSelectedTick = true, isRadio = false } = options;
@@ -290,10 +296,20 @@ const AsyncSearchableSelect = <T = any,>({
 						)}
 					</button>
 				</PopoverTrigger>
-				<PopoverContent className='w-[var(--radix-popover-trigger-width)] p-0' align='start'>
+				<PopoverContent
+					className='w-[var(--radix-popover-trigger-width)] p-0'
+					align={align}
+					side={side}
+					sideOffset={sideOffset}
+					avoidCollisions={true}
+					collisionPadding={8}
+					onOpenAutoFocus={(e) => e.preventDefault()}>
 					<Command shouldFilter={false}>
 						<CommandInput placeholder={searchPlaceholder} value={searchQuery} onValueChange={setSearchQuery} className='h-9' />
-						<CommandList style={{ maxHeight }}>
+						<CommandList
+							className='max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100'
+							onWheel={(e) => e.stopPropagation()}
+							onScroll={(e) => e.stopPropagation()}>
 							{isLoading && (
 								<div className='flex items-center justify-center py-6'>
 									<Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />

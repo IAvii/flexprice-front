@@ -256,30 +256,6 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 								onChange={(e) => handleChange('email', e)}
 								error={errors.email}
 							/>
-							{isEdit && (
-								<CustomerSearchSelect
-									value={uiState.parentCustomer}
-									excludeId={data?.id}
-									onChange={(customer) => {
-										// Guard against self-referential parent selection
-										const currentCustomerId = data?.id;
-										if (customer && customer.id === currentCustomerId) {
-											return;
-										}
-										updateUIState({ parentCustomer: customer || undefined });
-										setFormData((prev) => ({
-											...prev,
-											parent_customer_id: customer?.id,
-											parent_customer_external_id: undefined,
-										}));
-									}}
-									display={{
-										label: 'Parent Customer',
-										placeholder: 'Select parent customer',
-									}}
-									searchPlaceholder='Search for parent customer...'
-								/>
-							)}
 						</div>
 					</div>
 
@@ -361,6 +337,36 @@ const CreateCustomerDrawer: FC<Props> = ({ data, onOpenChange, open, trigger }) 
 									onChange={(e) => handleChange('address_postal_code', e)}
 									error={errors.address_postal_code}
 									maxLength={20}
+								/>
+							</div>
+						</div>
+					)}
+
+					{isEdit && (
+						<div className='relative card !p-4'>
+							<span className='absolute -top-4 left-2 text-[#18181B] text-sm bg-white font-medium px-2 py-1'>Customer Hierarchy</span>
+							<div className='space-y-4'>
+								<CustomerSearchSelect
+									value={uiState.parentCustomer}
+									excludeId={data?.id}
+									onChange={(customer) => {
+										// Guard against self-referential parent selection
+										const currentCustomerId = data?.id;
+										if (customer && customer.id === currentCustomerId) {
+											return;
+										}
+										updateUIState({ parentCustomer: customer || undefined });
+										setFormData((prev) => ({
+											...prev,
+											parent_customer_id: customer?.id,
+											parent_customer_external_id: undefined,
+										}));
+									}}
+									display={{
+										label: 'Parent Customer',
+										placeholder: 'Select parent customer',
+									}}
+									searchPlaceholder='Search for parent customer...'
 								/>
 							</div>
 						</div>

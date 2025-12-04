@@ -8,6 +8,8 @@ import {
 	FireEventsPayload,
 	GetUsageAnalyticsRequest,
 	GetUsageAnalyticsResponse,
+	GetMonitoringDataRequest,
+	GetMonitoringDataResponse,
 } from '@/types/dto';
 
 class EventsApi {
@@ -44,6 +46,15 @@ class EventsApi {
 	 */
 	public static async getUsageAnalyticsV2(payload: GetUsageAnalyticsRequest): Promise<GetUsageAnalyticsResponse> {
 		return await AxiosClient.post<GetUsageAnalyticsResponse>(`${EventsApi.baseUrl}/analytics-v2`, payload);
+	}
+
+	/**
+	 * Get monitoring data
+	 * Retrieve monitoring data for events including consumer lag and event metrics (last 24 hours by default)
+	 */
+	public static async getMonitoringData(payload: GetMonitoringDataRequest): Promise<GetMonitoringDataResponse> {
+		const url = generateQueryParams(`${EventsApi.baseUrl}/monitoring`, payload);
+		return await AxiosClient.get<GetMonitoringDataResponse>(url);
 	}
 }
 

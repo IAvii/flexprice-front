@@ -26,7 +26,7 @@ const testimonials: Testimonial[] = [
 		dpUrl: '/assets/company-founders/krutrim.png',
 		logoUrl: '/assets/svg/krutrim.svg',
 		testimonial:
-			'Flexprice helped us roll out usage-based plans without any heavy lifting. We finally stopped patching together internal hacks and team bandwidth to just to charge customers properly.',
+			'Flexprice helped us roll out usage-based plans without any heavy lifting. We finally stopped patching together internal hacks and team bandwidth to just charge customers properly.',
 		name: 'Raguraman Barathalwar',
 		designation: 'Vice President',
 		companyName: 'KRUTRIM',

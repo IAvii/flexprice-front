@@ -4,17 +4,17 @@ import SidebarNav, { NavItem } from './SidebarMenu';
 import FlexpriceSidebarFooter from './SidebarFooter';
 import { RouteNames } from '@/core/routes/Routes';
 import { EnvironmentSelector } from '@/components/molecules';
-import { Settings, Landmark, Layers2, LayoutPanelLeft, CodeXml, Puzzle } from 'lucide-react';
+import { Settings, Landmark, Layers2, LayoutPanelLeft, CodeXml, Puzzle, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }) => {
 	const { open: sidebarOpen } = useSidebar();
 	const navMain: NavItem[] = [
-		// {
-		// 	title: 'Home',
-		// 	url: RouteNames.home,
-		// 	icon: LayoutPanelLeft,
-		// },
+		{
+			title: 'Home',
+			url: RouteNames.homeDashboard,
+			icon: Home,
+		},
 		{
 			title: 'Product Catalog',
 			url: RouteNames.features,
@@ -77,11 +77,7 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 				},
 			],
 		},
-		{
-			title: 'Integrations',
-			url: RouteNames.integrations,
-			icon: Puzzle,
-		},
+
 		{
 			title: 'Tools',
 			url: RouteNames.bulkImports,
@@ -119,6 +115,11 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 					url: RouteNames.webhooks,
 				},
 			],
+		},
+		{
+			title: 'Integrations',
+			url: RouteNames.integrations,
+			icon: Puzzle,
 		},
 		{
 			title: 'Pricing Widget',

@@ -12,7 +12,6 @@ export interface ApiDocsSnippet {
 	'C#'?: string;
 	Ruby?: string;
 	Swift?: string;
-	url?: string;
 }
 
 interface ApiDocsState {

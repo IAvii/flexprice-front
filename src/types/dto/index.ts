@@ -19,6 +19,9 @@ export type {
 	FireEventsPayload,
 	GetUsageAnalyticsRequest,
 	GetUsageAnalyticsResponse,
+	GetMonitoringDataRequest,
+	GetMonitoringDataResponse,
+	EventCountPoint,
 } from './Events';
 
 export type {

@@ -63,3 +63,22 @@ export interface GetUsageAnalyticsResponse {
 	currency: string;
 	items: UsageAnalyticItem[];
 }
+
+// Monitoring DTOs
+export interface GetMonitoringDataRequest {
+	start_time?: string; // ISO 8601 format
+	end_time?: string; // ISO 8601 format
+	window_size?: WindowSize;
+}
+
+export interface EventCountPoint {
+	timestamp: string; // ISO 8601 format
+	event_count: number;
+}
+
+export interface GetMonitoringDataResponse {
+	total_count: number;
+	consumption_lag: number;
+	post_processing_lag: number;
+	points?: EventCountPoint[];
+}

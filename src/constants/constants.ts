@@ -22,6 +22,14 @@ export enum BILLING_PERIOD {
 	ANNUAL = 'ANNUAL',
 }
 
+// Dashboard time periods for analytics and monitoring
+export enum TIME_PERIOD {
+	LAST_HOUR = 'last-hour',
+	LAST_DAY = 'last-day',
+	LAST_WEEK = 'last-week',
+	LAST_30_DAYS = 'last-30-days',
+}
+
 export const getCurrencyOptions = () => {
 	const codes = getAllISOCodes();
 	const map = new Map();

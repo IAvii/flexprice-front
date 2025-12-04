@@ -27,7 +27,7 @@ const Page: FC<Props> = ({ children, className, type = 'default', header, headin
 		<div className='min-h-screen flex flex-col'>
 			<div
 				className={cn(
-					'flex-1 page w-full',
+					'flex-1 page w-full p-0!',
 					type === 'left-aligned' && '!px-12',
 					type === 'default' && 'mx-auto max-w-screen-lg',
 					className,

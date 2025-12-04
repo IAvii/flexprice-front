@@ -73,6 +73,7 @@ import {
 	TaskRunsPage,
 	// Error pages
 	ErrorPage,
+	DashboardPage,
 } from '@/pages';
 import { RouterErrorElement } from '@/components/atoms/ErrorBoundary';
 
@@ -83,6 +84,9 @@ export const RouteNames = {
 	signupConfirmation: '/auth/signup/confirmation',
 	resendVerification: '/auth/resend-verification',
 	verifyEmail: '/auth/verify-email',
+
+	// Dashboard routes
+	dashboard: '/dashboard',
 
 	// usage tracking routes
 	usageTracking: '/usage-tracking',
@@ -158,7 +162,7 @@ const DefaultRoute = () => {
 	const { user } = useUser();
 	const onboardingMetadata = user?.tenant?.metadata?.[TenantMetadataKey.ONBOARDING_COMPLETED];
 	const onboardingCompleted = onboardingMetadata === 'true';
-	return <Navigate to={onboardingCompleted ? RouteNames.pricing : RouteNames.onboarding} />;
+	return <Navigate to={onboardingCompleted ? RouteNames.dashboard : RouteNames.onboarding} />;
 };
 
 export const MainRouter = createBrowserRouter([
@@ -197,7 +201,10 @@ export const MainRouter = createBrowserRouter([
 				path: RouteNames.home,
 				element: <DefaultRoute />,
 			},
-
+			{
+				path: RouteNames.dashboard,
+				element: <DashboardPage />,
+			},
 			{
 				path: RouteNames.productCatalog,
 				children: [

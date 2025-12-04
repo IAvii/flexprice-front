@@ -417,9 +417,9 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 		createSubscription(payload);
 	};
 
-	// const handleDraftSubmit = () => {
-	// 	handleSubscriptionSubmit(true);
-	// };
+	const handleDraftSubmit = () => {
+		handleSubscriptionSubmit(true);
+	};
 
 	const handleRegularSubmit = () => {
 		handleSubscriptionSubmit(false);
@@ -478,9 +478,9 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 							<Button onClick={navigateBack} variant={'outline'} disabled={isCreating}>
 								Cancel
 							</Button>
-							{/* <Button onClick={handleDraftSubmit} isLoading={isCreating && isDraft} variant={'outline'} disabled={isCreating}>
+							<Button onClick={handleDraftSubmit} isLoading={isCreating && isDraft} variant={'outline'} disabled={isCreating}>
 								Save as Draft
-							</Button> */}
+							</Button>
 						</div>
 						<Button onClick={handleRegularSubmit} isLoading={isCreating && !isDraft} disabled={isCreating}>
 							Add Subscription

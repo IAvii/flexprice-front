@@ -4,48 +4,53 @@ import { Testimonial } from '@/types';
 
 const testimonials: Testimonial[] = [
 	{
-		dpUrl: '/assets/company-founders/verniq.webp',
-		logoUrl: '/assets/company-logo/verniq-ic.svg',
-		testimonial: 'Flexprice allowed us to focus on building our product without worrying about billing.',
-		name: 'Punit Dhimaan',
-		designation: 'Founder',
-		companyName: 'VerniQ',
+		dpUrl: '/assets/company-founders/aftershoot.webp',
+		logoUrl: '/assets/png/aftershoot.png',
+		testimonial:
+			"Flexprice streamlined our entire pricing workflow. We went from messy internal scripts to clean, configurable usage plans in no time, and it's been a huge relief for our team.",
+		name: 'Justin Benson',
+		designation: 'Co-founder',
+		companyName: 'Aftershoot',
+		label: 'Series A',
 	},
 	{
-		dpUrl: '/assets/company-founders/chaabi.webp',
-		logoUrl: '/assets/company-logo/chaabi-ic.svg',
+		dpUrl: '/assets/company-founders/clueso.webp',
+		logoUrl: '/assets/svg/clueso.svg',
 		testimonial:
-			'Flexprice saved us thousands of development hours that we would have spent building an in-house billing system. Managing pricing plans, experimenting with models & providing actionable data to teams is now effortless!',
-		name: 'Jaideep Kumar',
-		designation: 'Co-Founder & COO',
-		companyName: 'Chaabi',
+			'Flexprice made it super easy for us to create and sell custom plans based on usage in minutes & has eliminated our reliance on our in-house hacks.',
+		name: 'Prajwal Prakash',
+		designation: 'Co-Founder & CTO (YC 23)',
+		companyName: 'Clueso',
+		label: 'YC 23',
+	},
+	{
+		dpUrl: '/assets/company-founders/krutrim.webp',
+		logoUrl: '/assets/svg/krutrim.svg',
+		testimonial:
+			'Flexprice helped us roll out usage-based plans without any heavy lifting. We finally stopped patching together internal hacks and team bandwidth to just to charge customers properly.',
+		name: 'Raguraman Barathalwar',
+		designation: 'Vice President',
+		companyName: 'KRUTRIM',
+		label: 'Series B',
 	},
 	{
 		dpUrl: '/assets/company-founders/wizcommerce.webp',
-		logoUrl: '/assets/company-logo/wizcommerce-ic.svg',
+		logoUrl: '/assets/svg/wizcommerce.svg',
 		testimonial:
 			'We had to launch our new product and needed a billing solution that could handle billions of events without any latency issues or downtime. Flexprice delivered exactly that, ensuring smooth operations.',
-		name: 'Divyanshu',
-		designation: 'Founder',
+		name: 'Divyanshu Makkar',
+		designation: 'Founder and CEO',
 		companyName: 'WizCommerce',
 	},
 	{
-		dpUrl: '/assets/company-founders/simplismart.webp',
-		logoUrl: '/assets/company-logo/simplismart-ic.svg',
+		dpUrl: '/assets/company-founders/truffle-ai.webp',
+		logoUrl: '/assets/svg/truffle-ai.svg',
 		testimonial:
-			'Flexprice has completely transformed how we handle billing. Setting up usage-based pricing was a breeze, and their SDKs fit right into our stack.',
-		name: 'Shubhendu Shishir',
-		designation: 'Head of Engineering',
-		companyName: 'Simplismart',
-	},
-	{
-		dpUrl: '/assets/company-founders/publive.webp',
-		logoUrl: '/assets/company-logo/publive-ic.svg',
-		testimonial:
-			'Flexprice made it super easy for us to create and sell custom plans based on usage in minutes & has eliminated our reliance on Excel sheets.',
-		name: 'Gagandeep Singh',
-		designation: 'Co-Founder',
-		companyName: 'ThePubLive.com',
+			'Flexprice saved us thousands of development hours that we would have spent building in-house. Managing pricing plans and experimenting with models is now effortless.',
+		name: 'Shaunak Srivastava',
+		designation: 'Co-founder (YC 25)',
+		companyName: 'Truffle AI',
+		label: 'YC 25',
 	},
 ];
 

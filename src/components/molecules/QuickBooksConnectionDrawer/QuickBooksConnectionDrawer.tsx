@@ -7,6 +7,8 @@ import OAuthApi from '@/api/OAuthApi';
 import toast from 'react-hot-toast';
 import { CONNECTION_PROVIDER_TYPE, Connection } from '@/models';
 import { useEnvironment } from '@/hooks/useEnvironment';
+import { useUser } from '@/hooks/UserContext';
+import { Copy, CheckCircle } from 'lucide-react';
 
 interface QuickBooksConnection extends Connection {
 	encrypted_secret_data?: {
@@ -33,6 +35,7 @@ interface QuickBooksFormData {
 	client_secret: string;
 	environment: 'sandbox' | 'production';
 	income_account_id: string;
+	webhook_verifier_token: string;
 	sync_config: {
 		invoice: boolean;
 		payment: boolean;
@@ -40,7 +43,8 @@ interface QuickBooksFormData {
 }
 
 const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpen, onOpenChange, connection, onSave }) => {
-	const { isProduction } = useEnvironment();
+	const { isProduction, activeEnvironment } = useEnvironment();
+	const { user } = useUser();
 
 	// Determine QuickBooks environment based on Flexprice environment
 	const qbEnvironment: 'sandbox' | 'production' = isProduction ? 'production' : 'sandbox';
@@ -51,12 +55,19 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 		client_secret: '',
 		environment: qbEnvironment,
 		income_account_id: '',
+		webhook_verifier_token: '',
 		sync_config: {
 			invoice: false,
 			payment: false,
 		},
 	});
 	const [errors, setErrors] = useState<Record<string, string>>({});
+	const [webhookCopied, setWebhookCopied] = useState(false);
+
+	// Generate webhook URL
+	const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/v1';
+	const webhookUrl =
+		user?.tenant?.id && activeEnvironment?.id ? `${apiUrl}/webhooks/quickbooks/${user.tenant.id}/${activeEnvironment.id}` : '';
 
 	// Reset form on open or when editing connection changes
 	useEffect(() => {
@@ -70,9 +81,10 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 					client_secret: '',
 					environment: (secretData.environment as 'sandbox' | 'production') || qbEnvironment,
 					income_account_id: secretData.income_account_id || '',
+					webhook_verifier_token: '',
 					sync_config: {
 						invoice: syncConfig.invoice?.outbound || false,
-						payment: syncConfig.payment?.inbound || syncConfig.payment?.outbound || false,
+						payment: syncConfig.payment?.inbound || false,
 					},
 				});
 			} else {
@@ -82,6 +94,7 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 					client_secret: '',
 					environment: qbEnvironment,
 					income_account_id: '',
+					webhook_verifier_token: '',
 					sync_config: {
 						invoice: false,
 						payment: false,
@@ -89,6 +102,7 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 				});
 			}
 			setErrors({});
+			setWebhookCopied(false);
 		}
 	}, [isOpen, connection, qbEnvironment]);
 
@@ -147,6 +161,11 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 				sync_config: {} as Record<string, { inbound: boolean; outbound: boolean }>,
 			};
 
+			// Add webhook verifier token if provided
+			if (formData.webhook_verifier_token.trim()) {
+				payload.encrypted_secret_data.webhook_verifier_token = formData.webhook_verifier_token;
+			}
+
 			// Only add invoice config if toggle is true
 			if (formData.sync_config.invoice) {
 				payload.sync_config.invoice = {
@@ -155,10 +174,11 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 				};
 			}
 
+			// Payment sync is inbound-only (webhook-based)
 			if (formData.sync_config.payment) {
 				payload.sync_config.payment = {
 					inbound: true,
-					outbound: true,
+					outbound: false,
 				};
 			}
 
@@ -187,6 +207,7 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 				credentials: {
 					client_id: formData.client_id,
 					client_secret: formData.client_secret,
+					webhook_verifier_token: formData.webhook_verifier_token || '',
 				},
 				metadata: {
 					environment: formData.environment,
@@ -204,10 +225,11 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 				};
 			}
 
+			// Payment sync is inbound-only (webhook-based)
 			if (formData.sync_config.payment) {
 				syncConfig.payment = {
 					inbound: true,
-					outbound: true,
+					outbound: false,
 				};
 			}
 
@@ -215,6 +237,7 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 			if (Object.keys(syncConfig).length > 0) {
 				payload.sync_config = syncConfig;
 			}
+
 			return await OAuthApi.InitiateOAuth(payload);
 		},
 		onSuccess: (response) => {
@@ -252,6 +275,18 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 	};
 
 	const isPending = isUpdating || isInitiatingOAuth;
+
+	const handleCopyWebhookUrl = () => {
+		if (webhookUrl) {
+			navigator.clipboard.writeText(webhookUrl);
+			setWebhookCopied(true);
+			toast.success('Webhook URL copied to clipboard!');
+
+			setTimeout(() => {
+				setWebhookCopied(false);
+			}, 2000);
+		}
+	};
 
 	return (
 		<Sheet
@@ -339,11 +374,64 @@ const QuickBooksConnectionDrawer: FC<QuickBooksConnectionDrawerProps> = ({ isOpe
 						<div className='flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg'>
 							<div>
 								<label className='text-sm font-medium text-gray-700'>Payments</label>
-								<p className='text-xs text-gray-500'>2-way sync with QuickBooks</p>
+								<p className='text-xs text-gray-500'>Inbound sync (webhook configuration required)</p>
 							</div>
 							<Switch checked={formData.sync_config.payment} onCheckedChange={(checked) => handleSyncConfigChange('payment', checked)} />
 						</div>
 					</div>
+				</div>
+
+				{/* Webhook Configuration (always shown, but token field only on create) */}
+				<div className='p-4 bg-blue-50 border border-blue-200 rounded-lg'>
+					<h3 className='text-sm font-medium text-blue-800 mb-3'>Webhook Configuration</h3>
+					<p className='text-xs text-blue-700 mb-4'>
+						{formData.sync_config.payment
+							? 'Configure webhooks in your QuickBooks app to enable payment reconciliation from QuickBooks to Flexprice.'
+							: 'Enable payment sync to configure webhook integration for payment reconciliation.'}
+					</p>
+
+					{/* Webhook Verifier Token - Only show when creating AND payment sync enabled */}
+					{!connection && formData.sync_config.payment && (
+						<div className='mb-4'>
+							<Input
+								label='Webhook Verifier Token (Optional)'
+								placeholder='Enter webhook verifier token from QuickBooks'
+								type='password'
+								value={formData.webhook_verifier_token}
+								onChange={(value) => handleChange('webhook_verifier_token', value)}
+								description='The webhook verifier token from Intuit Developer Portal for signature verification (recommended for production)'
+							/>
+						</div>
+					)}
+
+					{/* Webhook URL - Always visible */}
+					<div className='mb-4'>
+						<label className='text-sm font-medium text-blue-800 mb-2 block'>Webhook URL</label>
+						<p className='text-xs text-blue-700 mb-3'>
+							Set up this webhook URL in your QuickBooks app (Intuit Developer Portal) to receive payment notifications:
+						</p>
+						<div className='flex items-center gap-2 p-2 bg-white border border-blue-200 rounded-md'>
+							<code className='flex-1 text-xs text-gray-800 font-mono break-all'>{webhookUrl}</code>
+							<Button size='xs' variant='outline' onClick={handleCopyWebhookUrl} className='flex items-center gap-1'>
+								{webhookCopied ? <CheckCircle className='w-3 h-3' /> : <Copy className='w-3 h-3' />}
+								{webhookCopied ? 'Copied!' : 'Copy'}
+							</Button>
+						</div>
+					</div>
+
+					{/* Webhook Instructions - Only show when payment sync enabled */}
+					{formData.sync_config.payment && (
+						<div className='p-3 bg-white border border-blue-200 rounded-md'>
+							<p className='text-xs text-blue-700 font-medium mb-2'>Setup Instructions:</p>
+							<ol className='text-xs text-blue-700 space-y-1 list-decimal list-inside'>
+								<li>Go to your QuickBooks app in Intuit Developer Portal</li>
+								<li>Navigate to Webhooks section</li>
+								<li>Add the webhook URL above</li>
+								<li>Subscribe to Payment entity events (Create/Update)</li>
+								{!connection && <li>Copy the webhook verifier token and paste it above (optional but recommended)</li>}
+							</ol>
+						</div>
+					)}
 				</div>
 
 				{/* OAuth Info Box */}

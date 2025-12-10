@@ -119,7 +119,7 @@ const ServiceAccountsPage = () => {
 					heading='Service Accounts'
 					onAddClick={handleAddServiceAccount}
 					emptyStateCard={{
-						heading: 'Create a service account',
+						heading: 'Create A Service Account',
 						description: 'Create a service account to manage programmatic access with specific roles and permissions.',
 						buttonLabel: 'Create Service Account',
 						buttonAction: handleAddServiceAccount,

@@ -205,7 +205,7 @@ const DeveloperPage = () => {
 					heading='API Keys'
 					onAddClick={handleAddSecretKey}
 					emptyStateCard={{
-						heading: 'Generate a secret key',
+						heading: 'Generate A Secret Key',
 						description: 'Generate a secret key to authenticate API requests and secure access.',
 						buttonLabel: 'Create Secret Key',
 						buttonAction: handleAddSecretKey,

@@ -183,7 +183,7 @@ const AddonsPage = () => {
 				<EmptyPage
 					onAddClick={handleOnAdd}
 					emptyStateCard={{
-						heading: 'Add your first addon',
+						heading: 'Add Your First Addon',
 						description: 'Create your first addon to define additional services customers can purchase.',
 						buttonLabel: 'Create Addon',
 						buttonAction: handleOnAdd,

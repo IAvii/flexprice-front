@@ -176,7 +176,7 @@ const CostSheetsPage = () => {
 				<EmptyPage
 					onAddClick={handleOnAdd}
 					emptyStateCard={{
-						heading: 'Add your first cost sheet',
+						heading: 'Add Your First Cost Sheet',
 						description: 'Create your first cost sheet to define pricing structures and charges.',
 						buttonLabel: 'Create Cost Sheet',
 						buttonAction: handleOnAdd,

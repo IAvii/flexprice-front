@@ -137,20 +137,24 @@ const DashboardPage = () => {
 				</div>
 
 				{/* Business Metrics Cards */}
-				<div className='grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6'>
-					<RecentSubscriptionsCard
-						subscriptionsCount={subscriptionsCount}
-						subscriptionsByPlan={subscriptionsByPlan}
-						isLoading={subscriptionsLoading}
-					/>
-
+				<div className='space-y-6 mt-6'>
+					{/* Revenue Trend Card - Full Width */}
 					<RevenueTrendCard revenueData={revenueData} isLoading={revenueLoading} />
 
-					<InvoiceIssuesCard
-						invoicesByStatus={invoicesByStatus}
-						pastDueSubscriptions={pastDueSubscriptions}
-						isLoading={invoiceIssuesLoading}
-					/>
+					{/* Recent Subscriptions and Invoice Payment Status - Side by Side */}
+					<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+						<RecentSubscriptionsCard
+							subscriptionsCount={subscriptionsCount}
+							subscriptionsByPlan={subscriptionsByPlan}
+							isLoading={subscriptionsLoading}
+						/>
+
+						<InvoiceIssuesCard
+							invoicesByStatus={invoicesByStatus}
+							pastDueSubscriptions={pastDueSubscriptions}
+							isLoading={invoiceIssuesLoading}
+						/>
+					</div>
 				</div>
 			</div>
 		</Page>

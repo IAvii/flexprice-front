@@ -76,7 +76,7 @@ const SidebarNav: FC<{ items: NavItem[] }> = ({ items }) => {
 
 	return (
 		<SidebarGroup className='mb-0'>
-			<SidebarMenu className={cn('gap-0', isCollapsed && 'gap-4')}>
+			<SidebarMenu className={cn('gap-1', isCollapsed && 'gap-4')}>
 				{items.map((item) => {
 					// Check if current path matches the main item URL or any of its sub-items
 					const isMainItemActive = location.pathname.startsWith(item.url) && item.url !== '#';

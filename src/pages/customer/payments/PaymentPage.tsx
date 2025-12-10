@@ -33,7 +33,7 @@ const PaymentPage = () => {
 			<EmptyPage
 				heading='Payments'
 				emptyStateCard={{
-					heading: 'Record your first payment',
+					heading: 'Record Your First Payment',
 					description: 'Add a payment record to manage customer charges and settlements.',
 				}}
 				tutorials={GUIDES.payments.tutorials}

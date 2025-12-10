@@ -4,7 +4,7 @@ import SidebarNav, { NavItem } from './SidebarMenu';
 import FlexpriceSidebarFooter from './SidebarFooter';
 import { RouteNames } from '@/core/routes/Routes';
 import { EnvironmentSelector } from '@/components/molecules';
-import { Settings, Landmark, Layers2, LayoutPanelLeft, CodeXml, Puzzle, Home } from 'lucide-react';
+import { Settings, Landmark, Layers2, CodeXml, Puzzle, GalleryHorizontalEnd, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }) => {
@@ -124,7 +124,7 @@ const AppSidebar: React.FC<React.ComponentProps<typeof Sidebar>> = ({ ...props }
 		{
 			title: 'Pricing Widget',
 			url: RouteNames.pricing,
-			icon: LayoutPanelLeft,
+			icon: GalleryHorizontalEnd,
 		},
 	];
 	return (

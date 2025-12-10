@@ -68,7 +68,7 @@ export const EventsMonitoringChart: React.FC<EventsMonitoringChartProps> = ({
 			<CardHeader className='pb-4'>
 				<div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
 					<div>
-						<CardTitle className={getTypographyClass('section-title')}>{title}</CardTitle>
+						<CardTitle className={getTypographyClass('section-title', 'font-medium')}>{title}</CardTitle>
 						<CardDescription className={getTypographyClass('helper-text', 'mt-1')}>{description}</CardDescription>
 					</div>
 				</div>

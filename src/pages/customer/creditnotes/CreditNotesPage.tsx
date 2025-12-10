@@ -43,7 +43,7 @@ const CreditNotesPage = () => {
 				tags={['Credit Notes']}
 				tutorials={GUIDES.creditNotes?.tutorials || []}
 				emptyStateCard={{
-					heading: 'Issue a credit note',
+					heading: 'Issue A Credit Note',
 					description: 'Add a credit note to adjust or refund customer invoices.',
 				}}
 			/>

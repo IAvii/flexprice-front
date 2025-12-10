@@ -57,7 +57,7 @@ const TaxPage = () => {
 				heading='Tax Rates'
 				tags={['Taxes']}
 				emptyStateCard={{
-					heading: 'Create your first tax rate',
+					heading: 'Create Your First Tax Rate',
 					description: 'Set up tax rates to automatically calculate taxes on invoices and ensure compliance with local regulations.',
 					buttonLabel: 'Create Tax Rate',
 					buttonAction: handleCreateNew,

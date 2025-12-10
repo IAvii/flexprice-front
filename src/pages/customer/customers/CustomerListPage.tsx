@@ -188,7 +188,7 @@ const CustomerListPage = () => {
 				heading='Customers'
 				tags={['Customers']}
 				emptyStateCard={{
-					heading: 'Create your first customer',
+					heading: 'Create Your First Customer',
 					description: 'Create a plan to display pricing and start billing customers.',
 					buttonLabel: 'Create Customer',
 					buttonAction: () => {

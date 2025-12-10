@@ -186,7 +186,7 @@ const SubscriptionsPage = () => {
 				tags={['Subscriptions']}
 				tutorials={GUIDES.customers.tutorials}
 				emptyStateCard={{
-					heading: 'Add your first subscription',
+					heading: 'Add Your First Subscription',
 					description: 'Create your first subscription to start billing your customers.',
 					buttonLabel: 'Create Subscription',
 				}}

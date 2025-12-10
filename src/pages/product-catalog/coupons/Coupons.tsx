@@ -178,7 +178,7 @@ const CouponsPage = () => {
 				tags={['Coupons']}
 				tutorials={GUIDES.coupons.tutorials}
 				emptyStateCard={{
-					heading: 'Add your first coupon',
+					heading: 'Add Your First Coupon',
 					description: 'Create your first coupon to offer discounts to customers.',
 					buttonLabel: 'Create Coupon',
 					buttonAction: handleCreateCoupon,

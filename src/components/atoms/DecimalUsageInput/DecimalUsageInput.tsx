@@ -7,7 +7,7 @@ interface Props {
 	precision?: number;
 	min?: number;
 	max?: number;
-	label: string;
+	label?: string;
 	placeholder?: string;
 	disabled?: boolean;
 	error?: string;

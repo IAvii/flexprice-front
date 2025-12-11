@@ -293,6 +293,7 @@ const EntityChargesPage: React.FC<EntityChargesPageProps> = ({ entityType, entit
 				invoice_cadence: price.invoice_cadence || INVOICE_CADENCE.ARREAR,
 				trial_period: price.trial_period,
 				description: price.description,
+				display_name: price.display_name,
 				metadata: price.metadata || undefined,
 				tier_mode: price.tier_mode,
 				tiers:
@@ -448,6 +449,7 @@ const EntityChargesPage: React.FC<EntityChargesPageProps> = ({ entityType, entit
 								price={charge}
 								entityType={priceEntityType}
 								entityId={entityId}
+								entityName={entityData?.name || entityName}
 								onAdd={(charge) => handleRecurringChargeAdd(index, charge)}
 								onUpdate={(price) => handleRecurringChargeUpdate(index, price)}
 								onDeleteClicked={() => handleRecurringChargeDelete(index)}

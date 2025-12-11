@@ -20,6 +20,7 @@ interface Props {
 	onDeleteClicked: () => void;
 	entityType?: PRICE_ENTITY_TYPE;
 	entityId?: string;
+	entityName?: string;
 }
 
 const RecurringChargesForm = ({
@@ -30,8 +31,12 @@ const RecurringChargesForm = ({
 	onDeleteClicked,
 	entityType = PRICE_ENTITY_TYPE.PLAN,
 	entityId,
+	entityName,
 }: Props) => {
-	const [localPrice, setLocalPrice] = useState<Partial<InternalPrice>>(price);
+	const [localPrice, setLocalPrice] = useState<Partial<InternalPrice>>({
+		...price,
+		display_name: price.display_name || entityName || '',
+	});
 	const [startDate, setStartDate] = useState<Date | undefined>(price.start_date ? new Date(price.start_date) : undefined);
 	const [errors, setErrors] = useState<Partial<Record<keyof InternalPrice, string>>>({});
 
@@ -43,6 +48,21 @@ const RecurringChargesForm = ({
 			setStartDate(undefined);
 		}
 	}, [price.start_date]);
+
+	// Update display_name when entityName becomes available or when price.display_name changes
+	useEffect(() => {
+		setLocalPrice((prev) => {
+			// If price has an explicit display_name, use it
+			if (price.display_name !== undefined && price.display_name !== null && price.display_name !== '') {
+				return { ...prev, display_name: price.display_name };
+			}
+			// Otherwise, if entityName is available and display_name is empty/not set, use entityName
+			if (entityName && (!prev.display_name || prev.display_name === '')) {
+				return { ...prev, display_name: entityName };
+			}
+			return prev;
+		});
+	}, [price.display_name, entityName]);
 
 	const validate = () => {
 		const newErrors: Partial<Record<keyof InternalPrice, string>> = {};
@@ -102,6 +122,15 @@ const RecurringChargesForm = ({
 
 	return (
 		<div className='card'>
+			<Input
+				onChange={(value) => setLocalPrice({ ...localPrice, display_name: value })}
+				value={localPrice.display_name || ''}
+				variant='text'
+				label='Display Name'
+				placeholder={entityName || 'Enter display name'}
+				error={errors.display_name}
+			/>
+			<Spacer height={'8px'} />
 			<Select
 				value={localPrice.currency}
 				options={currencyOptions}

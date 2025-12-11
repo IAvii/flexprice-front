@@ -10,12 +10,19 @@ export interface Price extends BaseModel {
 	readonly entity_id: string;
 	readonly type: PRICE_TYPE;
 	readonly price_unit_type: PRICE_UNIT_TYPE;
+	readonly price_unit_id?: string;
+	readonly price_unit_amount?: string;
+	readonly display_price_unit_amount?: string;
+	readonly price_unit?: string;
+	readonly conversion_rate?: string;
 	readonly billing_period: BILLING_PERIOD;
 	readonly billing_period_count: number;
 	readonly billing_model: BILLING_MODEL;
+	readonly display_name: string;
 	readonly billing_cadence: BILLING_CADENCE;
 	readonly tier_mode: TIER_MODE;
 	readonly tiers: Tier[] | null;
+	readonly price_unit_tiers?: Tier[] | null;
 	readonly meter_id: string;
 	readonly filter_values: Record<string, string[]> | null;
 	readonly lookup_key: string;
@@ -28,6 +35,7 @@ export interface Price extends BaseModel {
 	readonly end_date?: string;
 	readonly metadata: Metadata | null;
 	readonly price_unit_config?: PriceUnitConfig;
+	readonly parent_price_id?: string;
 	readonly group_id?: string;
 }
 

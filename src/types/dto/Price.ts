@@ -38,12 +38,12 @@ export interface CreatePriceRequest {
 	amount?: string;
 	currency: string;
 	plan_id?: string; // TODO: This is deprecated and will be removed in the future
-	entity_type?: PRICE_ENTITY_TYPE; // TODO: this will be required in the future as we will not allow prices to be created without an entity type
-	entity_id?: string; // TODO: this will be required in the future as we will not allow prices to be created without an entity id
+	entity_type: PRICE_ENTITY_TYPE;
+	entity_id: string;
 	type: PRICE_TYPE;
 	price_unit_type: PRICE_UNIT_TYPE;
 	billing_period: BILLING_PERIOD;
-	billing_period_count?: number;
+	billing_period_count?: number; // defaults to 1
 	billing_model: BILLING_MODEL;
 	billing_cadence: BILLING_CADENCE;
 	meter_id?: string;
@@ -52,6 +52,7 @@ export interface CreatePriceRequest {
 	invoice_cadence: INVOICE_CADENCE;
 	trial_period?: number;
 	description?: string;
+	display_name?: string;
 	metadata?: Metadata;
 	tier_mode?: TIER_MODE;
 	tiers?: CreatePriceTier[];

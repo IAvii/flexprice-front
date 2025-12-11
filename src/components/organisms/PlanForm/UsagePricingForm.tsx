@@ -86,6 +86,7 @@ const UsagePricingForm: FC<Props> = ({
 	const [meterId, setMeterId] = useState<string>(price.meter_id || '');
 	const [activeMeter, setActiveMeter] = useState<Meter | null>(price.meter || null);
 	const [groupId, setGroupId] = useState<string | undefined>(price.group_id);
+	const [displayName, setDisplayName] = useState<string>(price.display_name || '');
 	const [tieredPrices, setTieredPrices] = useState<PriceTier[]>([
 		{ from: 0, up_to: 1, unit_amount: '', flat_amount: '0' },
 		{ from: 1, up_to: null, unit_amount: '', flat_amount: '0' },
@@ -117,6 +118,8 @@ const UsagePricingForm: FC<Props> = ({
 					name: price.meter.name,
 				} as Meter);
 			}
+			// Set display_name from price or meter name
+			setDisplayName(price.display_name || price.meter?.name || '');
 			setBillingPeriod(price.billing_period || billlingPeriodOptions[1].value);
 			setStartDate(price.start_date ? new Date(price.start_date) : undefined);
 
@@ -146,6 +149,14 @@ const UsagePricingForm: FC<Props> = ({
 			}
 		}
 	}, [price]);
+
+	// Update display_name when meter changes
+	useEffect(() => {
+		if (activeMeter?.name && !displayName) {
+			setDisplayName(activeMeter.name);
+		}
+	}, [activeMeter?.name]);
+
 	const validate = () => {
 		setErrors({});
 		setInputErrors({
@@ -287,6 +298,7 @@ const UsagePricingForm: FC<Props> = ({
 			entity_id: entityId || '',
 			group_id: groupId,
 			start_date: startDate ? startDate.toISOString() : undefined,
+			display_name: displayName || activeMeter?.name || '',
 		};
 
 		let finalPrice: Partial<Price>;
@@ -356,9 +368,22 @@ const UsagePricingForm: FC<Props> = ({
 					if (meter) {
 						setMeterId(meter.id);
 						setActiveMeter(meter);
+						// Auto-fill display_name with meter name if empty
+						if (!displayName) {
+							setDisplayName(meter.name);
+						}
 					}
 				}}
 				value={meterId}
+			/>
+			<Spacer height='8px' />
+			<Input
+				onChange={(value) => setDisplayName(value)}
+				value={displayName}
+				variant='text'
+				label='Display Name'
+				placeholder={activeMeter?.name || 'Enter display name'}
+				error={errors.display_name}
 			/>
 			<Spacer height='8px' />
 

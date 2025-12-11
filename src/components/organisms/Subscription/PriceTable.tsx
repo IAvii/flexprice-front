@@ -3,7 +3,7 @@ import { ColumnData, FlexpriceTable, LineItemCoupon } from '@/components/molecul
 import PriceOverrideDialog from '@/components/molecules/PriceOverrideDialog/PriceOverrideDialog';
 import { Price, PRICE_TYPE } from '@/models';
 import { ChevronDownIcon, ChevronUpIcon, Pencil, RotateCcw, Tag } from 'lucide-react';
-import { FormHeader } from '@/components/atoms';
+import { FormHeader, DecimalUsageInput } from '@/components/atoms';
 import { motion } from 'framer-motion';
 import { ChargeValueCell } from '@/components/molecules';
 import { capitalize } from 'es-toolkit';
@@ -27,7 +27,7 @@ export interface Props {
 
 type ChargeTableData = {
 	charge: JSX.Element;
-	quantity: string;
+	quantity: string | JSX.Element;
 	price: JSX.Element;
 	invoice_cadence: string;
 	actions?: JSX.Element;
@@ -135,29 +135,50 @@ const PriceTable: FC<Props> = ({
 				</div>
 			),
 			quantity: (() => {
-				if (price.type === PRICE_TYPE.FIXED) return '1';
+				if (price.type === PRICE_TYPE.FIXED) {
+					// Get current quantity from override or default to 1
+					const currentQuantity = overriddenPrices[price.id]?.quantity || 1;
 
-				// const override = overriddenPrices[price.id];
+					return (
+						<div className='w-20' data-interactive='true'>
+							<DecimalUsageInput
+								value={currentQuantity.toString()}
+								onChange={(value) => {
+									const quantity = parseInt(value) || 1;
+									if (quantity === 1) {
+										// If quantity is back to default (1), remove the override if it only contains quantity
+										const currentOverride = overriddenPrices[price.id];
+										if (
+											currentOverride &&
+											Object.keys(currentOverride).length === 2 &&
+											currentOverride.price_id &&
+											currentOverride.quantity
+										) {
+											onResetOverride?.(price.id);
+										} else if (currentOverride) {
+											// Remove only the quantity from the override
+											const { quantity: _, ...restOverride } = currentOverride;
+											onPriceOverride?.(price.id, restOverride);
+										}
+									} else {
+										// Clear any existing coupon when quantity is overridden
+										const appliedCoupon = lineItemCoupons[price.id];
+										if (appliedCoupon) {
+											onLineItemCouponsChange?.(price.id, null);
+										}
 
-				// // PRIORITY 1: Check for any package overrides first (including transform_quantity)
-				// if (override?.billing_model === BILLING_MODEL.PACKAGE) {
-				// 	if (override?.quantity) {
-				// 		return override.quantity.toString();
-				// 	}
-				// 	if (override?.transform_quantity) {
-				// 		return `${override.transform_quantity.divide_by} units`;
-				// 	}
-				// }
-
-				// // PRIORITY 2: Check for transform_quantity overrides even when billing model hasn't changed
-				// if (override?.transform_quantity && price.billing_model === BILLING_MODEL.PACKAGE) {
-				// 	return `${override.transform_quantity.divide_by} units`;
-				// }
-
-				// // PRIORITY 3: Show original package transform_quantity if no overrides
-				// if (price.billing_model === BILLING_MODEL.PACKAGE && price.transform_quantity) {
-				// 	return `${price.transform_quantity.divide_by} units`;
-				// }
+										// Create or update override with quantity
+										onPriceOverride?.(price.id, { quantity });
+									}
+								}}
+								placeholder='1'
+								disabled={disabled}
+								precision={0}
+								min={1}
+							/>
+						</div>
+					);
+				}
 
 				return 'pay as you go';
 			})(),

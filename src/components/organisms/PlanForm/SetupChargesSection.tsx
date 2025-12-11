@@ -147,6 +147,7 @@ const SetupChargesSection: React.FC<Props> = ({ plan, setPlanField }) => {
 							price={price}
 							entityType={PRICE_ENTITY_TYPE.PLAN}
 							entityId={plan.id}
+							entityName={plan.name}
 							onAdd={(newPrice) => {
 								setRecurringCharges((prevCharges) => {
 									const newCharges = prevCharges.map((p, i) => {

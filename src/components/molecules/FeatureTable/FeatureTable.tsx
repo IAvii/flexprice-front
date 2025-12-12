@@ -70,6 +70,9 @@ const FeatureTable: FC<Props> = ({ data }) => {
 						archive={{
 							enabled: row?.status !== ENTITY_STATUS.ARCHIVED,
 						}}
+						edit={{
+							enabled: false
+						}}
 					/>
 				);
 			},

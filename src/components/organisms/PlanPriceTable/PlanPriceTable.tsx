@@ -299,15 +299,15 @@ const PlanPriceTable: FC<PlanChargesTableProps> = ({ plan, onPriceUpdate }) => {
 	// ===== TABLE COLUMNS =====
 	const chargeColumns: ColumnData<PriceWithStatus>[] = [
 		{
-			title: 'Charge Type',
-			render: (row) => {
-				return <span>{getPriceTypeLabel(row.type)}</span>;
+			title: 'Display Name',
+			render(rowData) {
+				return <span>{rowData.display_name ?? '--'}</span>;
 			},
 		},
 		{
-			title: 'Feature',
-			render(rowData) {
-				return <span>{rowData.meter?.name ?? '--'}</span>;
+			title: 'Charge Type',
+			render: (row) => {
+				return <span>{getPriceTypeLabel(row.type)}</span>;
 			},
 		},
 		{

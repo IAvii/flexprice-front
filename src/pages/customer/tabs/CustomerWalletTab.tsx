@@ -14,6 +14,7 @@ import { Dialog, Skeleton, Tooltip, TooltipContent, TooltipProvider, TooltipTrig
 import usePagination from '@/hooks/usePagination';
 import { Wallet } from '@/models/Wallet';
 import WalletApi from '@/api/WalletApi';
+import { UserApi } from '@/api';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -60,6 +61,13 @@ const CustomerWalletTab = () => {
 	const [metadata, setMetadata] = useState<Record<string, string>>({});
 
 	const { isArchived } = useOutletContext<{ isArchived: boolean }>();
+
+	// Fetch users for the table
+	const { data: users } = useQuery({
+		queryKey: ['getAllUsers'],
+		queryFn: () => UserApi.getAllUsers(),
+		retry: false,
+	});
 
 	// Wallet Queries
 	const {
@@ -394,7 +402,7 @@ const CustomerWalletTab = () => {
 										</div>
 									</div>
 									<Spacer className='!h-6' />
-									<WalletTransactionsTable data={transactionsData?.items || []} currency={walletBalance?.currency ?? ''} />
+									<WalletTransactionsTable data={transactionsData?.items || []} users={users || []} />
 									<ShortPagination unit='Transactions' totalItems={transactionsData?.pagination.total ?? 0} />
 								</div>
 							)}

@@ -138,6 +138,7 @@ export type {
 	UpdateWalletRequest,
 	WalletResponse,
 	GetCustomerWalletsPayload,
+	GetWalletTransactionsByFilterPayload,
 } from './Wallet';
 
 export type {

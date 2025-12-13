@@ -6,9 +6,21 @@ import { CreateServiceAccountPayload, GetServiceAccountsResponse } from '@/types
 export class UserApi {
 	private static baseUrl = '/users';
 
-	// Fetch all users
+	// Fetch all users (type: 'user' only, not service accounts)
 	public static async getAllUsers(): Promise<User[]> {
-		return await AxiosClient.get<User[]>(this.baseUrl);
+		const response = await AxiosClient.post<GetServiceAccountsResponse>(`${this.baseUrl}/search`, {
+			limit: 1000,
+			offset: 0,
+			type: 'user',
+			filters: [],
+			sort: [
+				{
+					field: 'created_at',
+					direction: 'desc',
+				},
+			],
+		});
+		return response.items || [];
 	}
 
 	// Fetch user by ID

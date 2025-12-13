@@ -1,9 +1,12 @@
 import FlexpriceTable, { ColumnData } from '@/components/molecules/Table';
+import { RedirectCell } from '@/components/molecules';
 import { cn } from '@/lib/utils';
 import { WALLET_TRANSACTION_REASON } from '@/models/Wallet';
 import { WalletTransaction } from '@/models/WalletTransaction';
+import { User } from '@/models/User';
 import { formatDateShort, getCurrencySymbol } from '@/utils/common/helper_functions';
-import { FC } from 'react';
+import { RouteNames } from '@/core/routes/Routes';
+import { FC, useMemo } from 'react';
 
 const formatAmount = ({
 	type,
@@ -60,38 +63,57 @@ const fomatTransactionTitle = ({ type, reason }: { type: string; reason: string 
 
 interface Props {
 	data: WalletTransaction[];
-	currency: string;
+	users: User[];
 }
 
-const WalletTransactionsTable: FC<Props> = ({ data, currency }) => {
+const WalletTransactionsTable: FC<Props> = ({ data, users }) => {
+	// Create a map of user IDs to user emails for quick lookup
+	const userMap = useMemo(() => {
+		const map = new Map<string, User>();
+		users.forEach((user) => {
+			map.set(user.id, user);
+		});
+		return map;
+	}, [users]);
+
 	const columnData: ColumnData<WalletTransaction>[] = [
 		{
-			title: 'Transactions',
+			title: 'Customer',
+			render: (rowData) => {
+				if (rowData.customer_id) {
+					const customerName = rowData.customer?.name || rowData.customer?.email || rowData.customer_id;
+					return <RedirectCell redirectUrl={`${RouteNames.customers}/${rowData.customer_id}`}>{customerName}</RedirectCell>;
+				}
+				return <span className='text-gray-400'>--</span>;
+			},
+		},
+		{
+			title: 'Transaction Reason',
 			render: (rowData) => fomatTransactionTitle({ type: rowData.type, reason: rowData.transaction_reason }),
 		},
 		{
-			title: 'Payment Date',
+			title: 'Date',
 			render: (rowData) => <span>{formatDateShort(rowData.created_at)}</span>,
 		},
 		{
-			title: 'Expiry Date',
+			title: 'Created By',
 			render: (rowData) => {
-				if (rowData.expiry_date) {
-					return <span>{formatDateShort(rowData.expiry_date)}</span>;
+				if (rowData.created_by) {
+					const user = rowData.created_by_user || userMap.get(rowData.created_by);
+					if (user) {
+						return <span>{user.email || user.name || rowData.created_by}</span>;
+					}
+					return <span className='text-gray-400 font-mono text-xs'>{rowData.created_by}</span>;
 				}
-				return <span>--</span>;
+				return <span className='text-gray-400'>--</span>;
 			},
 		},
 		{
-			title: 'Priority',
-			render: (rowData) => {
-				return <span>{rowData.priority || '--'}</span>;
-			},
-		},
-		{
-			title: `Amount(${getCurrencySymbol(currency)})`,
+			title: 'Amount',
 			align: 'right',
 			render: (rowData) => {
+				// Determine currency from transaction data or use credits
+				const currency = rowData.customer?.email ? 'USD' : undefined;
 				return (
 					<span className='flex flex-col justify-center items-end'>
 						{formatAmount({
@@ -101,12 +123,16 @@ const WalletTransactionsTable: FC<Props> = ({ data, currency }) => {
 							className: 'text-base font-medium',
 							status: rowData.transaction_status,
 						})}
-						{formatAmount({
-							type: rowData.type,
-							amount: rowData.credit_amount,
-							className: 'text-sm',
-							status: rowData.transaction_status,
-						})}
+						{rowData.credit_amount > 0 && (
+							<span className='text-sm text-gray-500'>
+								{formatAmount({
+									type: rowData.type,
+									amount: rowData.credit_amount,
+									className: 'text-sm',
+									status: rowData.transaction_status,
+								})}
+							</span>
+						)}
 					</span>
 				);
 			},

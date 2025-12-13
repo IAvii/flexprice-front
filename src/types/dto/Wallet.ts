@@ -9,6 +9,7 @@ import {
 	WALLET_CONFIG_PRICE_TYPE,
 	WalletTransaction,
 } from '@/models';
+import { TypedBackendFilter, TypedBackendSort } from '../formatters/QueryBuilder';
 
 export interface WalletTransactionResponse {
 	items: WalletTransaction[];
@@ -130,4 +131,10 @@ export interface GetCustomerWalletsResponse extends BaseModel {
 			value: string;
 		};
 	};
+}
+
+export interface GetWalletTransactionsByFilterPayload extends Pagination {
+	filters: TypedBackendFilter[];
+	sort: TypedBackendSort[];
+	expand?: string;
 }

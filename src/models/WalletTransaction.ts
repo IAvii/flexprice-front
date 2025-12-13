@@ -1,4 +1,6 @@
 import { Metadata } from './base';
+import { Customer } from './Customer';
+import { User } from './User';
 
 export type WalletTransaction = {
 	readonly amount: number;
@@ -17,4 +19,8 @@ export type WalletTransaction = {
 	readonly transaction_reason: string;
 	readonly expiry_date: string;
 	readonly priority?: number;
+	readonly customer_id?: string;
+	readonly created_by?: string;
+	readonly customer?: Customer;
+	readonly created_by_user?: User;
 };

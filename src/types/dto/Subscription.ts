@@ -47,6 +47,7 @@ export interface ListSubscriptionsPayload extends QueryFilter, TimeRangeFilter {
 import { TaxRateOverride } from './tax';
 import { TypedBackendFilter, TypedBackendSort } from '../formatters/QueryBuilder';
 import { CreateCreditGrantRequest } from './CreditGrant';
+import { LineItemCommitmentsMap } from './LineItemCommitmentConfig';
 
 export interface GetSubscriptionDetailsPayload {
 	subscription_id: string;
@@ -209,6 +210,9 @@ export interface CreateSubscriptionRequest {
 	// Entitlement overrides
 	override_entitlements?: EntitlementOverrideRequest[];
 
+	// Line item commitments
+	line_item_commitments?: LineItemCommitmentsMap;
+
 	// True up flag
 	enable_true_up: boolean;
 
@@ -229,6 +233,9 @@ export interface SubscriptionPhaseCreateRequest {
 	// OverrideLineItems allows customizing specific prices for this phase
 	// If not provided, phase will use the same line items as the subscription (plan prices)
 	override_line_items?: OverrideLineItemRequest[];
+
+	// Line item commitments for this phase
+	line_item_commitments?: LineItemCommitmentsMap;
 
 	metadata?: Metadata;
 }

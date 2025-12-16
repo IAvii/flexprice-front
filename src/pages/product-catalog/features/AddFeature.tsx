@@ -526,7 +526,8 @@ const AggregationSection = ({
 
 	const showFieldInput = meter.aggregation?.type !== METER_AGGREGATION_TYPE.COUNT;
 	const showMultiplierInput = meter.aggregation?.type === METER_AGGREGATION_TYPE.SUM_WITH_MULTIPLIER;
-	const showWindowSizeInput = meter.aggregation?.type === METER_AGGREGATION_TYPE.MAX;
+	const showWindowSizeInput =
+		meter.aggregation?.type === METER_AGGREGATION_TYPE.MAX || meter.aggregation?.type === METER_AGGREGATION_TYPE.SUM;
 
 	return (
 		<div className='card'>

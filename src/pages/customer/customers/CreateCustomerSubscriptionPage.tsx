@@ -38,6 +38,7 @@ import { OverrideLineItemRequest, SubscriptionPhaseCreateRequest } from '@/types
 import { cn } from '@/lib/utils';
 import { toSentenceCase } from '@/utils/common/helper_functions';
 import { ExtendedPriceOverride, getLineItemOverrides } from '@/utils/common/price_override_helpers';
+import { extractLineItemCommitments } from '@/utils/common/commitment_helpers';
 import { extractSubscriptionBoundaries, extractFirstPhaseData } from '@/utils/subscription/phaseConversion';
 
 import { useBreadcrumbsStore } from '@/store/useBreadcrumbsStore';
@@ -359,6 +360,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 		let finalCoupons: string[] | undefined;
 		let finalLineItemCoupons: Record<string, string[]> | undefined;
 		let finalOverrideLineItems: OverrideLineItemRequest[] | undefined;
+		let finalLineItemCommitments: Record<string, any> | undefined;
 		let sanitizedPhases: SubscriptionPhaseCreateRequest[] | undefined;
 
 		if (phases.length > 0) {
@@ -372,6 +374,10 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 			finalLineItemCoupons = firstPhaseData.line_item_coupons;
 			finalOverrideLineItems = firstPhaseData.override_line_items;
 
+			// Extract commitments from first phase if present
+			// Note: Phase-level commitments should be extracted from phase.line_item_commitments if phases support them
+			finalLineItemCommitments = undefined; // Phases handle their own commitments
+
 			// Sanitize phases (quantity exclusion for USAGE prices handled in PhaseList conversion)
 			sanitizedPhases = phases.map((phase) => ({
 				start_date: phase.start_date,
@@ -379,6 +385,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 				coupons: phase.coupons || undefined,
 				line_item_coupons: phase.line_item_coupons || undefined,
 				override_line_items: phase.override_line_items || undefined,
+				line_item_commitments: phase.line_item_commitments || undefined,
 				metadata: phase.metadata || undefined,
 			}));
 		} else {
@@ -399,6 +406,10 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 			// Note: getLineItemOverrides automatically excludes quantity for USAGE type prices
 			finalOverrideLineItems = getLineItemOverrides(currentPrices, priceOverrides);
 
+			// Extract line item commitments from price overrides
+			const commitments = extractLineItemCommitments(priceOverrides);
+			finalLineItemCommitments = Object.keys(commitments).length > 0 ? commitments : undefined;
+
 			finalCoupons = linkedCoupon ? [linkedCoupon.id] : undefined;
 			finalLineItemCoupons =
 				Object.keys(lineItemCoupons).length > 0
@@ -418,6 +429,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 			finalCoupons,
 			finalLineItemCoupons,
 			finalOverrideLineItems,
+			finalLineItemCommitments,
 			sanitizedPhases,
 			tax_rate_overrides,
 			overageFactor,
@@ -457,6 +469,7 @@ const CreateCustomerSubscriptionPage: React.FC = () => {
 			phases: sanitized.sanitizedPhases,
 			override_line_items:
 				sanitized.finalOverrideLineItems && sanitized.finalOverrideLineItems.length > 0 ? sanitized.finalOverrideLineItems : undefined,
+			line_item_commitments: sanitized.finalLineItemCommitments,
 			addons: subscriptionState.addons && subscriptionState.addons.length > 0 ? subscriptionState.addons : undefined,
 			coupons: sanitized.finalCoupons,
 			line_item_coupons: sanitized.finalLineItemCoupons,

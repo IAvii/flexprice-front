@@ -1,5 +1,6 @@
 import { Price } from '@/models/Price';
 import { BILLING_MODEL, TIER_MODE, CreatePriceTier, TransformQuantity, PRICE_TYPE } from '@/models/Price';
+import { LineItemCommitmentConfig } from '@/types/dto/LineItemCommitmentConfig';
 
 /**
  * Interface for line item overrides that will be sent to the backend
@@ -38,6 +39,7 @@ export interface ExtendedPriceOverride {
 	tiers?: CreatePriceTier[];
 	transform_quantity?: TransformQuantity;
 	effective_from?: string; // ISO date string for scheduling price changes
+	commitment?: LineItemCommitmentConfig; // Commitment configuration for this price
 }
 
 /**

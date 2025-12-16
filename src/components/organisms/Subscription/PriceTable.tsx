@@ -1,8 +1,9 @@
 import { FC, useState, useMemo } from 'react';
 import { ColumnData, FlexpriceTable, LineItemCoupon } from '@/components/molecules';
 import PriceOverrideDialog from '@/components/molecules/PriceOverrideDialog/PriceOverrideDialog';
+import CommitmentConfigDialog from '@/components/molecules/CommitmentConfigDialog';
 import { Price, PRICE_TYPE } from '@/models';
-import { ChevronDownIcon, ChevronUpIcon, Pencil, RotateCcw, Tag } from 'lucide-react';
+import { ChevronDownIcon, ChevronUpIcon, Pencil, RotateCcw, Tag, Target } from 'lucide-react';
 import { FormHeader, DecimalUsageInput } from '@/components/atoms';
 import { motion } from 'framer-motion';
 import { ChargeValueCell } from '@/components/molecules';
@@ -11,6 +12,7 @@ import { Coupon } from '@/models';
 import { BsThreeDots } from 'react-icons/bs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui';
 import { ExtendedPriceOverride } from '@/utils';
+import { LineItemCommitmentConfig } from '@/types/dto/LineItemCommitmentConfig';
 
 export interface Props {
 	data: Price[];
@@ -21,6 +23,7 @@ export interface Props {
 	overriddenPrices?: Record<string, ExtendedPriceOverride>;
 	lineItemCoupons?: Record<string, Coupon>;
 	onLineItemCouponsChange?: (priceId: string, coupon: Coupon | null) => void;
+	onCommitmentChange?: (priceId: string, config: LineItemCommitmentConfig | null) => void;
 	disabled?: boolean;
 	subscriptionLevelCoupon?: Coupon | null; // For tracking subscription level coupon
 }
@@ -43,12 +46,15 @@ const PriceTable: FC<Props> = ({
 	overriddenPrices = {},
 	lineItemCoupons = {},
 	onLineItemCouponsChange,
+	onCommitmentChange,
 	disabled = false,
 	subscriptionLevelCoupon = null,
 }) => {
 	const [showAllRows, setShowAllRows] = useState(false);
 	const [selectedPrice, setSelectedPrice] = useState<Price | null>(null);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [selectedCommitmentPrice, setSelectedCommitmentPrice] = useState<Price | null>(null);
+	const [isCommitmentDialogOpen, setIsCommitmentDialogOpen] = useState(false);
 	const [couponModalState, setCouponModalState] = useState<{ isOpen: boolean; priceId: string | null }>({
 		isOpen: false,
 		priceId: null,
@@ -80,11 +86,17 @@ const PriceTable: FC<Props> = ({
 		setIsDialogOpen(true);
 	};
 
+	const handleConfigureCommitment = (price: Price) => {
+		setSelectedCommitmentPrice(price);
+		setIsCommitmentDialogOpen(true);
+	};
+
 	// Custom action component for price rows
 	const PriceActionMenu: FC<{ price: Price }> = ({ price }) => {
 		const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 		// Now all billing models are overridable with the new comprehensive dialog
 		const isOverridden = overriddenPrices[price.id] !== undefined;
+		const priceHasCommitment = overriddenPrices[price.id]?.commitment !== undefined;
 
 		const handleClick = (e: React.MouseEvent) => {
 			e.preventDefault();
@@ -111,6 +123,10 @@ const PriceTable: FC<Props> = ({
 								Reset Override
 							</DropdownMenuItem>
 						)}
+						<DropdownMenuItem onClick={() => handleConfigureCommitment(price)}>
+							<Target className='mr-2 h-4 w-4' />
+							{priceHasCommitment ? 'Edit Commitment' : 'Configure Commitment'}
+						</DropdownMenuItem>
 						{!isOverridden && (
 							<DropdownMenuItem onClick={() => setCouponModalState({ isOpen: true, priceId: price.id })}>
 								<Tag className='mr-2 h-4 w-4' />
@@ -270,6 +286,19 @@ const PriceTable: FC<Props> = ({
 					onPriceOverride={onPriceOverride || (() => {})}
 					onResetOverride={onResetOverride || (() => {})}
 					overriddenPrices={overriddenPrices}
+				/>
+			)}
+
+			{/* Commitment Configuration Dialog */}
+			{selectedCommitmentPrice && (
+				<CommitmentConfigDialog
+					isOpen={isCommitmentDialogOpen}
+					onOpenChange={setIsCommitmentDialogOpen}
+					price={selectedCommitmentPrice}
+					onSave={(priceId, config) => {
+						onCommitmentChange?.(priceId, config);
+					}}
+					currentConfig={overriddenPrices[selectedCommitmentPrice.id]?.commitment}
 				/>
 			)}
 

@@ -489,6 +489,25 @@ const SubscriptionForm = ({
 										};
 									});
 								}}
+								onCommitmentChange={(priceId, config) => {
+									// Update the commitment field on the price override
+									if (config) {
+										overridePrice(priceId, { commitment: config });
+									} else {
+										// Remove commitment from override
+										const currentOverride = overriddenPrices[priceId];
+										if (currentOverride) {
+											const { commitment, ...restOverride } = currentOverride;
+											if (Object.keys(restOverride).length > 1) {
+												// Has other overrides, just remove commitment
+												overridePrice(priceId, restOverride);
+											} else {
+												// Only had commitment, remove entire override
+												resetOverride(priceId);
+											}
+										}
+									}
+								}}
 								disabled={isDisabled}
 								subscriptionLevelCoupon={state.linkedCoupon}
 							/>

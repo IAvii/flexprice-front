@@ -12,7 +12,7 @@ import { EmptyPage } from '@/components/organisms';
 import ServiceAccountDrawer from '@/components/molecules/ServiceAccountDrawer/ServiceAccountDrawer';
 
 const ServiceAccountsPage = () => {
-	const { page, limit, offset } = usePagination();
+	const { page } = usePagination();
 	const [isServiceAccountDrawerOpen, setIsServiceAccountDrawerOpen] = useState(false);
 
 	const {
@@ -20,7 +20,7 @@ const ServiceAccountsPage = () => {
 		isLoading: isLoadingServiceAccounts,
 		isError: isServiceAccountsError,
 	} = useQuery({
-		queryKey: ['service-accounts', page, limit, offset],
+		queryKey: ['service-accounts', page],
 		queryFn: async () => {
 			return await UserApi.getServiceAccounts();
 		},

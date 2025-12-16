@@ -53,7 +53,10 @@ class WalletApi {
 
 	// Search all wallet transactions across all wallets
 	static async getAllWalletTransactionsByFilter(payload: GetWalletTransactionsByFilterPayload): Promise<WalletTransactionResponse> {
-		return await AxiosClient.post<WalletTransactionResponse, GetWalletTransactionsByFilterPayload>(`${this.baseUrl}/transactions/search`, payload);
+		return await AxiosClient.post<WalletTransactionResponse, GetWalletTransactionsByFilterPayload>(
+			`${this.baseUrl}/transactions/search`,
+			payload,
+		);
 	}
 
 	// List wallets with query parameters

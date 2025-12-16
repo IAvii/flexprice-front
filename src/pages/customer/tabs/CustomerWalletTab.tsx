@@ -402,7 +402,7 @@ const CustomerWalletTab = () => {
 										</div>
 									</div>
 									<Spacer className='!h-6' />
-									<WalletTransactionsTable data={transactionsData?.items || []} users={users || []} />
+									<WalletTransactionsTable data={transactionsData?.items || []} users={users?.items || []} />
 									<ShortPagination unit='Transactions' totalItems={transactionsData?.pagination.total ?? 0} />
 								</div>
 							)}

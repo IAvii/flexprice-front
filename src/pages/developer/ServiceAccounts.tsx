@@ -22,19 +22,7 @@ const ServiceAccountsPage = () => {
 	} = useQuery({
 		queryKey: ['service-accounts', page, limit, offset],
 		queryFn: async () => {
-			const response = await UserApi.getServiceAccounts();
-			// Manually paginate since the API returns all items
-			const start = offset;
-			const end = offset + limit;
-			const paginatedItems = response.slice(start, end);
-			return {
-				items: paginatedItems,
-				pagination: {
-					total: response.length,
-					limit,
-					offset,
-				},
-			};
+			return await UserApi.getServiceAccounts();
 		},
 	});
 

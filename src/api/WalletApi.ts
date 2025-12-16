@@ -10,6 +10,9 @@ import {
 	WalletResponse,
 	GetCustomerWalletsPayload,
 	GetWalletTransactionsByFilterPayload,
+	ListWalletsPayload,
+	ListWalletsByFilterPayload,
+	ListWalletsResponse,
 } from '@/types/dto';
 import { generateQueryParams } from '@/utils/common/api_helper';
 
@@ -50,11 +53,19 @@ class WalletApi {
 
 	// Search all wallet transactions across all wallets
 	static async getAllWalletTransactionsByFilter(payload: GetWalletTransactionsByFilterPayload): Promise<WalletTransactionResponse> {
-		// Extract expand from payload and use it as query param
-		const { expand, ...bodyPayload } = payload;
-		const url = expand ? `${this.baseUrl}/transactions/search?expand=${expand}` : `${this.baseUrl}/transactions/search`;
+		const url = generateQueryParams(`${this.baseUrl}/transactions/search`, payload);
+		return await AxiosClient.post<WalletTransactionResponse, GetWalletTransactionsByFilterPayload>(url, payload);
+	}
 
-		return await AxiosClient.post<WalletTransactionResponse, Omit<GetWalletTransactionsByFilterPayload, 'expand'>>(url, bodyPayload);
+	// List wallets with query parameters
+	static async listWallets(payload: ListWalletsPayload = {}): Promise<ListWalletsResponse> {
+		const url = generateQueryParams(this.baseUrl, payload);
+		return await AxiosClient.get<ListWalletsResponse>(url);
+	}
+
+	// List wallets by filter with JSON body
+	static async listWalletsByFilter(payload: ListWalletsByFilterPayload): Promise<ListWalletsResponse> {
+		return await AxiosClient.post<ListWalletsResponse, ListWalletsByFilterPayload>(`${this.baseUrl}/search`, payload);
 	}
 }
 

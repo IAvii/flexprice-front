@@ -22,5 +22,6 @@ export type WalletTransaction = {
 	readonly customer_id?: string;
 	readonly created_by?: string;
 	readonly customer?: Customer;
+	readonly currency?: string;
 	readonly created_by_user?: User;
 };

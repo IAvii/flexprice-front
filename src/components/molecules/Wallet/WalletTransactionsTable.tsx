@@ -112,14 +112,12 @@ const WalletTransactionsTable: FC<Props> = ({ data, users }) => {
 			title: 'Amount',
 			align: 'right',
 			render: (rowData) => {
-				// Determine currency from transaction data or use credits
-				const currency = rowData.customer?.email ? 'USD' : undefined;
 				return (
 					<span className='flex flex-col justify-center items-end'>
 						{formatAmount({
 							type: rowData.type,
 							amount: rowData.amount,
-							currency,
+							currency: rowData.currency,
 							className: 'text-base font-medium',
 							status: rowData.transaction_status,
 						})}

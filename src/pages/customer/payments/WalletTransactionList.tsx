@@ -16,6 +16,9 @@ import {
 } from '@/types/common/QueryBuilder';
 import useFilterSorting from '@/hooks/useFilterSorting';
 import { useQueryWithEmptyState } from '@/hooks/useQueryWithEmptyState';
+import { User } from '@/models/User';
+import { EXPAND } from '@/models/expand';
+import { generateExpandQueryParams } from '@/utils/common/api_helper';
 
 const sortingOptions: SortOption[] = [
 	{
@@ -36,12 +39,11 @@ const WalletTransactionList = () => {
 	} = useQuery({
 		queryKey: ['getAllUsers'],
 		queryFn: () => UserApi.getAllUsers(),
-		retry: false,
 	});
 
 	const userOptions = useMemo(() => {
 		return (
-			users?.map((user) => ({
+			users?.items.map((user: User) => ({
 				value: user.id,
 				label: user.email || user.name || user.id,
 			})) || []
@@ -50,7 +52,7 @@ const WalletTransactionList = () => {
 
 	const filterOptions: FilterField[] = useMemo(() => {
 		// Only show Created By filter if users were successfully fetched
-		if (isUsersError || !users || users.length === 0) {
+		if (isUsersError || !users?.items || users.items.length === 0) {
 			return [
 				{
 					field: 'created_at',
@@ -98,7 +100,7 @@ const WalletTransactionList = () => {
 			offset,
 			filters: sanitizedFilters,
 			sort: sanitizedSorts,
-			expand: 'customer,created_by_user',
+			expand: generateExpandQueryParams([EXPAND.CUSTOMER, EXPAND.CREATED_BY_USER]),
 		});
 	};
 
@@ -186,7 +188,7 @@ const WalletTransactionList = () => {
 				selectedSorts={sorts}
 			/>
 			<Spacer className='!h-4' />
-			<WalletTransactionsTable data={transactionsData?.items || []} users={users || []} />
+			<WalletTransactionsTable data={transactionsData?.items || []} users={users?.items || []} />
 			<Spacer className='!h-4' />
 			<ShortPagination unit='Transactions' totalItems={transactionsData?.pagination.total ?? 0} />
 		</div>

@@ -16,4 +16,5 @@ export enum EXPAND {
 	TAX_ASSOCIATION = 'tax_association',
 	ADDONS = 'addons',
 	PARENT_CUSTOMER = 'parent_customer',
+	CREATED_BY_USER = 'created_by_user',
 }

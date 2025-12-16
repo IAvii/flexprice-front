@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import { Copy, AlertTriangle, Eye, EyeOff, Info } from 'lucide-react';
 import { refetchQueries } from '@/core/services/tanstack/ReactQueryProvider';
 import { ServerError } from '@/core/axios/types';
+import { GetServiceAccountsResponse } from '@/types/dto/UserApi';
 
 interface Props {
 	isOpen: boolean;
@@ -34,28 +35,27 @@ const SecretKeyDrawer: FC<Props> = ({ isOpen, onOpenChange }) => {
 		data: serviceAccounts,
 		isLoading: isLoadingServiceAccounts,
 		isError: isServiceAccountsError,
-	} = useQuery<User[]>({
+	} = useQuery<GetServiceAccountsResponse>({
 		queryKey: ['service-accounts'],
-		queryFn: () => UserApi.getServiceAccounts(),
+		queryFn: async () => await UserApi.getServiceAccounts(),
 		enabled: isOpen && formData.accountType === 'service_account',
-		retry: false, // Don't retry on failure
 	});
 
 	// Convert service accounts to select options
 	const serviceAccountOptions: SelectOption[] = useMemo(() => {
-		if (!serviceAccounts || !Array.isArray(serviceAccounts)) {
+		if (!serviceAccounts?.items || !Array.isArray(serviceAccounts.items)) {
 			return [];
 		}
 
 		// Sort by created_at (newest first) if available, otherwise keep original order
-		const sortedAccounts = [...serviceAccounts].sort((a, b) => {
+		const sortedAccounts = [...serviceAccounts.items].sort((a, b) => {
 			if (a.tenant?.created_at && b.tenant?.created_at) {
 				return new Date(b.tenant.created_at).getTime() - new Date(a.tenant.created_at).getTime();
 			}
 			return 0;
 		});
 
-		return sortedAccounts.map((account, index) => {
+		return sortedAccounts.map((account: User, index: number) => {
 			// Create a meaningful label
 			let label = '';
 
@@ -201,8 +201,8 @@ const SecretKeyDrawer: FC<Props> = ({ isOpen, onOpenChange }) => {
 
 	// Get the selected service account for displaying roles
 	const selectedServiceAccount = useMemo(() => {
-		if (!serviceAccounts || !formData.serviceAccountId) return null;
-		return serviceAccounts.find((account: User) => account.id === formData.serviceAccountId);
+		if (!serviceAccounts?.items || !formData.serviceAccountId) return null;
+		return serviceAccounts.items.find((account: User) => account.id === formData.serviceAccountId);
 	}, [serviceAccounts, formData.serviceAccountId]);
 
 	return (

@@ -1,5 +1,10 @@
+export enum CommitmentType {
+	AMOUNT = 'amount',
+	QUANTITY = 'quantity',
+}
+
 export interface LineItemCommitmentConfig {
-	commitment_type: 'amount' | 'quantity';
+	commitment_type: CommitmentType;
 	commitment_amount?: number;
 	commitment_quantity?: number;
 	overage_factor: number;

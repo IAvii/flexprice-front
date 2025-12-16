@@ -1,5 +1,5 @@
 import { Price } from '@/models/Price';
-import { LineItemCommitmentConfig, LineItemCommitmentsMap } from '@/types/dto/LineItemCommitmentConfig';
+import { CommitmentType, LineItemCommitmentConfig, LineItemCommitmentsMap } from '@/types/dto/LineItemCommitmentConfig';
 
 /**
  * Check if a price has commitment configured
@@ -24,7 +24,7 @@ export const validateCommitment = (config: Partial<LineItemCommitmentConfig>): s
 		return 'Commitment type is required';
 	}
 
-	if (config.commitment_type === 'amount') {
+	if (config.commitment_type === CommitmentType.AMOUNT) {
 		if (config.commitment_amount === undefined || config.commitment_amount === null) {
 			return 'Commitment amount is required when type is "amount"';
 		}
@@ -33,7 +33,7 @@ export const validateCommitment = (config: Partial<LineItemCommitmentConfig>): s
 		}
 	}
 
-	if (config.commitment_type === 'quantity') {
+	if (config.commitment_type === CommitmentType.QUANTITY) {
 		if (config.commitment_quantity === undefined || config.commitment_quantity === null) {
 			return 'Commitment quantity is required when type is "quantity"';
 		}
@@ -67,7 +67,7 @@ export const validateCommitment = (config: Partial<LineItemCommitmentConfig>): s
 export const formatCommitmentSummary = (config: LineItemCommitmentConfig): string => {
 	const parts: string[] = [];
 
-	if (config.commitment_type === 'amount') {
+	if (config.commitment_type === CommitmentType.AMOUNT) {
 		parts.push(`$${config.commitment_amount?.toLocaleString() || '0'} commitment`);
 	} else {
 		parts.push(`${config.commitment_quantity?.toLocaleString() || '0'} units commitment`);

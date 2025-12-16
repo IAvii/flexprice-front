@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from 'react';
 import { Dialog, Button, Input } from '@/components/atoms';
 import { Switch } from '@/components/ui';
 import { Price } from '@/models/Price';
-import { LineItemCommitmentConfig } from '@/types/dto/LineItemCommitmentConfig';
+import { LineItemCommitmentConfig, CommitmentType } from '@/types/dto/LineItemCommitmentConfig';
 import { validateCommitment, supportsWindowCommitment } from '@/utils/common/commitment_helpers';
 import { removeFormatting } from '@/components/atoms/Input/Input';
 import { getCurrencySymbol } from '@/utils/common/helper_functions';
@@ -18,18 +18,18 @@ interface CommitmentConfigDialogProps {
 const commitmentTypeOptions = [
 	{
 		label: 'Amount',
-		value: 'amount' as const,
+		value: CommitmentType.AMOUNT,
 		description: 'Commitment based on monetary amount',
 	},
 	{
 		label: 'Quantity',
-		value: 'quantity' as const,
+		value: CommitmentType.QUANTITY,
 		description: 'Commitment based on usage quantity',
 	},
 ];
 
 const CommitmentConfigDialog: FC<CommitmentConfigDialogProps> = ({ isOpen, onOpenChange, price, onSave, currentConfig }) => {
-	const [commitmentType, setCommitmentType] = useState<'amount' | 'quantity'>('amount');
+	const [commitmentType, setCommitmentType] = useState<CommitmentType>(CommitmentType.AMOUNT);
 	const [commitmentAmount, setCommitmentAmount] = useState<string>('');
 	const [commitmentQuantity, setCommitmentQuantity] = useState<string>('');
 	const [overageFactor, setOverageFactor] = useState<string>('1.0');
@@ -52,7 +52,7 @@ const CommitmentConfigDialog: FC<CommitmentConfigDialogProps> = ({ isOpen, onOpe
 			setIsWindowCommitment(currentConfig.is_window_commitment);
 		} else {
 			// Reset to defaults when opening without existing config
-			setCommitmentType('amount');
+			setCommitmentType(CommitmentType.AMOUNT);
 			setCommitmentAmount('');
 			setCommitmentQuantity('');
 			setOverageFactor('1.0');
@@ -70,7 +70,7 @@ const CommitmentConfigDialog: FC<CommitmentConfigDialogProps> = ({ isOpen, onOpe
 			is_window_commitment: isWindowCommitment,
 		};
 
-		if (commitmentType === 'amount') {
+		if (commitmentType === CommitmentType.AMOUNT) {
 			config.commitment_amount = commitmentAmount ? parseFloat(removeFormatting(commitmentAmount)) : undefined;
 		} else {
 			config.commitment_quantity = commitmentQuantity ? parseInt(commitmentQuantity, 10) : undefined;
@@ -133,7 +133,7 @@ const CommitmentConfigDialog: FC<CommitmentConfigDialogProps> = ({ isOpen, onOpe
 				</div>
 
 				{/* Conditional: Commitment Amount */}
-				{commitmentType === 'amount' && (
+				{commitmentType === CommitmentType.AMOUNT && (
 					<div className='space-y-2'>
 						<label className='text-sm font-medium text-gray-700'>Commitment Amount ({price.currency})*</label>
 						<Input
@@ -153,7 +153,7 @@ const CommitmentConfigDialog: FC<CommitmentConfigDialogProps> = ({ isOpen, onOpe
 				)}
 
 				{/* Conditional: Commitment Quantity */}
-				{commitmentType === 'quantity' && (
+				{commitmentType === CommitmentType.QUANTITY && (
 					<div className='space-y-2'>
 						<label className='text-sm font-medium text-gray-700'>Commitment Quantity*</label>
 						<Input

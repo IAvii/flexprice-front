@@ -61,15 +61,15 @@ type Params = {
 
 const chargeColumns: ColumnData<Price>[] = [
 	{
-		title: 'Charge Type',
-		render: (row) => {
-			return <span>{getPriceTypeLabel(row.type)}</span>;
+		title: 'Display Name',
+		render(rowData) {
+			return <span>{rowData.display_name ?? '--'}</span>;
 		},
 	},
 	{
-		title: 'Feature',
-		render(rowData) {
-			return <span>{rowData.meter?.name ?? '--'}</span>;
+		title: 'Charge Type',
+		render: (row) => {
+			return <span>{getPriceTypeLabel(row.type)}</span>;
 		},
 	},
 	{

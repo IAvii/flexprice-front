@@ -1,4 +1,4 @@
-import { FC, useState, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { ColumnData, FlexpriceTable, LineItemCoupon } from '@/components/molecules';
 import PriceOverrideDialog from '@/components/molecules/PriceOverrideDialog/PriceOverrideDialog';
 import CommitmentConfigDialog from '@/components/molecules/CommitmentConfigDialog';
@@ -59,6 +59,8 @@ const PriceTable: FC<Props> = ({
 		isOpen: false,
 		priceId: null,
 	});
+	// Track in-progress quantity text so backspacing to empty is allowed before committing
+	const [quantityInputs, setQuantityInputs] = useState<Record<string, string>>({});
 
 	// Filter prices based on billing period and currency if provided
 	const filteredPrices = useMemo(() => {
@@ -155,14 +157,21 @@ const PriceTable: FC<Props> = ({
 					// Calculate minimum quantity from price or default to 1
 					const minQuantity = price.min_quantity || 1;
 					// Get current quantity from override or default to min_quantity
-					const currentQuantity = overriddenPrices[price.id]?.quantity || minQuantity;
+					const currentQuantity = overriddenPrices[price.id]?.quantity ?? minQuantity;
+					const displayQuantity = quantityInputs[price.id] ?? currentQuantity.toString();
 
 					return (
 						<div className='w-20' data-interactive='true'>
 							<DecimalUsageInput
-								value={currentQuantity.toString()}
+								value={displayQuantity}
 								onChange={(value) => {
-									const quantity = parseInt(value) || minQuantity;
+									// Allow empty while the user edits; don't force min immediately
+									if (value === '') {
+										setQuantityInputs((prev) => ({ ...prev, [price.id]: '' }));
+										return;
+									}
+
+									const quantity = parseInt(value, 10) || minQuantity;
 
 									if (quantity === minQuantity) {
 										// If quantity is back to default (min_quantity), remove the override if it only contains quantity
@@ -189,6 +198,17 @@ const PriceTable: FC<Props> = ({
 										// Create or update override with quantity
 										onPriceOverride?.(price.id, { quantity });
 									}
+
+									// Clear transient input state once value is committed
+									setQuantityInputs((prev) => {
+										const next = { ...prev };
+										if (value === quantity.toString()) {
+											delete next[price.id];
+										} else {
+											next[price.id] = value;
+										}
+										return next;
+									});
 								}}
 								placeholder={minQuantity.toString()}
 								disabled={disabled}
@@ -283,8 +303,8 @@ const PriceTable: FC<Props> = ({
 					isOpen={isDialogOpen}
 					onOpenChange={setIsDialogOpen}
 					price={selectedPrice}
-					onPriceOverride={onPriceOverride || (() => {})}
-					onResetOverride={onResetOverride || (() => {})}
+					onPriceOverride={onPriceOverride || (() => { })}
+					onResetOverride={onResetOverride || (() => { })}
 					overriddenPrices={overriddenPrices}
 				/>
 			)}

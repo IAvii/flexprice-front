@@ -89,8 +89,14 @@ const CustomerWalletTransactionsTable: FC<Props> = ({ data }) => {
 			render: (rowData) => {
 				return (
 					<span className='flex flex-col justify-center items-end'>
-						{formatAmount({ type: rowData.type, amount: rowData.amount, currency: rowData.currency, className: 'text-base font-medium' })}
-						{formatAmount({ type: rowData.type, amount: rowData.credit_amount, className: 'text-sm' })}
+						{formatAmount({
+							type: rowData.type,
+							amount: rowData.amount,
+							currency: rowData.currency,
+							className: 'text-base font-medium',
+							status: rowData.transaction_status,
+						})}
+						{formatAmount({ type: rowData.type, amount: rowData.credit_amount, className: 'text-sm', status: rowData.transaction_status })}
 					</span>
 				);
 			},

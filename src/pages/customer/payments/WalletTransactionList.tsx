@@ -1,9 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
 import WalletApi from '@/api/WalletApi';
-import { UserApi } from '@/api';
+import useAllUsers from '@/hooks/useAllUsers';
 import usePagination, { PAGINATION_PREFIX } from '@/hooks/usePagination';
 import { Loader, ShortPagination, Spacer } from '@/components/atoms';
-import { WalletTransactionsTable, QueryBuilder } from '@/components/molecules';
+import { AllWalletTransactionsTable, QueryBuilder } from '@/components/molecules';
 import { useEffect, useMemo } from 'react';
 import {
 	FilterField,
@@ -35,14 +34,7 @@ const WalletTransactionList = () => {
 	});
 
 	// Fetch users for the Created By filter
-	const {
-		data: users,
-		isLoading: isUsersLoading,
-		isError: isUsersError,
-	} = useQuery({
-		queryKey: ['getAllUsers'],
-		queryFn: () => UserApi.getAllUsers(),
-	});
+	const { users, isLoading: isUsersLoading, isError: isUsersError } = useAllUsers();
 
 	const userOptions = useMemo(() => {
 		return (
@@ -171,7 +163,7 @@ const WalletTransactionList = () => {
 				selectedSorts={sorts}
 			/>
 			<Spacer className='!h-4' />
-			<WalletTransactionsTable data={transactionsData?.items || []} users={users?.items || []} />
+			<AllWalletTransactionsTable data={transactionsData?.items || []} />
 			<Spacer className='!h-4' />
 			<ShortPagination
 				unit='Transactions'

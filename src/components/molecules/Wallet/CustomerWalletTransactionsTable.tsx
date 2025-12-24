@@ -5,16 +5,30 @@ import { WalletTransaction } from '@/models/WalletTransaction';
 import { formatDateShort, getCurrencySymbol } from '@/utils/common/helper_functions';
 import { FC } from 'react';
 
-const formatAmount = ({ type, amount, currency, className }: { type: string; amount: number; currency?: string; className?: string }) => {
+const formatAmount = ({
+	type,
+	amount,
+	currency,
+	className,
+	status,
+}: {
+	type: string;
+	amount: number;
+	currency?: string;
+	className?: string;
+	status?: string;
+}) => {
+	const isPending = status?.toLowerCase() === 'pending';
+	const colorClass = isPending ? 'text-[#f5c50b]' : type === 'credit' ? 'text-[#2A9D90]' : 'text-[#18181B]';
+
 	return (
-		<span className={cn(type === 'credit' ? 'text-[#2A9D90] ' : 'text-[#18181B] ', className)}>
+		<span className={cn(colorClass, className)}>
 			{type === 'credit' ? '+' : '-'}
 			{amount}
 			{currency ? ` ${getCurrencySymbol(currency)}` : ' credits'}
 		</span>
 	);
 };
-
 const fomatTransactionTitle = ({ type, reason }: { type: string; reason: string }) => {
 	switch (reason) {
 		case WALLET_TRANSACTION_REASON.INVOICE_PAYMENT:

@@ -1,11 +1,11 @@
 import { Price } from '@/models/Price';
 import { FC, useState, useEffect } from 'react';
 import { Button, Input, Select, SelectOption, Spacer, DatePicker } from '@/components/atoms';
-import SelectMeter from './SelectMeter';
+import SelectFeature from '@/components/atoms/SelectFeature/SelectFeature';
 import SelectGroup from './SelectGroup';
 // import { Pencil, Trash2 } from 'lucide-react';
-import { Meter } from '@/models/Meter';
 import { Group } from '@/models/Group';
+import Feature, { FEATURE_TYPE } from '@/models/Feature';
 import { formatBillingPeriodForPrice, getCurrencySymbol } from '@/utils/common/helper_functions';
 import { billlingPeriodOptions, currencyOptions } from '@/constants/constants';
 import VolumeTieredPricingForm from './VolumeTieredPricingForm';
@@ -15,6 +15,9 @@ import { toast } from 'react-hot-toast';
 import { BILLING_CADENCE, INVOICE_CADENCE } from '@/models/Invoice';
 import { BILLING_MODEL, TIER_MODE, PRICE_ENTITY_TYPE } from '@/models/Price';
 import { BILLING_PERIOD, PRICE_TYPE } from '@/models/Price';
+import { useQuery } from '@tanstack/react-query';
+import FeatureApi from '@/api/FeatureApi';
+import { ENTITY_STATUS } from '@/models/base';
 
 /**
  * Enum for internal price states to avoid typos and provide better type safety
@@ -83,8 +86,7 @@ const UsagePricingForm: FC<Props> = ({
 }) => {
 	const [currency, setCurrency] = useState(price.currency || currencyOptions[0].value);
 	const [billingModel, setBillingModel] = useState(price.billing_model || billingModels[0].value);
-	const [meterId, setMeterId] = useState<string>(price.meter_id || '');
-	const [activeMeter, setActiveMeter] = useState<Meter | null>(price.meter || null);
+	const [selectedFeature, setSelectedFeature] = useState<Feature | undefined>(undefined);
 	const [groupId, setGroupId] = useState<string | undefined>(price.group_id);
 	const [displayName, setDisplayName] = useState<string>(price.display_name || '');
 	const [tieredPrices, setTieredPrices] = useState<PriceTier[]>([
@@ -106,20 +108,27 @@ const UsagePricingForm: FC<Props> = ({
 		tieredModelError: '',
 	});
 
+	// Query to find feature by meter_id when editing
+	const { data: featuresData } = useQuery({
+		queryKey: ['fetchFeatureByMeterId', price.meter_id],
+		queryFn: async () => {
+			if (!price.meter_id) return null;
+			const features = await FeatureApi.getAllFeatures({
+				status: ENTITY_STATUS.PUBLISHED,
+				meter_ids: [price.meter_id],
+			});
+			return features.items[0] || null;
+		},
+		enabled: !!price.meter_id && price.internal_state === PriceInternalState.EDIT,
+	});
+
 	// Load price data when editing
 	useEffect(() => {
 		if (price.internal_state === PriceInternalState.EDIT) {
 			setCurrency(price.currency || currencyOptions[0].value);
 			setBillingModel(price.billing_model || billingModels[0].value);
-			setMeterId(price.meter_id || '');
-			if (price.meter) {
-				setActiveMeter({
-					id: price.meter.id,
-					name: price.meter.name,
-				} as Meter);
-			}
-			// Set display_name from price or meter name
-			setDisplayName(price.display_name || price.meter?.name || '');
+			// Set display_name from price or feature name (will be set when feature is loaded)
+			setDisplayName(price.display_name || '');
 			setBillingPeriod(price.billing_period || billlingPeriodOptions[1].value);
 			setStartDate(price.start_date ? new Date(price.start_date) : undefined);
 
@@ -150,12 +159,23 @@ const UsagePricingForm: FC<Props> = ({
 		}
 	}, [price]);
 
-	// Update display_name when meter changes
+	// Set selectedFeature when feature is found by meter_id
 	useEffect(() => {
-		if (activeMeter?.name && !displayName) {
-			setDisplayName(activeMeter.name);
+		if (featuresData && price.internal_state === PriceInternalState.EDIT) {
+			setSelectedFeature(featuresData);
+			// Set display_name from feature name if not already set
+			if (!displayName && featuresData.name) {
+				setDisplayName(featuresData.name);
+			}
 		}
-	}, [activeMeter?.name]);
+	}, [featuresData, price.internal_state]);
+
+	// Update display_name when feature changes
+	useEffect(() => {
+		if (selectedFeature?.name && !displayName) {
+			setDisplayName(selectedFeature.name);
+		}
+	}, [selectedFeature?.name, displayName]);
 
 	const validate = () => {
 		setErrors({});
@@ -165,7 +185,7 @@ const UsagePricingForm: FC<Props> = ({
 			tieredModelError: '',
 		});
 
-		if (!meterId) {
+		if (!selectedFeature?.meter_id) {
 			setErrors((prev) => ({ ...prev, meter_id: 'Feature is required' }));
 			return false;
 		}
@@ -285,8 +305,8 @@ const UsagePricingForm: FC<Props> = ({
 		if (!validate()) return;
 
 		const basePrice: Partial<Price> = {
-			meter_id: meterId,
-			meter: activeMeter || undefined,
+			meter_id: selectedFeature?.meter_id || '',
+			meter: selectedFeature?.meter || undefined,
 			currency,
 			billing_period: billingPeriod,
 			billing_model: billingModel as BILLING_MODEL,
@@ -298,7 +318,7 @@ const UsagePricingForm: FC<Props> = ({
 			entity_id: entityId || '',
 			group_id: groupId,
 			start_date: startDate ? startDate.toISOString() : undefined,
-			display_name: displayName || activeMeter?.name || '',
+			display_name: displayName || selectedFeature?.name || '',
 		};
 
 		let finalPrice: Partial<Price>;
@@ -338,8 +358,8 @@ const UsagePricingForm: FC<Props> = ({
 				...price,
 				...finalPrice,
 				type: PRICE_TYPE.USAGE,
-				meter_id: meterId,
-				meter: activeMeter || price.meter,
+				meter_id: selectedFeature?.meter_id || price.meter_id || '',
+				meter: selectedFeature?.meter || price.meter,
 				internal_state: PriceInternalState.SAVED,
 			};
 			onUpdate(finalPriceWithEdit);
@@ -362,19 +382,21 @@ const UsagePricingForm: FC<Props> = ({
 	return (
 		<div className='card mb-2'>
 			<Spacer height={'8px'} />
-			<SelectMeter
+			<SelectFeature
+				featureTypes={[FEATURE_TYPE.METERED]}
 				error={errors.meter_id}
-				onChange={(meter) => {
-					if (meter) {
-						setMeterId(meter.id);
-						setActiveMeter(meter);
-						// Auto-fill display_name with meter name if empty
+				onChange={(feature) => {
+					if (feature) {
+						setSelectedFeature(feature);
+						// Auto-fill display_name with feature name if empty
 						if (!displayName) {
-							setDisplayName(meter.name);
+							setDisplayName(feature.name);
 						}
 					}
 				}}
-				value={meterId}
+				value={selectedFeature?.id}
+				label='Feature'
+				placeholder='Select a metered feature'
 			/>
 			<Spacer height='8px' />
 			<Input
@@ -382,7 +404,7 @@ const UsagePricingForm: FC<Props> = ({
 				value={displayName}
 				variant='text'
 				label='Display Name'
-				placeholder={activeMeter?.name || 'Enter display name'}
+				placeholder={selectedFeature?.name || 'Enter display name'}
 				error={errors.display_name}
 			/>
 			<Spacer height='8px' />

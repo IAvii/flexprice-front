@@ -5,10 +5,12 @@ import FeatureApi from '@/api/FeatureApi';
 import { useQuery } from '@tanstack/react-query';
 import { Gauge, SquareCheckBig, Wrench, ChevronDown } from 'lucide-react';
 import React, { FC, useEffect } from 'react';
+import { ENTITY_STATUS } from '@/models/base';
 
 const fetchFeatures = async () => {
 	return await FeatureApi.getAllFeatures({
-		status: 'published',
+		status: ENTITY_STATUS.PUBLISHED,
+		limit: 1000,
 	});
 };
 

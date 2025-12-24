@@ -1,4 +1,4 @@
-import { Pagination, Feature, FEATURE_TYPE, Metadata, Meter, AlertSettings } from '@/models';
+import { Pagination, Feature, FEATURE_TYPE, Metadata, Meter, AlertSettings, ENTITY_STATUS } from '@/models';
 import { TypedBackendFilter, TypedBackendSort } from '../formatters/QueryBuilder';
 import { MeterFilter, CreateMeterRequest } from './Meter';
 
@@ -50,14 +50,16 @@ export interface GetFeaturesPayload {
 	end_time?: string;
 	expand?: string;
 	feature_ids?: string[];
+	meter_ids?: string[];
 	limit?: number;
 	lookup_key?: string;
+	lookup_keys?: string[];
 	offset?: number;
 	order?: string;
 	sort?: string;
 	name_contains?: string;
 	start_time?: string;
-	status?: string;
+	status?: ENTITY_STATUS;
 }
 
 export interface GetFeaturesResponse {

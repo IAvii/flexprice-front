@@ -14,7 +14,8 @@ import toast from 'react-hot-toast';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip as RechartsTooltip } from 'recharts';
 import { Card, CardContent, ChartConfig, ChartContainer, ChartTooltipContent } from '@/components/ui';
 import { formatDateTime } from '@/utils';
-import SelectMeter from '@/components/organisms/PlanForm/SelectMeter';
+import SelectFeature from '@/components/atoms/SelectFeature/SelectFeature';
+import Feature, { FEATURE_TYPE } from '@/models/Feature';
 
 // Helper function to convert sanitized filters to Usage API parameters
 const convertFiltersToUsageParams = (filters: TypedBackendFilter[]): Partial<GetUsageByMeterPayload> => {
@@ -112,6 +113,7 @@ const filterOptions: FilterField[] = [
 const QueryPage: React.FC = () => {
 	const [usageData, setUsageData] = useState<any>(null);
 	const [selectedMeter, setSelectedMeter] = useState<string | undefined>(undefined);
+	const [selectedFeature, setSelectedFeature] = useState<Feature | undefined>(undefined);
 	const [windowSize, setWindowSize] = useState(windowSizeOptions[0].value);
 
 	// Move useMemo here
@@ -224,17 +226,20 @@ const QueryPage: React.FC = () => {
 					onSortChange={setSorts}
 					selectedSorts={sorts}
 				/>
-				{/* Move SelectMeter here, after QueryBuilder and before Refresh button */}
+				{/* Move SelectFeature here, after QueryBuilder and before Refresh button */}
 				<div className='flex flex-col justify-end min-w-[250px]'>
-					<SelectMeter
+					<SelectFeature
+						featureTypes={[FEATURE_TYPE.METERED]}
 						label=''
 						className='w-full rounded-xl max-h-9'
-						onChange={(value) => {
-							if (value) {
-								setSelectedMeter(value.id);
+						onChange={(feature: Feature) => {
+							if (feature) {
+								setSelectedFeature(feature);
+								setSelectedMeter(feature.meter_id);
 							}
 						}}
-						value={selectedMeter}
+						value={selectedFeature?.id}
+						placeholder='Select a metered feature'
 					/>
 				</div>
 				<div className='flex flex-col justify-end min-w-32'>

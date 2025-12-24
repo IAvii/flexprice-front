@@ -5,10 +5,12 @@ import FeatureApi from '@/api/FeatureApi';
 import { useQuery } from '@tanstack/react-query';
 import { Gauge, SquareCheckBig, Wrench } from 'lucide-react';
 import { FC } from 'react';
+import { ENTITY_STATUS } from '@/models/base';
 
 const fetchFeatures = async () => {
 	return await FeatureApi.getAllFeatures({
-		status: 'published',
+		status: ENTITY_STATUS.PUBLISHED,
+		limit: 1000,
 	});
 };
 
@@ -21,6 +23,7 @@ interface Props {
 	description?: string;
 	className?: string;
 	disabledFeatures?: string[];
+	featureTypes?: FEATURE_TYPE[];
 }
 
 export const getFeatureIcon = (featureType: string) => {
@@ -43,6 +46,7 @@ const SelectFeature: FC<Props> = ({
 	description,
 	className,
 	disabledFeatures,
+	featureTypes = [FEATURE_TYPE.METERED, FEATURE_TYPE.BOOLEAN, FEATURE_TYPE.STATIC],
 }) => {
 	const {
 		data: featuresData,
@@ -65,7 +69,9 @@ const SelectFeature: FC<Props> = ({
 		return <div>No Features found</div>;
 	}
 
-	const options = featuresData.items
+	const filteredFeatures = featuresData.items.filter((feature: Feature) => featureTypes.includes(feature.type));
+
+	const options = filteredFeatures
 		.map(
 			(feature: Feature): SelectOption => ({
 				value: feature.id,
@@ -89,7 +95,7 @@ const SelectFeature: FC<Props> = ({
 				value={value}
 				noOptionsText='No features added yet'
 				onChange={(e) => {
-					const selectedFeature = featuresData.items.find((feature) => feature.id === e);
+					const selectedFeature = filteredFeatures.find((feature) => feature.id === e);
 					if (selectedFeature) {
 						onChange(selectedFeature);
 					}

@@ -4,6 +4,7 @@ export enum SCHEDULED_ENTITY_TYPE {
 	EVENTS = 'events',
 	INVOICE = 'invoice',
 	CREDIT_TOPUPS = 'credit_topups',
+	CREDIT_USAGE = 'credit_usage',
 }
 
 export enum SCHEDULED_TASK_INTERVAL {

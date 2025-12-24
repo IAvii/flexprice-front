@@ -8,7 +8,7 @@ import { FC } from 'react';
 import { ENTITY_STATUS } from '@/models/base';
 
 const fetchFeatures = async () => {
-	return await FeatureApi.getAllFeatures({
+	return await FeatureApi.listFeatures({
 		status: ENTITY_STATUS.PUBLISHED,
 		limit: 1000,
 	});

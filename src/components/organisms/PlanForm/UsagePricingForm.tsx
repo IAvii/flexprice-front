@@ -113,7 +113,7 @@ const UsagePricingForm: FC<Props> = ({
 		queryKey: ['fetchFeatureByMeterId', price.meter_id],
 		queryFn: async () => {
 			if (!price.meter_id) return null;
-			const features = await FeatureApi.getAllFeatures({
+			const features = await FeatureApi.listFeatures({
 				status: ENTITY_STATUS.PUBLISHED,
 				meter_ids: [price.meter_id],
 			});

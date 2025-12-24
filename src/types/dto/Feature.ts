@@ -43,6 +43,27 @@ export interface ListFeaturesResponse {
 }
 
 // ============================================
+// Feature Filter Types
+// ============================================
+
+export interface FeatureFilter {
+	limit?: number;
+	offset?: number;
+	expand?: string;
+	order?: string;
+	sort?: string;
+	// Feature-specific filter fields
+	feature_ids?: string[];
+	meter_ids?: string[];
+	lookup_key?: string;
+	lookup_keys?: string[];
+	name_contains?: string;
+	status?: ENTITY_STATUS;
+	start_time?: string;
+	end_time?: string;
+}
+
+// ============================================
 // Legacy Payload Types (for backwards compatibility)
 // ============================================
 

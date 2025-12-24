@@ -3,6 +3,7 @@ export type {
 	UpdateFeatureRequest,
 	FeatureResponse,
 	ListFeaturesResponse,
+	FeatureFilter,
 	GetFeaturesPayload,
 	GetFeaturesResponse,
 	GetFeatureByFilterPayload,
